@@ -275,3 +275,110 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* === NEW: Tier List Extra Info Section === */
+.tier-list-extra-info-container {
+    max-width: 1400px;
+    margin: 2.5rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Space between collapsible panels */
+}
+
+/* Ensure inner panel content has consistent padding */
+.tier-list-extra-info-container .panel-content-inner {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.tier-list-extra-info-container .collapsible-panel h3 {
+    font-size: 1.2rem;
+    color: var(--accent-color-ur);
+}
+
+.tier-list-extra-info-container .video-section {
+    padding: 0; /* Remove default padding as CollapsiblePanel provides it */
+}
+
+.tier-list-extra-info-container .video-header-clickable {
+     padding: 1rem 1.5rem;
+}
+
+.tier-list-extra-info-container .video-collapsible-area.expanded {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 0;
+}
+
+/* src/app/styles/TierListPage.css */
+
+/* ... (โค้ด CSS เดิมทั้งหมด) ... */
+
+/* === REVISED: Tab System Styles === */
+.tier-list-tabs-container {
+    max-width: 1400px;
+    margin: 2.5rem auto 0 auto;
+}
+
+.tab-buttons-container {
+    display: flex; /* ใช้ flexbox เพื่อจัดเรียงปุ่ม */
+    gap: 0.5rem;   /* ระยะห่างเล็กน้อยระหว่างปุ่ม */
+}
+
+.tab-button {
+    flex: 1; /* <-- ทำให้ปุ่มทุกอันขยายจนเต็มพื้นที่เท่าๆ กัน */
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+    color: var(--text-color-secondary);
+    
+    /* --- FIX: เปลี่ยนสีพื้นหลังให้เหมือน Skill Card --- */
+    background-color: var(--surface-color-dark); /* สีพื้นหลังของปุ่มที่ไม่ได้เลือก */
+    border: 1px solid var(--border-color);
+    border-bottom: none; /* เอาเส้นขอบล่างออก */
+    border-radius: 8px 8px 0 0; /* ทำให้มุมบนโค้งมนเหมือนแท็บ */
+
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.tab-button:hover {
+    color: var(--text-color-primary);
+    background-color: var(--surface-color-light); /* เปลี่ยนสีเมื่อเอาเมาส์ไปชี้ */
+}
+
+.tab-button.active {
+    color: var(--accent-color-ur);
+    background-color: var(--surface-color-opaque); /* <-- สีเดียวกับพื้นที่เนื้อหา */
+    border-color: var(--border-color);
+    font-weight: bold;
+}
+
+.tab-content-area {
+    padding: 1.5rem;
+    /* --- FIX: ใช้สีเดียวกับ Skill Card เพื่อความชัดเจน --- */
+    background-color: var(--surface-color-opaque);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 8px 8px; /* ทำให้มุมล่างโค้งมน */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.tab-content-area .video-section {
+    margin-top: 2rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+/* === NEW: Constrain Video Size in Tabs === */
+.tab-content-area .video-section {
+    max-width: 800px; /* <-- ปรับขนาดความกว้างสูงสุดของวิดีโอได้ที่นี่ */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}

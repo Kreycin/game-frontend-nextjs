@@ -1,12 +1,14 @@
+// src/components/TierListClientPage.tsx
 'use client';
 import React, { useState } from 'react';
 import html2canvas from 'html2canvas';
 import CharacterIcon from './CharacterIcon';
+import TierListTabs from './TierListTabs'; // Make sure you have created and imported this
 import type { TierList, GuideData, Tier } from '@/types/tierlist';
 
 // --- Helper Component for Rich Text ---
 const BlocksRenderer = ({ blocks }: { blocks: any[] | null }) => {
-    if (!blocks) return null;
+    if (!Array.isArray(blocks) || blocks.length === 0) return null;
 
     return blocks.map((block, index) => {
         switch (block.type) {
@@ -137,18 +139,20 @@ const TierListDisplay = ({ list }: { list: TierList | undefined }) => {
     );
 };
 
-// --- Main Client Component ---
+// --- FIX: Added interface definition for the component's props ---
 interface TierListClientPageProps {
   initialTierLists: TierList[];
   initialGuideData: GuideData | null;
 }
 
+// --- Main Client Component ---
 export default function TierListClientPage({ initialTierLists, initialGuideData }: TierListClientPageProps) {
   const [tierLists] = useState(initialTierLists);
   const [guideData] = useState(initialGuideData);
   const [selectedMode, setSelectedMode] = useState<string | null>(() => {
     if (tierLists && tierLists.length > 0) {
-      const defaultList = tierLists.find(l => l.attributes.game_mode === 'mode 5v5') || tierLists[0];
+      // --- FIX: Added type for parameter 'l' ---
+      const defaultList = tierLists.find((l: TierList) => l.attributes.game_mode === 'mode 5v5') || tierLists[0];
       return defaultList.attributes.game_mode;
     }
     return null;
@@ -164,7 +168,8 @@ export default function TierListClientPage({ initialTierLists, initialGuideData 
             backgroundColor: '#1a1a1a',
         }).then(canvas => {
             const link = document.createElement('a');
-            const activeList = tierLists.find(list => list.attributes.game_mode === selectedMode);
+            // --- FIX: Added type for parameter 'list' ---
+            const activeList = tierLists.find((list: TierList) => list.attributes.game_mode === selectedMode);
             const fileName = activeList ? `${activeList.attributes.title}-tier-list.png` : 'tier-list.png';
             link.download = fileName;
             link.href = canvas.toDataURL('image/png');
@@ -173,13 +178,16 @@ export default function TierListClientPage({ initialTierLists, initialGuideData 
     }
   };
 
-  const activeTierList = tierLists.find(list => list.attributes.game_mode === selectedMode);
-  const availableModes = tierLists.map(list => list.attributes.game_mode);
+  // --- FIX: Added type for parameter 'list' ---
+  const activeTierList = tierLists.find((list: TierList) => list.attributes.game_mode === selectedMode);
+  // --- FIX: Added type for parameter 'list' ---
+  const availableModes = tierLists.map((list: TierList) => list.attributes.game_mode);
 
   return (
     <div style={{ padding: '0 2rem 2rem 2rem' }}>
       <div className="star-selector" style={{ maxWidth: '400px', margin: '1rem auto' }}>
-        {availableModes.map(mode => (
+        {/* --- FIX: Added type for parameter 'mode' --- */}
+        {availableModes.map((mode: string) => (
           <button key={mode} className={`star-button ${selectedMode === mode ? 'active' : ''}`} onClick={() => setSelectedMode(mode)}>
             {mode.replace(/mode /i, '').toUpperCase()}
           </button>
@@ -187,6 +195,9 @@ export default function TierListClientPage({ initialTierLists, initialGuideData 
       </div>
 
       {tierLists.length > 0 ? <TierListDisplay list={activeTierList} /> : <div style={{ textAlign: 'center', marginTop: '2rem' }}>No Tier Lists have been created yet.</div>}
+
+      {/* This component will display the new tabs */}
+      <TierListTabs guideData={guideData} />
 
       {guideData?.credit_name && (
           <div className="guide-credit">
