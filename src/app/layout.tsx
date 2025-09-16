@@ -2,6 +2,8 @@
 import type { Metadata } from "next";
 import ClientAuthProvider from "@/context/ClientAuthProvider";
 import Navbar from "@/components/Navbar"; // เราจะสร้าง Navbar ทีหลัง
+import LayoutWrapper from "@/components/LayoutWrapper";
+import NotificationButtonWrapper from "@/components/NotificationButtonWrapper";
 import "./globals.css"; // นี่คือไฟล์ App.css เดิมของเรา
 import "./styles/TierListPage.css";
 import "./styles/CharacterTooltip.css";
@@ -21,8 +23,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ClientAuthProvider>
-          <Navbar />
-          <main>{children}</main>
+          <NotificationButtonWrapper> {/* <-- 2. นำมาหุ้มตรงนี้ */}
+            <LayoutWrapper>
+              <Navbar />
+              <main>{children}</main>
+            </LayoutWrapper>
+          </NotificationButtonWrapper> {/* <-- 3. ปิด Tag */}
         </ClientAuthProvider>
       </body>
     </html>
