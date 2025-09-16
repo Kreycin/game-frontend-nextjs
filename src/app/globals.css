@@ -1,0 +1,466 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* ================== GLOBAL VARIABLES ================== */
+:root {
+  --background-color: #1a1a1a;
+  --surface-color-opaque: rgba(36, 36, 36, 0.85);
+  --surface-color-light: rgba(45, 45, 45, 0.85);
+  --surface-color-dark: rgba(31, 31, 31, 0.9);
+  --border-color: #444;
+  --text-color-primary: rgba(255, 255, 255, 0.9);
+  --text-color-secondary: #b0b0b0;
+  --accent-color-ur: #ffc107;
+}
+
+/* ================== BASE STYLES ================== */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  color: var(--text-color-primary);
+
+  /* --- ส่วนของพื้นหลัง --- */
+  background-color: var(--background-color); /* สีพื้นหลังสำรองเผื่อรูปไม่โหลด */
+
+  /* <<< วาง URL ของรูปคุณที่นี่ >>> */
+  background-image: url('https://res.cloudinary.com/di8bf7ufw/image/upload/v1750761818/Gyokko-UR_Workspace_emhp2w.jpg'); 
+
+  background-size: cover; /* ทำให้รูปขยายเต็มพื้นที่ */
+  background-position: center center; /* จัดให้รูปอยู่ตรงกลาง */
+  background-attachment: fixed; /* ทำให้พื้นหลังอยู่กับที่ไม่เลื่อนตามตอน scroll */
+}
+
+.App {
+  padding: 2rem;
+}
+
+.loading-state, .error-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  background-color: var(--background-color);
+  color: var(--text-color-primary);
+  text-align: center;
+  padding: 2rem;
+}
+
+/* ================== LAYOUT: GRID TEMPLATE AREAS ================== */
+.character-sheet-container {
+  display: grid;
+  max-width: 1400px;
+  margin: auto;
+  gap: 1.5rem;
+  /* Mobile-First: Single column layout */
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "header"
+    "art"
+    "main-stats"
+    "special-stats"
+    "skills"
+    "enhancements"
+    "showcase";
+}
+
+/* Desktop Layout: Two columns */
+@media (min-width: 1025px) {
+  .character-sheet-container {
+    gap: 2rem;
+    grid-template-columns: 320px 1fr; /* Left sidebar and main content */
+    grid-template-areas:
+      "art              header"
+      "art              skills"
+      "main-stats       skills"
+      "special-stats    skills"
+      "enhancements     skills"
+      "showcase         skills";
+  }
+}
+
+.layout-header { grid-area: header; }
+.layout-art { grid-area: art; }
+.layout-main-stats { grid-area: main-stats; }
+.layout-special-stats { grid-area: special-stats; }
+.layout-skills { grid-area: skills; }
+.layout-enhancements { grid-area: enhancements; }
+.layout-showcase { grid-area: showcase; }
+
+/* ================== COMPONENT STYLES ================== */
+
+/* --- Glassmorphism Panel Style --- */
+.collapsible-panel, .character-header, .video-section {
+  background-color: var(--surface-color-opaque);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+/* --- Character Art & Header --- */
+.main-character-art {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.character-header {
+  padding: 1.5rem;
+  text-align: center;
+}
+.name-and-id {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.character-id-tag {
+  background-color: #333;
+  color: #ccc;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+}
+.character-header h1 { margin: 0; }
+.tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+.tag-rarity, .tag-role, .tag-element { padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+.tag-rarity.UR { background-color: var(--accent-color-ur); color: #000; }
+.tag-role, .tag-element { background-color: var(--surface-color-light); }
+
+/* --- Collapsible Panels --- */
+.panel-header-clickable {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 1rem;
+}
+.collapsible-panel h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--accent-color-ur);
+}
+.toggle-icon { transition: transform 0.3s ease; }
+.toggle-icon.expanded { transform: rotate(180deg); }
+.panel-content-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+}
+.collapsible-panel.expanded .panel-content-collapsible {
+  max-height: 2000px; /* Large value to allow for expansion */
+}
+.panel-content-inner, .stats-grid, .stats-grid-special {
+  padding: 0rem 1rem 1rem 1rem;
+  border-top: 1px solid var(--border-color);
+  margin: 0 0.5rem;
+}
+
+/* --- Stats Grids --- */
+.stats-grid, .stats-grid-special {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #333;
+}
+.stat-item:last-child { border-bottom: none; }
+.stat-item span { color: var(--text-color-secondary); }
+
+/* --- Enhancements --- */
+.enhancement-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  font-size: 0.9rem;
+  padding-bottom: 0.75rem;
+  margin-top: 0.75rem;
+}
+.enhancement-item:last-child { padding-bottom: 0; }
+.enhancement-icon { width: 24px; height: 24px; margin-top: 2px; }
+.enhancement-item p { margin: 0; line-height: 1.5; white-space: pre-wrap; }
+
+
+/* --- Skills Section --- */
+.layout-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.star-selector {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: var(--surface-color-dark);
+  border-radius: 8px;
+}
+.star-button {
+  background-color: var(--surface-color-light);
+  color: var(--text-color-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.star-button:hover {
+  background-color: #4f4f4f;
+  color: var(--text-color-primary);
+}
+.star-button.active {
+  background-color: var(--accent-color-ur);
+  color: #000;
+  border-color: var(--accent-color-ur);
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+  transform: translateY(-2px);
+}
+.skills-grid {
+  display: block; /* ตั้งเป็น block เพื่อให้ column-count ทำงาน */
+  gap: 1.5rem; /* เราจะใช้ column-gap แทน */
+  align-items: start;
+}
+
+/* We will define multi-column layout for wider screens */
+
+/* --- Individual Skill Card --- */
+.skill-card-small {
+  background-color: var(--surface-color-opaque);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: background-color 0.2s;
+  align-self: start;
+  break-inside: avoid;
+  margin-bottom: 1.5rem; /* ใช้ margin แทน gap ของ grid */
+}
+  
+
+.skill-card-small.expanded { background-color: rgba(45, 45, 45, 0.95); }
+.skill-card-header-clickable { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; cursor: pointer; }
+.skill-icon-and-name { display: flex; align-items: center; gap: 0.75rem; }
+.skill-icon-small { width: 48px; height: 48px; border-radius: 4px; flex-shrink: 0; }
+.skill-name-small { margin: 0; font-size: 1rem; }
+.skill-level-tag { position: absolute; top: 0.5rem; right: 0.5rem; background-color: var(--accent-color-ur); color: #000; padding: 0.1rem 0.5rem; font-size: 0.7rem; border-radius: 4px; font-weight: bold; }
+.skill-details-collapsible { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+.skill-card-small.expanded .skill-details-collapsible { max-height: 3000px; }
+.skill-details-inner { padding-top: 1rem; border-top: 1px solid var(--border-color); }
+.skill-type-small { font-size: 0.8rem; color: var(--text-color-secondary); margin-bottom: 0.75rem; }
+.skill-description-small p { margin: 0; font-size: 0.9rem; color: #ccc; line-height: 1.5; white-space: pre-wrap; }
+.effects-list-in-skill { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.75rem; }
+.effects-list-in-skill h5 { margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--accent-color-ur); }
+.effect-item-in-skill { background-color: var(--surface-color-dark); padding: 0.5rem 0.75rem; border-radius: 6px; }
+.effect-header-in-skill { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+.effect-icon-in-skill { width: 20px; height: 20px; }
+.effect-name-in-skill { font-weight: 500; }
+.effect-description-in-skill p { margin: 0; line-height: 1.4; white-space: pre-wrap; font-size: 0.85rem; color: var(--text-color-secondary); }
+
+/* --- Video Section --- */
+.video-section { padding: 1.5rem; }
+.video-header-clickable { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.video-header-clickable h3 { margin: 0; color: var(--text-color-primary); }
+.video-collapsible-area {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, margin-top 0.5s ease-out;
+  margin-top: 0;
+}
+.video-collapsible-area.expanded {
+  max-height: 1000px;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+@media (min-width: 551px) {
+  .skills-grid {
+    column-count: 2; /* สร้าง 2 คอลัมน์ */
+    column-gap: 1.5rem; /* กำหนดช่องว่างระหว่างคอลัมน์ */
+  }
+}
+
+/* --- Responsive adjustments for smaller screens --- */
+@media (max-width: 550px) {
+  .App { padding: 1rem; }
+  .skills-grid, .stats-grid, .stats-grid-special {
+    grid-template-columns: 1fr;
+  }
+}
+/* === Export Button Styles === */
+.export-container {
+  max-width: 1400px;
+  margin: 2rem auto 0 auto; /* เว้นระยะห่างด้านบน 2rem และจัดให้อยู่กลางจอ */
+  text-align: right;        /* จัดให้ปุ่มอยู่ชิดขวาของกรอบ */
+  padding: 0 2rem;          /* เพิ่ม padding ซ้าย-ขวาเล็กน้อยให้สวยงาม */
+}
+
+.export-button {
+  background-color: var(--accent-color-ur);
+  color: #000;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.export-button:hover {
+  background-color: #ffda6a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+/* Tell the container to have its own background for exporting */
+#character-sheet-container {
+  /* Use the same background image settings as the body */
+  background-image: url('https://res.cloudinary.com/di8bf7ufw/image/upload/v1750761818/Gyokko-UR_Workspace_emhp2w.jpg');
+  background-size: cover;
+  background-position: center center;
+
+  /* Add some padding to make it look good */
+  padding: 2rem;
+  border-radius: 8px; /* Optional: adds rounded corners to the exported image */
+}
+/* === Collapsible Effect Styles === */
+
+.effect-header-clickable {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle-icon-small {
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.toggle-icon-small.expanded {
+  transform: rotate(180deg);
+}
+
+.effect-details-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  margin-top: 0;
+}
+
+.effect-item-in-skill.expanded .effect-details-collapsible {
+  max-height: 1000px; /* Or a suitable max height */
+  margin-top: 0.5rem;
+  transition: max-height 0.3s ease-in, margin-top 0.3s ease-in;
+}
+
+.effect-description-in-skill p {
+    margin: 0;
+}
+
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 9999;
+  overflow: hidden; /* ป้องกันไม่ให้มี scrollbar */
+}
+
+.splash-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  /* ทำให้พื้นหลังมืดลงเล็กน้อยเพื่อให้เห็นข้อความชัดขึ้น */
+  filter: brightness(0.6);
+  transform: scale(1.1); /* ขยายเล็กน้อยเพื่อไม่ให้เห็นขอบ */
+}
+
+.splash-content {
+  position: relative; /* ทำให้เนื้อหาลอยอยู่เหนือพื้นหลัง */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* เพิ่มเงาให้ข้อความ */
+}
+
+.splash-logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 2rem;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.splash-message {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 1.5rem 0 0.5rem 0;
+}
+
+/* --- [ใหม่] สไตล์สำหรับตัวนับถอยหลัง --- */
+.splash-countdown {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--accent-color-ur); /* ใช้สีเดียวกับเว็บ */
+  margin-top: 1rem;
+}
+
+/* --- Spinner Animation --- */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--accent-color-ur);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* --- Keyframe Animations --- */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.6; transform: scale(0.95); }
+}

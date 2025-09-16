@@ -1,0 +1,277 @@
+/* src/styles/TierListPage.css */
+
+.tier-table-wrapper {
+    background-color: #242424;
+    border-radius: 8px;
+    margin-top: 2rem;
+    border: 1px solid #333;
+}
+
+.tier-table-header {
+    display: grid;
+    /* --- FIX: ปรับความกว้างคอลัมน์แรกให้ตรงกับเนื้อหา --- */
+    grid-template-columns: 35px 1fr 1fr 1fr;
+    background-color: #1a1a1a;
+    align-items: center; 
+}
+
+.role-header {
+    text-align: center;
+    padding: 0.4rem ;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+.role-header.dps { color: #e82934; }
+.role-header.support { color: #f2cc8b; }
+.role-header.def { color: #a2cc56; }
+
+.tier-group-header {
+    display: flex;
+    align-items: center;
+    margin: 0.3rem 0;
+}
+
+.tier-group-header::before,
+.tier-group-header::after {
+    content: '';
+    flex-grow: 1;
+    height: 2px;
+    background-color: currentColor;
+}
+
+.tier-group-header span {
+    padding: 0 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.tier-row-grid {
+    display: grid;
+    grid-template-columns: 35px 1fr 1fr 1fr;
+    border-top: 1px solid #333;
+}
+
+.tier-group .tier-row-grid:first-child {
+    border-top: none;
+}
+
+.tier-header-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.tier-level-text {
+    /* --- FIX: ลดขนาดและเปลี่ยนสีตัวอักษร --- */
+    font-size: 0.8rem;
+    color: #000000;
+    /* ลบ text-shadow ออก */
+}
+
+.character-cell {
+    padding: 0%;
+    min-height: auto;
+    border-left: 1px solid #333;
+}
+.character-cell:first-child {
+    border-left: none;
+}
+
+.characters-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem;
+    align-items: flex-start;
+}
+
+/* === Character Icon Component Styles === */
+.character-icon-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.character-image-wrapper { position: relative; }
+.character-image-wrapper.hovering .tooltip-container { opacity: 1; visibility: visible; bottom: 115%; pointer-events: auto; }
+
+.character-icon-image { 
+    width: 80px; 
+    height: 80px; 
+    object-fit: cover; 
+    border-radius: 0; 
+    border: none; 
+    /* --- FIX: ทำให้พื้นหลังโปร่งใสเป็นค่าเริ่มต้น --- */
+    background-color: transparent; 
+    transition: transform 0.2s ease; 
+    display: block; 
+}
+
+.character-icon-container:hover .character-icon-image { transform: scale(1.1); }
+.expert-icon { position: absolute; bottom: 2px; left: 2px; width: 20px; height: 20px; }
+.character-desc-overlay { position: absolute; top: 4px; left: 4px; background-color: rgba(0, 0, 0, 0.6); color: #fff; font-size: 0.7rem; font-weight: bold; padding: 2px 5px; border-radius: 3px; }
+.character-icon-name { display: none; }
+
+.character-condition-icon { 
+    position: absolute; 
+    top: 0%; 
+    right: -4px;
+    width: 30px;
+    height: 30px;
+}
+/* === Guide Section Styles === */
+.guide-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 2.5rem auto 0 auto;
+    padding: 2rem;
+    background-color: rgba(26, 26, 26, 0.7);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+
+.guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.guide-section h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffc107;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #444;
+}
+
+.guide-paragraph {
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+.guide-list {
+    padding-left: 1.5rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+.guide-list li::marker {
+    color: #ffc107;
+}
+
+.guide-credit {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #444;
+    text-align: center;
+    font-size: 1rem;
+    color: #b0b0b0;
+}
+
+.guide-credit strong {
+    color: #fff;
+}
+
+/* === Responsive Design for Mobile (New Approach) === */
+@media (max-width: 767px) {
+    .tier-table-header,
+    .tier-row-grid {
+        grid-template-columns: 35px 1fr 1fr 1fr;
+    }
+
+    .role-header {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.25rem;
+    }
+
+    .tier-group-header {
+        font-size: 0.75rem;
+        margin: 1rem 0;
+    }
+    .tier-group-header span {
+        padding: 0 0.5rem;
+    }
+
+    .tier-level-text {
+        font-size: 1rem;
+    }
+
+    .character-cell {
+        padding: 0.5rem;
+        min-height: auto;
+    }
+    .characters-grid {
+        gap: 0.5rem;
+    }
+
+    .character-icon-image {
+        width: 50px;
+        height: 50px;
+        border-width: 1px;
+    }
+    .expert-icon {
+        width: 15px;
+        height: 15px;
+    }
+    .character-condition-icon {
+        width: 20px;
+        height: 20px;
+        top: -3px;
+        right: -3px;
+    }
+    .character-desc-overlay {
+        font-size: 0.5rem;
+        padding: 1px 3px;
+    }
+    .character-icon-name {
+        font-size: 0.6rem;
+        margin-top: 0.25rem;
+    }
+    .tooltip-container {
+        width: 200px;
+    }
+    .guide-container {
+        padding: 1rem;
+    }
+    .guide-grid {
+        grid-template-columns: 1fr;
+    }
+    .guide-section h3 {
+        font-size: 1.2rem;
+    }
+    .guide-credit {
+        font-size: 1rem;
+    }
+}
+
+/* ============================================== */
+/* === สไตล์สำหรับคอลัมน์พิเศษใน Tier List === */
+/* ============================================== */
+
+/* 1. กำหนดสีพื้นหลังให้คอลัมน์ Support ทั้งหัวข้อและช่องตัวละคร */
+.tier-row-grid .character-cell:nth-child(3),
+.tier-table-header > div:nth-child(3) {
+    background-color: #3a3a3a; /* สีเทาอ่อนสำหรับคอลัมน์ Support */
+}
+
+/* 2. กำหนดสีพื้นหลังให้ "เฉพาะ" ไอคอนในคอลัมน์ DPS และ DEF */
+.tier-row-grid .character-cell:nth-child(2) .character-icon-image,
+.tier-row-grid .character-cell:nth-child(4) .character-icon-image {
+    background-color: #2a2a2a; /* สีเทาเข้มดั้งเดิม */
+}
+/* ================================================= */
+/* === FIX: บังคับให้ Guide เป็น 2 คอลัมน์บนจอ Desktop === */
+/* ================================================= */
+
+@media (min-width: 1024px) {
+    .guide-grid {
+        /* * สั่งให้สร้าง Grid 2 คอลัมน์ที่มีขนาดเท่ากัน
+         * เมื่อความกว้างของหน้าจอมากกว่า 1024px ขึ้นไป
+        */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

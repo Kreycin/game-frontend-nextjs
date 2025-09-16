@@ -1,0 +1,58 @@
+/* src/components/OverlayPage.css */
+
+.overlay-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column; /* เรียงจากบนลงล่าง */
+  gap: 2rem; /* ระยะห่างระหว่างส่วนบน (เวลา) และส่วนล่าง (รูป) */
+}
+
+.overlay-header {
+  /* ปรับสไตล์ของ CountdownTimer ที่อยู่ในหน้านี้โดยเฉพาะ */
+  /* เราจะใช้ CSS selector ที่ซับซ้อนขึ้นเพื่อไม่ให้กระทบกับ CountdownTimer ที่หน้าหลัก */
+  background-color: #333; /* สีพื้นหลังของแถบเวลา */
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* ปรับแต่งข้อความ "Countdown Time" */
+.overlay-header .countdown-prefix {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* ปรับแต่งตัวเลขและหน่วยของเวลา */
+.overlay-header .countdown-value {
+  font-size: 2rem;
+  color: #ffc107;
+}
+.overlay-header .countdown-label {
+  font-size: 0.8rem;
+}
+
+.overlay-image-container {
+  flex-grow: 1; /* ทำให้กล่องนี้ขยายเต็มพื้นที่ที่เหลือ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #333; /* สีพื้นหลังของพื้นที่รูป */
+  border-radius: 8px;
+  min-height: 400px; /* กำหนดความสูงขั้นต่ำ */
+}
+
+.image-placeholder-text {
+  font-size: 2rem;
+  color: #888;
+  font-weight: bold;
+}
+.overlay-image {
+  max-width: 100%;      /* ทำให้รูปภาพกว้างไม่เกินขอบของกล่อง */
+  max-height: 100%;     /* ทำให้รูปภาพสูงไม่เกินขอบของกล่อง */
+  object-fit: contain;  /* ทำให้รูปย่อ/ขยายพอดีในกรอบโดยไม่ถูกตัด */
+  border-radius: 6px;   /* ทำให้มุมของรูปมนเล็กน้อย */
+}

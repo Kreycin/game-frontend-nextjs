@@ -1,0 +1,64 @@
+/* src/styles/CharacterTooltip.css */
+
+.tooltip-container {
+    position: absolute;
+    bottom: 110%; /* ตำแหน่งเริ่มต้น จะอยู่เหนือไอคอน */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #444;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+
+    /* --- ส่วนสำคัญที่ควบคุมการแสดงผล --- */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease, bottom 0.2s ease;
+    pointer-events: none; /* ทำให้เมาส์ทะลุผ่านได้ */
+}
+
+.tooltip-section {
+    margin-bottom: 0.75rem;
+}
+.tooltip-section:last-child {
+    margin-bottom: 0;
+}
+
+.tooltip-section h4 {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #ffc107;
+    margin: 0 0 0.25rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.tooltip-section h4 .condition-tag {
+    font-size: 0.8rem;
+    color: #1e1e1e;
+    background-color: #ffc107;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+}
+
+.tooltip-section p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* --- เพิ่ม: สไตล์สำหรับชื่อตัวละครใน Tooltip --- */
+.tooltip-character-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #444;
+}

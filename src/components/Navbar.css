@@ -1,0 +1,82 @@
+/* src/components/Navbar.css */
+
+.navbar-container {
+  background-color: rgba(36, 36, 36, 0.85);
+  padding: 0.75rem 2rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.navbar-main-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  border: 2px solid transparent; 
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-right-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.user-actions, .guest-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.login-link, .profile-link {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.login-link:hover, .profile-link:hover {
+    color: #fff;
+}
+.register-button, .logout-button {
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+.register-button {
+    background-color: #3b82f6;
+    color: white;
+}
+.register-button:hover {
+    background-color: #2563eb;
+}
+.logout-button {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.logout-button:hover {
+    background-color: #b91c1c;
+}
+
+/* --- เราได้ลบสไตล์ทั้งหมดของ Google Translate Widget ออกไปแล้ว --- */
+/* === Responsive Navbar for Mobile === */
