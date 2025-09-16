@@ -15,10 +15,6 @@ const backgroundGifs = [
   'https://res.cloudinary.com/di8bf7ufw/image/upload/v1757869589/giphy_dbsf7d.gif',
 ];
 const loadingMessages = [
-  "Connecting to database...",
-  "Polishing character sheets...",
-  "Almost there, hang tight!",
-  "Waking the server up",
   "Tip: iOS — Add this website with Add to Home Screen to receive notifications from us",
   "Tip: Android — Install this website to receive notifications from us",
   "New characters will always be updated — please stay tuned every month",
@@ -52,7 +48,7 @@ export default function SplashScreen() {
         style={{ backgroundImage: `url(${backgroundGif})` }}
       ></div>
       <div className="splash-content">
-        <img src="/pwa-512x512.png" alt="App Logo" className="splash-logo" />
+        {/* <img src="/pwa-512x512.png" alt="App Logo" className="splash-logo" /> */}
         <div className="spinner"></div>
         <p className="splash-message">{currentMessage}</p>
       </div>

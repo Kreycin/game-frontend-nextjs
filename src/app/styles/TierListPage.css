@@ -374,7 +374,7 @@
 
 /* === NEW: Constrain Video Size in Tabs === */
 .tab-content-area .video-section {
-    max-width: 800px; /* <-- ปรับขนาดความกว้างสูงสุดของวิดีโอได้ที่นี่ */
+    max-width: 400px; /* <-- ปรับขนาดความกว้างสูงสุดของวิดีโอได้ที่นี่ */
     margin-left: auto;
     margin-right: auto;
     margin-top: 2rem;
