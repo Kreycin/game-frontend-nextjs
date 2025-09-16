@@ -10,7 +10,7 @@ import "./styles/CharacterTooltip.css";
 import "./styles/NotificationSettings.css";
 
 export const metadata: Metadata = {
-  title: "New Character Leaked",
+  title: "DS Game Hub",
   description: "Your one-stop platform for the latest game character info, tier lists, and guides.",
 };
 

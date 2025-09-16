@@ -56,7 +56,7 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   }
 
-  const title = `${character.Name} - Character Sheet | DS Game Hub`;
+  const title = `${character.Name} - DS Game Hub`;
   const description = `Data, skills, and details for the ${character.Rarity} character: ${character.Name}`;
 
   return {
