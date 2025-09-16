@@ -12,7 +12,7 @@ const STRAPI_API_URL = `${API_ENDPOINT}/api/character-sheet`;
 async function getCharacterData(): Promise<Character | null> {
   try {
     console.log("1. Attempting to fetch data from Strapi..."); 
-    const response = await fetch(`${STRAPI_API_URL}?timestamp=${new Date().getTime()}`, { cache: 'no-store' });
+    const response = await fetch(`${STRAPI_API_URL}?timestamp=${new Date().getTime()}`, { next: { revalidate: 43200 } }); 
     console.log("2. Strapi responded with status:", response.status);
     if (!response.ok) throw new Error('Failed to fetch character data');
 

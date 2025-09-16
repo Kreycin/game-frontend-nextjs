@@ -8,8 +8,8 @@ const GUIDE_API_URL = `${API_ENDPOINT}/api/tier-list-guide`;
 async function getTierListData() {
   try {
     const [tierListsRes, guideRes] = await Promise.all([
-      fetch(TIER_LIST_API_URL, { cache: 'no-store' }),
-      fetch(GUIDE_API_URL, { cache: 'no-store' })
+      fetch(TIER_LIST_API_URL, { next: { revalidate: 43200 } }),
+      fetch(GUIDE_API_URL, { next: { revalidate: 43200 } })
     ]);
 
     if (!tierListsRes.ok || !guideRes.ok) {
