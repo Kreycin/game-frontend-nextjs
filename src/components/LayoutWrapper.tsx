@@ -8,7 +8,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2500); // 2500 milliseconds = 2.5 seconds
+    }, 2000); // 2000 milliseconds = 2 seconds
 
     // Cleanup function to clear the timer if the component unmounts
     return () => clearTimeout(timer);
