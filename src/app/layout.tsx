@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Your one-stop platform for the latest game character info, tier lists, and guides.",
     manifest: "/manifest.json", 
   icons: {
-    apple: "/apple-touch-icon.png",
+    apple: "/default-icon.png",
   },
 };
 
