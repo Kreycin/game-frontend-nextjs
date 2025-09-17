@@ -14,7 +14,7 @@ const VideoSection = ({ embedUrl, className = '' }) => {
     <section className={`video-section ${className}`}>
       {/* ทำให้ส่วนหัวทั้งหมดกดได้ */}
       <div className="video-header-clickable" onClick={() => setIsExpanded(!isExpanded)}>
-        <h3>Showcase</h3>
+        {/* <h3>Showcase</h3> */}
         <span className={`toggle-icon ${isExpanded ? 'expanded' : ''}`}>▼</span>
       </div>
 
