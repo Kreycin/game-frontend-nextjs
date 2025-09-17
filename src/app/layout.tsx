@@ -12,6 +12,10 @@ import "./styles/NotificationSettings.css";
 export const metadata: Metadata = {
   title: "DS Game Hub",
   description: "Your one-stop platform for the latest game character info, tier lists, and guides.",
+    manifest: "/manifest.json", 
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
