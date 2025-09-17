@@ -7,6 +7,7 @@ import TierListTabs from './TierListTabs'; // Make sure you have created and imp
 import type { TierList, GuideData, Tier } from '@/types/tierlist';
 
 // --- Helper Component for Rich Text ---
+// --- Helper Component for Rich Text ---
 const BlocksRenderer = ({ blocks }: { blocks: any[] | null }) => {
     if (!Array.isArray(blocks) || blocks.length === 0) return null;
 
@@ -16,11 +17,20 @@ const BlocksRenderer = ({ blocks }: { blocks: any[] | null }) => {
                 return (
                     <p key={`block-${index}`} className="guide-paragraph">
                         {block.children.map((child: any, childIndex: number) => {
-                            let content = child.text;
-                            if (child.bold) content = <strong>{content}</strong>;
-                            if (child.italic) content = <em>{content}</em>;
-                            if (child.underline) content = <u>{content}</u>;
-                            if (child.code) content = <code>{content}</code>;
+                            // --- FIX: Apply styles sequentially ---
+                            let content: React.ReactNode = child.text;
+                            if (child.bold) {
+                                content = <strong>{content}</strong>;
+                            }
+                            if (child.italic) {
+                                content = <em>{content}</em>;
+                            }
+                            if (child.underline) {
+                                content = <u>{content}</u>;
+                            }
+                            if (child.code) {
+                                content = <code>{content}</code>;
+                            }
                             return <React.Fragment key={`child-${childIndex}`}>{content}</React.Fragment>;
                         })}
                     </p>
@@ -32,11 +42,20 @@ const BlocksRenderer = ({ blocks }: { blocks: any[] | null }) => {
                         {block.children.map((listItem: any, listIndex: number) => (
                             <li key={`list-item-${listIndex}`}>
                                 {listItem.children.map((child: any, childIndex: number) => {
-                                    let content = child.text;
-                                    if (child.bold) content = <strong>{content}</strong>;
-                                    if (child.italic) content = <em>{content}</em>;
-                                    if (child.underline) content = <u>{content}</u>;
-                                    if (child.code) content = <code>{content}</code>;
+                                   // --- FIX: Apply styles sequentially ---
+                                    let content: React.ReactNode = child.text;
+                                    if (child.bold) {
+                                        content = <strong>{content}</strong>;
+                                    }
+                                    if (child.italic) {
+                                        content = <em>{content}</em>;
+                                    }
+                                    if (child.underline) {
+                                        content = <u>{content}</u>;
+                                    }
+                                    if (child.code) {
+                                        content = <code>{content}</code>;
+                                    }
                                     return <React.Fragment key={`list-child-${childIndex}`}>{content}</React.Fragment>;
                                 })}
                             </li>

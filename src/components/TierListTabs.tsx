@@ -1,6 +1,6 @@
 // src/components/TierListTabs.tsx
 'use client';
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // <-- แก้ไขโดยการเพิ่ม useState ตรงนี้
 import VideoSection from './VideoSection';
 import type { GuideData } from '@/types/tierlist';
 
@@ -16,11 +16,19 @@ const BlocksRenderer = ({ blocks }: { blocks: any[] | null }) => {
                 return (
                     <p key={`block-${index}`} className="guide-paragraph">
                         {block.children.map((child: any, childIndex: number) => {
-                            let content = child.text;
-                            if (child.bold) content = <strong>{content}</strong>;
-                            if (child.italic) content = <em>{content}</em>;
-                            if (child.underline) content = <u>{content}</u>;
-                            if (child.code) content = <code>{content}</code>;
+                            let content: React.ReactNode = child.text;
+                            if (child.bold) {
+                                content = <strong>{content}</strong>;
+                            }
+                            if (child.italic) {
+                                content = <em>{content}</em>;
+                            }
+                            if (child.underline) {
+                                content = <u>{content}</u>;
+                            }
+                            if (child.code) {
+                                content = <code>{content}</code>;
+                            }
                             return <React.Fragment key={`child-${childIndex}`}>{content}</React.Fragment>;
                         })}
                     </p>
@@ -32,11 +40,19 @@ const BlocksRenderer = ({ blocks }: { blocks: any[] | null }) => {
                         {block.children.map((listItem: any, listIndex: number) => (
                             <li key={`list-item-${listIndex}`}>
                                 {listItem.children.map((child: any, childIndex: number) => {
-                                    let content = child.text;
-                                    if (child.bold) content = <strong>{content}</strong>;
-                                    if (child.italic) content = <em>{content}</em>;
-                                    if (child.underline) content = <u>{content}</u>;
-                                    if (child.code) content = <code>{content}</code>;
+                                    let content: React.ReactNode = child.text;
+                                    if (child.bold) {
+                                        content = <strong>{content}</strong>;
+                                    }
+                                    if (child.italic) {
+                                        content = <em>{content}</em>;
+                                    }
+                                    if (child.underline) {
+                                        content = <u>{content}</u>;
+                                    }
+                                    if (child.code) {
+                                        content = <code>{content}</code>;
+                                    }
                                     return <React.Fragment key={`list-child-${childIndex}`}>{content}</React.Fragment>;
                                 })}
                             </li>
@@ -67,7 +83,6 @@ const TierListTabs = ({ guideData }: { guideData: GuideData | null }) => {
     }
 
     const handleTabClick = (tabName: TabName) => {
-        // If the clicked tab is already active, close it. Otherwise, set it as active.
         setActiveTab(activeTab === tabName ? null : tabName);
     };
     
