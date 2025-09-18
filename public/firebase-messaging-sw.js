@@ -18,22 +18,28 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-/**
- * Use the Firebase-specific onBackgroundMessage handler.
- * This gives you full control over the notification when your app is in the background.
- */
-messaging.onBackgroundMessage(function(payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+// -- 2. จัดการ Push Notification ที่เข้ามา --
+self.addEventListener('push', (event) => {
+  const payload = event.data.json();
+  const notificationTitle = payload.notification.title;
 
-  // IMPORTANT: Read title and body from the 'data' payload,
-  // which aligns with the recommended backend fix.
-  const notificationTitle = payload.data.title;
+  // --- 3. ตั้งค่าการแจ้งเตือน (เพิ่มแค่เสียง) ---
   const notificationOptions = {
-    body: payload.data.body,
-    icon: '/pwa-192x192.png', // You can customize the icon here
-    sound: 'https://res.cloudinary.com/di8bf7ufw/video/upload/v1757847611/titlecard_gz9met.mp3'
+    body: payload.notification.body,
+    icon: '/pwa-192x192.png',
+    
+    // --- นี่คือส่วนที่เพิ่มเข้ามาสำหรับเสียง ---
+    sound: '/sounds/titlecard.mp3' // <-- ระบุ Path ไปยังไฟล์เสียง
   };
 
-  // Display the notification.
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  event.waitUntil(
+    self.registration.showNotification(notificationTitle, notificationOptions)
+  );
+});
+
+// จัดการ Event เมื่อผู้ใช้คลิกที่การแจ้งเตือน
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const urlToOpen = event.notification.data?.url || '/'; // ตรวจสอบ data ก่อนใช้งาน
+  event.waitUntil(clients.openWindow(urlToOpen));
 });
