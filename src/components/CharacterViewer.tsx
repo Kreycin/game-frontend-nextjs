@@ -1,15 +1,25 @@
-"use client"; // สำคัญมาก! สำหรับ Next.js App Router
+"use client";
 
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
+import { OrbitControls, useGLTF, useTexture } from '@react-three/drei';
+import * as THREE from 'three';
 
 // Component สำหรับโหลดและแสดงโมเดล
 function Model(props: any) {
-  // Path ไปยังไฟล์ .glb ของคุณที่อยู่ในโฟลเดอร์ public
   const { scene } = useGLTF('/mitsuri_posed.glb');
   return <primitive object={scene} {...props} />;
 }
+
+// Component สำหรับสร้างพื้นหลัง 2D
+function Background() {
+  const texture = useTexture('/background.jpg'); // <-- แก้ชื่อไฟล์ตรงนี้ถ้าใช้ชื่ออื่น
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  texture.colorSpace = THREE.SRGBColorSpace;
+
+  return <primitive attach="background" object={texture} />;
+}
+
 
 // Component หลักสำหรับ Viewer
 export default function CharacterViewer() {
@@ -20,24 +30,29 @@ export default function CharacterViewer() {
       marginTop: '2rem',
       marginBottom: '2rem',
       borderRadius: '8px',
-      overflow: 'hidden',
-      backgroundColor: '#1a202c'
+      overflow: 'hidden'
     }}>
-      <Canvas camera={{ position: [0, 1, 3.5], fov: 50 }}>
+      <Canvas camera={{ position: [0, 3, 2.5], fov: 50 }}>
         <Suspense fallback={null}>
-          {/* เพิ่มแสงเข้าไปในซีน */}
-          <ambientLight intensity={2} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} />
+          {/* เพิ่มแสงเข้าไปในซีนเพื่อให้โมเดลสว่าง */}
+          <ambientLight intensity={1.1} />
           <directionalLight position={[10, 10, 5]} intensity={2} />
           
-          {/* แสดงโมเดล - เพิ่ม rotation ตรงนี้ */}
+          {/* แสดงโมเดล */}
           <Model 
-            scale={1.2} 
-            position={[0, 0, 0]} 
+            scale={1.8} 
+            position={[0, -1, 0]} 
+            rotation={[0, Math.PI, 0]}
           />
           
-          {/* เปิดให้ผู้ใช้หมุนดูโมเดลได้ */}
-          <OrbitControls enableZoom={true} enablePan={true} />
+          {/* แสดงพื้นหลัง 2D */}
+          <Background />
+
+          {/* ลบการจำกัดมุมกล้องออกแล้ว */}
+          <OrbitControls 
+            enableZoom={true} 
+            enablePan={false}
+          />
         </Suspense>
       </Canvas>
     </div>
