@@ -13,6 +13,7 @@ import CollapsiblePanel from './CollapsiblePanel';
 import StatItem from './StatItem';
 import CommentSection from './CommentSection';
 import InstallPWAButton from './InstallPWAButton';
+import CharacterViewer from '@/components/CharacterViewer';
 
 // --- TypeScript Interfaces for our data ---
 
@@ -170,6 +171,7 @@ export default function CharacterSheet({ initialCharacter }: { initialCharacter:
             </div>
         </CollapsiblePanel>
         <VideoSection embedUrl={embedUrl} className="layout-showcase" />
+        <CharacterViewer />
       </div>
 
       <div className="export-container">
