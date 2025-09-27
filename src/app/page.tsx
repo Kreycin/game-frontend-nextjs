@@ -1,87 +1,115 @@
-// src/app/page.tsx
 import { Metadata } from 'next';
 import CharacterSheet from "@/components/CharacterSheet";
 import CharacterSheetSkeleton from "@/components/CharacterSheetSkeleton";
 import type { Character } from '@/types/character';
+import qs from 'qs';
 
-const API_ENDPOINT = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
-const STRAPI_API_URL = `${API_ENDPOINT}/api/character-sheet`;
+const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
 
-// --- Define type for the fetched data ---
+async function getCharacters(): Promise<Character[]> {
+  const queryString = qs.stringify({
+    fields: ['*'],
+    populate: {
+      Main_Art: { fields: ['url', 'width', 'height'] },
+      Star_Levels: {
+        populate: {
+          enhancements: { 
+            populate: { Enhancement_Icon: { fields: ['url'] } } 
+          },
+          skill_descriptions: {
+            populate: {
+              skill: {
+                populate: {
+                  Skill_Icon: {
+                    fields: ['url']
+                  },
+                  // ----- นี่คือส่วนที่เพิ่มเข้ามา -----
+                  effects: { // 1. เจาะเข้าไปใน relation "effects"
+                    populate: '*' // 2. สั่งให้ดึงข้อมูลทั้งหมดของ effect ออกมาด้วย
+                  }
+                  // ---------------------------------
+                }
+              }
+            }
+          },
+        },
+      },
+    },
+  }, { encodeValuesOnly: true });
 
-async function getCharacterData(): Promise<Character | null> {
+  const fetchURL = `${STRAPI_API_URL}/api/characters?${queryString}`;
+
   try {
-    console.log("1. Attempting to fetch data from Strapi..."); 
-    const response = await fetch(STRAPI_API_URL, { next: { revalidate: 43200 } });
-    console.log("2. Strapi responded with status:", response.status);
-    if (!response.ok) throw new Error('Failed to fetch character data');
-
-    const json = await response.json();
-    const allCharacters = json.data;
-
-    if (allCharacters && allCharacters.length > 0) {
-      const latestCharData = allCharacters.sort((a: any, b: any) => 
-        new Date(b.attributes.updatedAt).getTime() - new Date(a.attributes.updatedAt).getTime()
-      )[0];
-      
-      const charToDisplay = { id: latestCharData.id, ...latestCharData.attributes };
-      
-      const getStarLevelNumber = (starString: string | null): number => {
-        if (!starString) return 0;
-        return parseInt(starString.replace('star', ''), 10);
-      };
-
-      const sortedStarLevels = [...charToDisplay.Star_Levels].sort((a, b) => 
-        getStarLevelNumber(b.Star_Level) - getStarLevelNumber(a.Star_Level)
-      );
-      charToDisplay.Star_Levels = sortedStarLevels;
-      
-      return charToDisplay;
+    const res = await fetch(fetchURL, { next: { revalidate: 3600 } });
+    if (!res.ok) {
+      console.error("Failed to fetch characters from Strapi:", await res.text());
+      return [];
     }
-    return null;
+    const rawData = await res.json();
+    if (!rawData.data) return [];
+
+    // โค้ดส่วนแปลงข้อมูลนี้ถูกต้องแล้ว และจะจัดการกับ effects ที่ได้มาใหม่โดยอัตโนมัติ
+    const characters = rawData.data.map((char: any) => {
+      const transformedStarLevels = char.Star_Levels?.map((level: any) => ({
+        ...level,
+        skill_descriptions: level.skill_descriptions?.map((desc: any) => ({
+          ...desc,
+          skill: desc.skill ? {
+            ...desc.skill,
+            Skill_Icon: desc.skill.Skill_Icon || null,
+            effects: desc.skill.effects || [] // ตรวจสอบให้แน่ใจว่า effects ถูกส่งต่อไป
+          } : null,
+        })) || [],
+      })) || [];
+
+      return {
+        ...char,
+        id: char.id,
+        Main_Art: char.Main_Art || null,
+        Star_Levels: transformedStarLevels,
+      };
+    });
+    
+    console.log(`Successfully transformed ${characters.length} characters with deep skill and effect data.`);
+    return characters;
+
   } catch (error) {
-    console.error(error);
-    return null;
+    console.error("An error occurred while fetching characters:", error);
+    return [];
   }
 }
 
-// --- Dynamic Metadata Generation ---
+// --- Dynamic Metadata Generation (สำหรับ SEO) ---
 export async function generateMetadata(): Promise<Metadata> {
-  const character = await getCharacterData();
-
-  if (!character) {
-    return {
-      title: 'Character Not Found',
-      description: 'Could not load character data.',
-    }
+  const characters = await getCharacters();
+  if (!characters || characters.length === 0) {
+    return { title: 'Character Not Found' };
   }
-
+  const character = characters[0];
   const title = `${character.Name} - DS Game Hub`;
   const description = `Data, skills, and details for the ${character.Rarity} character: ${character.Name}`;
-
   return {
     title,
     description,
     openGraph: {
-      title,
-      description,
-      url: 'https://demonslayergamehub.com', // Replace with your actual domain
-      siteName: 'Demon Slayer Game Hub',
-      images: character.Main_Art?.url ? [character.Main_Art.url] : [],
-      type: 'website',
+      title, description, images: character.Main_Art?.url ? [character.Main_Art.url] : [],
     },
-  }
+  };
 }
 
-
-// --- The Main Server Component for the Page ---
+// --- Page Component สำหรับหน้าแรก ---
 export default async function HomePage() {
-  const characterData = await getCharacterData();
-
-  if (!characterData) {
+  const allCharacters = await getCharacters();
+  if (!allCharacters || allCharacters.length === 0) {
     return <CharacterSheetSkeleton />;
   }
-
-  // Pass server-fetched data to the client component
-  return <CharacterSheet initialCharacter={characterData} />;
+  const firstCharacterId = allCharacters[0].id.toString();
+  return (
+    <main>
+      <CharacterSheet
+        allCharacters={allCharacters}
+        characterId={firstCharacterId}
+      />
+    </main>
+  );
 }

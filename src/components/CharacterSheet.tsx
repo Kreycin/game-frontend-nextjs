@@ -1,7 +1,8 @@
 // src/components/CharacterSheet.tsx
 'use client'; // This marks the component as a Client Component
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // เพิ่ม useEffect
+import { useRouter } from 'next/navigation'; // อาจจะต้องใช้เพื่อเปลี่ยน URL
 import html2canvas from 'html2canvas';
 import type { Character, RichTextBlock } from '@/types/character';
 
@@ -38,10 +39,44 @@ const getYouTubeEmbedUrl = (url: string | undefined | null): string | null => {
 };
 
 // --- The Main Client Component ---
-export default function CharacterSheet({ initialCharacter }: { initialCharacter: Character }) {
+export default function CharacterSheet({ allCharacters, characterId }: { allCharacters: Character[], characterId: string }) {
   
-  const [character] = useState(initialCharacter);
-  const [selectedStar, setSelectedStar] = useState<string | null>(initialCharacter?.Star_Levels[0]?.Star_Level || null);
+  // ถ้ายังไม่มีข้อมูล allCharacters ให้แสดง Loading... หรือ null ไปก่อน
+  if (!allCharacters || allCharacters.length === 0) {
+    return <div>Loading character data...</div>;
+  }
+  const router = useRouter();
+  const initialIndex = allCharacters.findIndex(c => c.id === parseInt(characterId, 10)); 
+  const [currentIndex, setCurrentIndex] = useState(initialIndex !== -1 ? initialIndex : 0);
+  
+  const character = allCharacters[currentIndex];
+
+  const [selectedStar, setSelectedStar] = useState<string | null>(null);
+
+  useEffect(() => {
+    // รีเซ็ต star level เมื่อ character เปลี่ยน
+    if (character?.Star_Levels && character.Star_Levels.length > 0) {
+      setSelectedStar(character.Star_Levels[0].Star_Level);
+    }
+  }, [character]);
+
+
+  const handleNavigate = (newIndex: number) => {
+    setCurrentIndex(newIndex);
+    // Optional: หากต้องการเปลี่ยน URL ตามตัวละครที่เลือก
+    // const newCharacterId = allCharacters[newIndex].id;
+    // router.push(`/character/${newCharacterId}`);
+  };
+
+  const handleNext = () => {
+    const nextIndex = (currentIndex + 1) % allCharacters.length;
+    handleNavigate(nextIndex);
+  };
+
+  const handlePrev = () => {
+    const prevIndex = (currentIndex - 1 + allCharacters.length) % allCharacters.length;
+    handleNavigate(prevIndex);
+  };
 
   const handleExportAsImage = () => {
     const elementToCapture = document.getElementById('character-sheet-container');
@@ -87,93 +122,108 @@ export default function CharacterSheet({ initialCharacter }: { initialCharacter:
 
   return (
     <div className="App">
-      <div id="character-sheet-container" key={character.id} className="character-sheet-container">
-        <header className="character-header layout-header">
-           <div className="name-and-id">
-              <h1>{character.Name}</h1>
-            </div>
-          <div className="tags">
-            <span className={`tag-rarity ${character.Rarity}`}>{character.Rarity}</span>
-            <span className="tag-role">{character.Role}</span>
-            {character.Element && <span className="tag-element">{character.Element}</span>}
-          </div>
-        </header>
+        {/* --- Container หลักของ Character Sheet --- */}
+        <div id="character-sheet-container" key={character.id} className="character-sheet-container">
+            
+            {/* Header จะมีแค่ชื่อและ Tags */}
+            <header className="character-header layout-header">
+                <div className="name-and-id">
+                    <h1>{character.Name}</h1>
+                </div>
+                <div className="tags">
+                    <span className={`tag-rarity ${character.Rarity}`}>{character.Rarity}</span>
+                    <span className="tag-role">{character.Role}</span>
+                    {character.Element && <span className="tag-element">{character.Element}</span>}
+                </div>
+            </header>
 
-        {mainArtUrl && (<img src={mainArtUrl} alt={character.Name} className="main-character-art layout-art" width={320} height={400} />)}
-        
-        <CollapsiblePanel title="Main Stats" defaultExpanded={false} className="layout-main-stats">
-          <div className="stats-grid">
-            <StatItem label="ATK" value={character.ATK} />
-            <StatItem label="DEF" value={character.DEF} />
-            <StatItem label="HP" value={character.HP} />
-            <StatItem label="SPD" value={character.SPD} />
-          </div>
-        </CollapsiblePanel>
-        
-        <CollapsiblePanel title="Special" defaultExpanded={false} className="layout-special-stats">
-          <div className="stats-grid-special">
-            <StatItem label="Lifesteal" value={character.Lifesteal} />
-            <StatItem label="Penetration" value={character.Penetration} />
-            <StatItem label="CRIT Rate" value={character.CRIT_rate} />
-            <StatItem label="CRIT Res" value={character.CRIT_Res} />
-            <StatItem label="Debuff Acc" value={character.Debuff_Acc} />
-            <StatItem label="Debuff Res" value={character.Debuff_Res} />
-            <StatItem label="Accuracy" value={character.Accuracy} />
-            <StatItem label="Dodge" value={character.Doge} />
-            <StatItem label="Healing Amt" value={character.Healing_Amt} />
-            <StatItem label="Healing Amt(P)" value={character.Healing_Amt_P} />
-            <StatItem label="Extra DMG" value={character.Extra_DMG} />
-            <StatItem label="DMG Res" value={character.DMG_Res} />
-            <StatItem label="CRIT DMG Res" value={character.CRIT_DMG_Res} />
-            <StatItem label="CRIT DMG" value={character.CRIT_DMG} />
-          </div>
-        </CollapsiblePanel>
+            {/* --- เนื้อหาที่เหลือทั้งหมดจะอยู่ใน Container นี้ --- */}
+            
+            {mainArtUrl && (<img src={mainArtUrl} alt={character.Name} className="main-character-art layout-art" width={320} height={400} />)}
+    
+            <CollapsiblePanel title="Main Stats" defaultExpanded={false} className="layout-main-stats">
+              <div className="stats-grid">
+                <StatItem label="ATK" value={character.ATK} />
+                <StatItem label="DEF" value={character.DEF} />
+                <StatItem label="HP" value={character.HP} />
+                <StatItem label="SPD" value={character.SPD} />
+              </div>
+            </CollapsiblePanel>
+            
+            <CollapsiblePanel title="Special" defaultExpanded={false} className="layout-special-stats">
+              <div className="stats-grid-special">
+                <StatItem label="Lifesteal" value={character.Lifesteal} />
+                <StatItem label="Penetration" value={character.Penetration} />
+                <StatItem label="CRIT Rate" value={character.CRIT_rate} />
+                <StatItem label="CRIT Res" value={character.CRIT_Res} />
+                <StatItem label="Debuff Acc" value={character.Debuff_Acc} />
+                <StatItem label="Debuff Res" value={character.Debuff_Res} />
+                <StatItem label="Accuracy" value={character.Accuracy} />
+                <StatItem label="Dodge" value={character.Doge} />
+                <StatItem label="Healing Amt" value={character.Healing_Amt} />
+                <StatItem label="Healing Amt(P)" value={character.Healing_Amt_P} />
+                <StatItem label="Extra DMG" value={character.Extra_DMG} />
+                <StatItem label="DMG Res" value={character.DMG_Res} />
+                <StatItem label="CRIT DMG Res" value={character.CRIT_DMG_Res} />
+                <StatItem label="CRIT DMG" value={character.CRIT_DMG} />
+              </div>
+            </CollapsiblePanel>
 
-        <div className="layout-skills">
-          <div className="star-selector">
-              {character.Star_Levels.map((level) => (
-              <button
-                  key={level.id}
-                  className={`star-button ${selectedStar === level.Star_Level ? 'active' : ''}`}
-                  onClick={() => setSelectedStar(level.Star_Level)}
-              >
-                  {getStarLevelNumber(level.Star_Level)}★
-              </button>
-              ))}
-          </div>
-          <section className="skills-grid">
-            {currentSkillDescriptions.length > 0 ? (
-              currentSkillDescriptions.map((skillDesc) => (
-                <SkillCard key={skillDesc.id} skillDescription={skillDesc} />
-              ))
-            ) : (
-              <p>No skills available for this star level.</p>
-            )}
-          </section>
-        </div>
-        <CollapsiblePanel title="Enhancements" className="layout-enhancements" defaultExpanded={true}>
-            <div className="panel-content-inner">
-                {currentEnhancements.length > 0 ? (
-                    currentEnhancements.map((enh) => {
-                    const enhancementIconUrl = enh.Enhancement_Icon?.url;
-                    return (
-                        <div key={enh.id} className="enhancement-item">
-                        {enhancementIconUrl && (
-                            <img src={enhancementIconUrl} alt="Enhancement Icon" className="enhancement-icon" />
-                        )}
-                        <div>{renderRichText(enh.Description)}</div>
-                        </div>
-                    )
-                    })
+            <div className="layout-skills">
+              <div className="star-selector">
+                  {character.Star_Levels.map((level) => (
+                  <button
+                      key={level.id}
+                      className={`star-button ${selectedStar === level.Star_Level ? 'active' : ''}`}
+                      onClick={() => setSelectedStar(level.Star_Level)}
+                  >
+                      {getStarLevelNumber(level.Star_Level)}★
+                  </button>
+                  ))}
+              </div>
+              <section className="skills-grid">
+                {currentSkillDescriptions.length > 0 ? (
+                  currentSkillDescriptions.map((skillDesc) => (
+                    <SkillCard key={skillDesc.id} skillDescription={skillDesc} />
+                  ))
                 ) : (
-                    <p>No enhancements for this star level.</p>
+                  <p>No skills available for this star level.</p>
                 )}
+              </section>
             </div>
-        </CollapsiblePanel>
-        <VideoSection embedUrl={embedUrl} className="layout-showcase" />
-        <CharacterViewer />
-      </div>
 
+            <CollapsiblePanel title="Enhancements" className="layout-enhancements" defaultExpanded={true}>
+                <div className="panel-content-inner">
+                    {currentEnhancements.length > 0 ? (
+                        currentEnhancements.map((enh) => {
+                        const enhancementIconUrl = enh.Enhancement_Icon?.url;
+                        return (
+                            <div key={enh.id} className="enhancement-item">
+                            {enhancementIconUrl && (
+                                <img src={enhancementIconUrl} alt="Enhancement Icon" className="enhancement-icon" />
+                            )}
+                            <div>{renderRichText(enh.Description)}</div>
+                            </div>
+                        )
+                        })
+                    ) : (
+                        <p>No enhancements for this star level.</p>
+                    )}
+                </div>
+            </CollapsiblePanel>
+
+            <VideoSection embedUrl={embedUrl} className="layout-showcase" />
+            <CharacterViewer />
+
+        </div> {/* --- จบส่วนของ Container หลัก --- */}
+      
+      {/* ===== ปุ่มจะถูกย้ายมาอยู่ตรงนี้ (นอก Container หลัก แต่ก่อน Export) ===== */}
+      <div className="bottom-navigation-controls">
+          <button onClick={handlePrev} className="nav-button prev-button">&lt;</button>
+          <button onClick={handleNext} className="nav-button next-button">&gt;</button>
+      </div>
+      
+      {/* ส่วน Export และอื่นๆ */}
       <div className="export-container">
         <button onClick={handleExportAsImage} className="export-button">
           Export as PNG
