@@ -7,7 +7,7 @@ import * as THREE from 'three';
 
 // Component สำหรับโหลดและแสดงโมเดล
 function Model(props: any) {
-  const { scene } = useGLTF('/mitsuri_posed.glb');
+  const { scene } = useGLTF('/mui_posed.glb');
   return <primitive object={scene} {...props} />;
 }
 
