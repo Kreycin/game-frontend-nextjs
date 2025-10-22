@@ -35,6 +35,7 @@ async function getCharacters(): Promise<Character[]> {
         },
       },
     },
+    sort: ['publishedAt:desc'],
   }, { encodeValuesOnly: true });
 
   const fetchURL = `${STRAPI_API_URL}/api/characters?${queryString}`;
