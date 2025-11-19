@@ -213,7 +213,7 @@ export default function CharacterSheet({ allCharacters, characterId }: { allChar
             </CollapsiblePanel>
 
             <VideoSection embedUrl={embedUrl} className="layout-showcase" />
-            <CharacterViewer />
+            {/*<CharacterViewer />*/}
 
         </div> {/* --- จบส่วนของ Container หลัก --- */}
       
