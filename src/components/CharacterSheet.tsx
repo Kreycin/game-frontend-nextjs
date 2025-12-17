@@ -157,7 +157,6 @@ export default function CharacterSheet({ allCharacters, characterId }: { allChar
         <header className="character-header layout-header">
           <motion.div
             className="name-and-id"
-            initial="hidden"
             animate="visible"
             variants={fadeInUp}
           >
@@ -194,7 +193,6 @@ export default function CharacterSheet({ allCharacters, characterId }: { allChar
         </CollapsiblePanel>
 
         <motion.div
-          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={fadeInUp}
@@ -221,7 +219,6 @@ export default function CharacterSheet({ allCharacters, characterId }: { allChar
 
         <motion.div
           className="layout-skills"
-          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={staggerContainer}
@@ -251,7 +248,6 @@ export default function CharacterSheet({ allCharacters, characterId }: { allChar
         </motion.div>
 
         <motion.div
-          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={fadeInUp}
