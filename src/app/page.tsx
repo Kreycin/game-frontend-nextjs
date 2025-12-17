@@ -6,6 +6,9 @@ import qs from 'qs';
 
 const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
 
+// --- Page Component สำหรับหน้าแรก ---
+import { MOCK_CHARACTER } from "@/utils/mockData";
+
 async function getCharacters(): Promise<Character[]> {
   const queryString = qs.stringify({
     fields: ['*'],
@@ -13,8 +16,8 @@ async function getCharacters(): Promise<Character[]> {
       Main_Art: { fields: ['url', 'width', 'height'] },
       Star_Levels: {
         populate: {
-          enhancements: { 
-            populate: { Enhancement_Icon: { fields: ['url'] } } 
+          enhancements: {
+            populate: { Enhancement_Icon: { fields: ['url'] } }
           },
           skill_descriptions: {
             populate: {
@@ -43,11 +46,14 @@ async function getCharacters(): Promise<Character[]> {
   try {
     const res = await fetch(fetchURL, { next: { revalidate: 3600 } });
     if (!res.ok) {
-      console.error("Failed to fetch characters from Strapi:", await res.text());
-      return [];
+      console.warn(`Failed to fetch characters from Strapi found at ${STRAPI_API_URL}. Using Mock Data.`);
+      return [MOCK_CHARACTER];
     }
     const rawData = await res.json();
-    if (!rawData.data) return [];
+    if (!rawData.data || rawData.data.length === 0) {
+      console.warn("Strapi returned no data. Using Mock Data.");
+      return [MOCK_CHARACTER];
+    }
 
     // โค้ดส่วนแปลงข้อมูลนี้ถูกต้องแล้ว และจะจัดการกับ effects ที่ได้มาใหม่โดยอัตโนมัติ
     const characters = rawData.data.map((char: any) => {
@@ -70,13 +76,13 @@ async function getCharacters(): Promise<Character[]> {
         Star_Levels: transformedStarLevels,
       };
     });
-    
+
     console.log(`Successfully transformed ${characters.length} characters with deep skill and effect data.`);
     return characters;
 
   } catch (error) {
-    console.error("An error occurred while fetching characters:", error);
-    return [];
+    console.error("An error occurred while fetching characters. Using Mock Data.", error);
+    return [MOCK_CHARACTER];
   }
 }
 
@@ -99,18 +105,38 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // --- Page Component สำหรับหน้าแรก ---
+import AnimatedBackground from "@/components/AnimatedBackground";
+import { MotionDiv } from "@/components/MotionWrapper"; // We need a client wrapper for motion since page is server component
+
 export default async function HomePage() {
   const allCharacters = await getCharacters();
-  if (!allCharacters || allCharacters.length === 0) {
-    return <CharacterSheetSkeleton />;
-  }
-  const firstCharacterId = allCharacters[0].id.toString();
+  // if (!allCharacters || allCharacters.length === 0) {
+  //   return <CharacterSheetSkeleton />;
+  // }
+  // Commenting out explicit loading state return to allow background to show even if empty, 
+  // but logically if empty we might still want skeleton. 
+  // Let's keep existing logic but wrapped.
+
+  const content = (allCharacters && allCharacters.length > 0) ? (
+    <CharacterSheet
+      allCharacters={allCharacters}
+      characterId={allCharacters[0].id.toString()}
+    />
+  ) : (
+    <CharacterSheetSkeleton />
+  );
+
   return (
-    <main>
-      <CharacterSheet
-        allCharacters={allCharacters}
-        characterId={firstCharacterId}
-      />
+    <main className="relative min-h-screen">
+      <AnimatedBackground />
+      <MotionDiv
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10"
+      >
+        {content}
+      </MotionDiv>
     </main>
   );
 }
