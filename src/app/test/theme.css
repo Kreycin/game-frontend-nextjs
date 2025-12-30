@@ -1262,3 +1262,17 @@
         -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
     }
 }
+
+/* ================== MOBILE TEXT OVERFLOW FIX ================== */
+@media (max-width: 768px) {
+    .ds-modal-stat-item .label {
+        white-space: normal !important; /* Allow wrapping */
+        font-size: 0.75rem !important; /* Slightly smaller text */
+        letter-spacing: 0.05rem !important; /* Tighter spacing */
+    }
+
+    .ds-modal-stat-item {
+        /* Optional: Stack if really needed, but wrapping should suffice */
+        padding: 0.8rem 0.5rem !important; /* Reduce padding */
+    }
+}

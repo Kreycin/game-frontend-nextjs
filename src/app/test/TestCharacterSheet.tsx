@@ -612,7 +612,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                 paddingBottom: isMobile ? '5rem' : '2.5rem'
                             }}>
                                 <div className="ds-modal-inner">
-                                    <h2 className="ds-modal-header">Advanced Analytics</h2>
+                                    <h2 className="ds-modal-header">Special Stats</h2>
                                     <div className="ds-modal-stats-list">
                                         {specialStats.map(stat => (
                                             <div key={stat.label} className="ds-modal-stat-item">
