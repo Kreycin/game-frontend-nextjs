@@ -126,7 +126,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                 raw: desc,
                 // Use real icon if available (rendered as img), else mock emoji
                 icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
-                buffs: buffs
+                buffs: buffs,
+                level: desc.skill?.Skill_Level || 1
             };
         }) || [];
     };
@@ -375,6 +376,21 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                             {skills.map((skill, index) => (
                                 <div key={index} className="ds-skill-icon-frame" onClick={() => setSelectedSkill(skill)}>
                                     <span style={{ fontSize: '1.5rem' }}>{skill.icon}</span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '-5px',
+                                        right: '-5px',
+                                        background: 'var(--ds-red)',
+                                        color: 'white',
+                                        fontSize: '0.7rem',
+                                        fontWeight: 'bold',
+                                        padding: '2px 6px',
+                                        borderRadius: '10px',
+                                        border: '1px solid var(--ds-gold)',
+                                        zIndex: 10
+                                    }}>
+                                        Lv.{skill.level}
+                                    </span>
                                 </div>
                             ))}
                         </div>
