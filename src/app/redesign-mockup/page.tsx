@@ -69,7 +69,7 @@ export default function MockupPage() {
     const [selectedBuff, setSelectedBuff] = useState(null);
     const [showSpecialStats, setShowSpecialStats] = useState(false);
     const [starLevel, setStarLevel] = useState(4);
-    const [expandedEnhancements, setExpandedEnhancements] = useState({});
+    const [expandedEnhancements, setExpandedEnhancements] = useState<Record<string | number, boolean>>({});
     const [rightPanelWidth, setRightPanelWidth] = useState(600);
     const [selectedCharIdx, setSelectedCharIdx] = useState(0);
     const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
