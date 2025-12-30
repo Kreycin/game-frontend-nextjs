@@ -530,7 +530,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                             </div>
 
                                             <div className="ds-section-title" style={{ marginTop: '1rem' }}>Description</div>
-                                            <p className="ds-modal-desc" style={{ lineHeight: 1.8, fontSize: '1.05rem', color: 'rgba(255,255,255,0.9)' }}>
+                                            <p className="ds-modal-desc" style={{ lineHeight: 1.8, fontSize: '1.05rem', color: 'rgba(255,255,255,0.9)', whiteSpace: 'pre-line' }}>
                                                 {selectedSkill.description}
                                             </p>
                                         </div>
