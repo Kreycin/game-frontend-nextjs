@@ -41,6 +41,15 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
     const [selectedSkill, setSelectedSkill] = useState<any | null>(null);
 
     const [showSpecialStats, setShowSpecialStats] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Mobile Detection
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // --- Accordion State ---
     const [expandedBuffs, setExpandedBuffs] = useState<Record<string, boolean>>({});
@@ -246,7 +255,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
             <div
                 className="mockup-container"
                 style={{
-                    gridTemplateColumns: `1fr 4px minmax(400px, ${rightPanelWidth}px)` // Dynamic Grid matches Mockup logic
+                    gridTemplateColumns: isMobile ? '1fr' : `1fr 4px minmax(400px, ${rightPanelWidth}px)` // Dynamic Grid
                 }}
             >
 
@@ -321,14 +330,17 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                 </div>
 
                 {/* --- RESIZER --- */}
-                <div
-                    className="ds-resizer"
-                    onMouseDown={startResizing}
-                    onTouchStart={startResizing}
-                >
-                    <div className="ds-resizer-line"></div>
-                    <div className="ds-resizer-handle">⁝</div>
-                </div>
+                {/* --- RESIZER (Desktop Only) --- */}
+                {!isMobile && (
+                    <div
+                        className="ds-resizer"
+                        onMouseDown={startResizing}
+                        onTouchStart={startResizing}
+                    >
+                        <div className="ds-resizer-line"></div>
+                        <div className="ds-resizer-handle">⁝</div>
+                    </div>
+                )}
 
                 {/* --- RIGHT COLUMN: Stats & Skills --- */}
                 <div
