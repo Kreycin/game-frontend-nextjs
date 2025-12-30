@@ -1237,3 +1237,28 @@
         display: none !important;
     }
 }
+
+/* ================== MOBILE MODAL OVERFLOW FIX ================== */
+@media (max-width: 768px) {
+    /* Reset Overlay to allow full screen child */
+    .ds-modal-overlay {
+        padding: 0 !important;
+        align-items: flex-start !important;
+        overflow: hidden !important; /* Prevent double scroll */
+    }
+
+    /* Force Full Screen Modal */
+    .ds-scroll-popup {
+        width: 100vw !important;
+        height: 100dvh !important; /* Dynamic viewport height to avoid bar issues */
+        max-width: none !important;
+        max-height: none !important;
+        border-radius: 0 !important;
+        border: none !important;
+        margin: 0 !important;
+        transform: none !important;
+        padding-bottom: 5rem !important; /* Extra padding for bottom overlap */
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+    }
+}
