@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Character, RichTextBlock } from "@/types/character";
+import CommentSection from '@/components/CommentSection';
 import "./theme.css";
 
 // --- Mock Buff Definitions (Ported from Mockup) ---
@@ -312,17 +313,9 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                     </div>
 
                     <div className="ds-comment-container">
-                        <div className="ds-sub-header">Comments</div>
-                        <div className="comment-list">
-                            {(character.comments || [1, 2, 3]).map((i: any) => (
-                                <div key={i} className="comment-item" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.5rem', marginBottom: '0.5rem' }}>
-                                    <div style={{ fontWeight: 'bold', color: 'var(--ds-red)', fontSize: '0.9rem' }}>User_{typeof i === 'object' ? i.id : i}92 <span style={{ fontWeight: 'normal', color: 'rgba(255,255,255,0.4)', fontSize: '0.7rem' }}>• 2h ago</span></div>
-                                    <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.8)', margin: 0 }}>Best build for this cycle is definitely hybrid ATK/EM.</p>
-                                </div>
-                            ))}
-                            <div className="comment-input" style={{ marginTop: '1rem' }}>
-                                <input type="text" placeholder="Add a comment..." style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }} />
-                            </div>
+                        {/* Real Comment Section Integration */}
+                        <div style={{ marginTop: '1rem' }}>
+                            <CommentSection pageId={`character-${character.id || 'default'}`} />
                         </div>
                     </div>
                 </div>
