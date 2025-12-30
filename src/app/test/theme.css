@@ -1276,3 +1276,44 @@
         padding: 0.8rem 0.5rem !important; /* Reduce padding */
     }
 }
+
+/* ================== MOBILE STATS MODAL 2-COL ================== */
+@media (max-width: 768px) {
+    /* 1. Turn List into 2-Column Grid */
+    .ds-modal-stats-list {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.5rem !important;
+    }
+
+    /* 2. Stack Items Vertically (Label Top, Value Bottom) */
+    .ds-modal-stat-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 1rem 0.5rem !important;
+        height: 100% !important; /* Uniform height */
+    }
+
+    /* 3. Adjust Internal Elements */
+    .ds-modal-stat-item .label {
+        grid-column: auto !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 0.7rem !important; /* Smaller label */
+        white-space: normal !important; /* Wrap allowed */
+        text-align: center !important;
+        width: 100%;
+    }
+
+    .ds-modal-stat-item .val {
+        grid-column: auto !important;
+        font-size: 1.1rem !important; /* Prominent value */
+        padding: 0 !important;
+    }
+
+    .ds-modal-stat-item .spacer {
+        display: none !important; /* Remove spacer */
+    }
+}
