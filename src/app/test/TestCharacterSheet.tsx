@@ -493,11 +493,15 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                 exit={{ scale: 0.9, opacity: 0 }}
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
-                                    maxWidth: '1000px',
-                                    width: '90%',
+                                    maxWidth: isMobile ? 'none' : '1000px',
+                                    width: isMobile ? '100vw' : '90%',
+                                    height: isMobile ? '100dvh' : 'auto',
+                                    maxHeight: isMobile ? 'none' : '85vh',
+                                    margin: 0,
+                                    borderRadius: isMobile ? 0 : undefined,
                                 }}
                             >
-                                <div className="ds-modal-inner">
+                                <div className="ds-modal-inner" style={{ height: isMobile ? '100%' : 'auto', display: 'flex', flexDirection: 'column' }}>
                                     <h2 style={{
                                         margin: '0 0 3rem 0',
                                         textTransform: 'uppercase',
@@ -597,8 +601,16 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                 {/* SPECIAL STATS MODAL */}
                 <AnimatePresence>
                     {showSpecialStats && (
-                        <div className="ds-modal-overlay" onClick={() => setShowSpecialStats(false)}>
-                            <div className="ds-scroll-popup" onClick={(e) => e.stopPropagation()}>
+                        <div className="ds-modal-overlay" onClick={() => setShowSpecialStats(false)} style={{ padding: isMobile ? 0 : '2rem', alignItems: isMobile ? 'flex-start' : 'center' }}>
+                            <div className="ds-scroll-popup" onClick={(e) => e.stopPropagation()} style={{
+                                width: isMobile ? '100vw' : '90%',
+                                height: isMobile ? '100dvh' : 'auto',
+                                maxHeight: isMobile ? 'none' : '85vh',
+                                maxWidth: isMobile ? 'none' : '600px',
+                                margin: 0,
+                                borderRadius: isMobile ? 0 : undefined,
+                                paddingBottom: isMobile ? '5rem' : '2.5rem'
+                            }}>
                                 <div className="ds-modal-inner">
                                     <h2 className="ds-modal-header">Advanced Analytics</h2>
                                     <div className="ds-modal-stats-list">
