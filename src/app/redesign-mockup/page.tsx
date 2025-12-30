@@ -139,7 +139,7 @@ export default function MockupPage() {
         }
     }, []);
 
-    const toggleEnhancement = (id) => {
+    const toggleEnhancement = (id: number) => {
         setExpandedEnhancements(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
