@@ -95,18 +95,40 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
     // Extract skills from the first Star Level
     const getSkills = () => {
         if (!character.Star_Levels || character.Star_Levels.length === 0) return [];
-        return character.Star_Levels[0].skill_descriptions?.map((desc, idx) => ({
-            id: idx,
-            name: desc.skill?.name || "Unknown Skill",
+        return character.Star_Levels[0].skill_descriptions?.map((desc, idx) => {
+            // Safe name accessor (handle capitalized or lowercase)
+            const skillName = desc.skill?.Skill_Name || desc.skill?.name || "Unknown Skill";
+
             // Convert RichTextBlock[] to string
-            description: desc.Description?.map((block: RichTextBlock) => block.children.map((c: any) => c.text).join("")).join("\n") || "",
-            type: "Active", // Placeholder
-            raw: desc,
-            // Use real icon if available (rendered as img), else mock emoji
-            icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
-            // Map real effects names
-            buffs: desc.skill?.effects && desc.skill.effects.length > 0 ? desc.skill.effects.map((e: any) => e.Name) : getMockBuffs(character.Element || "Unknown")
-        })) || [];
+            const description = desc.Description?.map((block: RichTextBlock) => block.children.map((c: any) => c.text).join("")).join("\n") || "";
+
+            // Try to get buffs from API effects
+            let buffs: string[] = [];
+            if (desc.skill?.effects && desc.skill.effects.length > 0) {
+                buffs = desc.skill.effects.map((e: any) => e.Effect_Name).filter(Boolean);
+            }
+
+            // FALLBACK: If no buffs from API, try to parse from description [Bound Names]
+            if (buffs.length === 0) {
+                const bracketMatches = description.match(/\[([a-zA-Z0-9\s]+)\]/g);
+                if (bracketMatches) {
+                    buffs = bracketMatches.map((m: string) => m.slice(1, -1)); // Remove brackets
+                } else {
+                    buffs = getMockBuffs(character.Element || "Unknown"); // Final fallback
+                }
+            }
+
+            return {
+                id: idx,
+                name: skillName,
+                description: description,
+                type: "Active", // Placeholder
+                raw: desc,
+                // Use real icon if available (rendered as img), else mock emoji
+                icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
+                buffs: buffs
+            };
+        }) || [];
     };
 
     const skills = getSkills();
