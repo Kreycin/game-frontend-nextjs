@@ -52,5 +52,7 @@ export interface Character {
   CRIT_DMG: string;
   Main_Art?: { url: string };
   YouTube_URL?: string;
+  elementName?: string;
+  comments?: any[];
   Star_Levels: StarLevel[];
 }
