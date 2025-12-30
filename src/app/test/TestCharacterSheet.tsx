@@ -34,22 +34,22 @@ export default function TestCharacterSheet({ character }: TestCharacterSheetProp
     const [selectedBuff, setSelectedBuff] = useState<string | null>(null);
     const [showSpecialStats, setShowSpecialStats] = useState(false);
 
-    // --- Special Stats Data (Mocked) ---
+    // --- Special Stats Data (Real) ---
     const specialStats = [
-        { label: "Lifesteal", val: "15%" },
-        { label: "Penetration", val: "10%" },
-        { label: "CRIT Rate", val: character.CRIT_rate || "25%" },
-        { label: "CRIT Res", val: "12%" },
-        { label: "Debuff Acc", val: "30%" },
-        { label: "Debuff Res", val: "20%" },
-        { label: "Accuracy", val: "100%" },
-        { label: "Dodge", val: "5%" },
-        { label: "Healing Amt", val: "0%" },
-        { label: "Healing Amt(P)", val: "0%" },
-        { label: "Extra DMG", val: "40%" },
-        { label: "DMG Res", val: "15%" },
-        { label: "CRIT DMG Res", val: "20%" },
-        { label: "CRIT DMG", val: "180%" },
+        { label: "Lifesteal", val: character.Lifesteal || "0%" },
+        { label: "Penetration", val: character.Penetration || "0%" },
+        { label: "CRIT Rate", val: character.CRIT_rate || "0%" },
+        { label: "CRIT Res", val: character.CRIT_Res || "0%" },
+        { label: "Debuff Acc", val: character.Debuff_Acc || "0%" },
+        { label: "Debuff Res", val: character.Debuff_Res || "0%" },
+        { label: "Accuracy", val: character.Accuracy || "0%" },
+        { label: "Dodge", val: character.Doge || "0%" },
+        { label: "Healing Amt", val: character.Healing_Amt || "0%" },
+        { label: "Healing Amt(P)", val: character.Healing_Amt_P || "0%" },
+        { label: "Extra DMG", val: character.Extra_DMG || "0%" },
+        { label: "DMG Res", val: character.DMG_Res || "0%" },
+        { label: "CRIT DMG Res", val: character.CRIT_DMG_Res || "0%" },
+        { label: "CRIT DMG", val: character.CRIT_DMG || "0%" },
     ];
 
     // --- Scroll Parallax Effects ---
