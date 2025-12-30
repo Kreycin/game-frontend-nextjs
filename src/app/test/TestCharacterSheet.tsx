@@ -266,10 +266,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                         </motion.div>
 
                         <div className="absolute bottom-10 left-0 right-0 flex justify-center gap-4">
-                            <div className="ds-element-tag">
-                                <span className="icon">⚡</span>
-                                <span className="name">{getElement()}</span>
-                            </div>
+                            {/* Duplicate Element Tag Removed */}
                         </div>
                     </div>
 
