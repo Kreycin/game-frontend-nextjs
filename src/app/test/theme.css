@@ -1153,3 +1153,87 @@
         font-size: 2rem !important;
     }
 }
+
+/* ================== MOBILE REORDERING & SCALING ================== */
+@media (max-width: 768px) {
+    /* 1. Scale Down Everything by 20% (assuming base 16px -> 13px) */
+    html {
+        font-size: 13px !important;
+    }
+
+    /* 2. Flatten Layout for Reordering */
+    .mockup-container {
+        display: flex !important;
+        flex-direction: column !important;
+        /* No grid */
+    }
+
+    .left-column-scroll,
+    .right-panel {
+        display: contents !important; /* Unwrap contents so they become siblings */
+    }
+
+    /* 3. Define Specific Order */
+    /* Order: Name -> Level -> Role/Element -> Art -> Skills -> Stats -> Enh -> Video -> Comment */
+
+    /* Name & Level (Stars) are in .ds-header-area */
+    .ds-header-area {
+        order: 1 !important;
+    }
+
+    /* Role & Element are in .ds-level-row */
+    .ds-level-row {
+        order: 2 !important;
+        justify-content: center !important; /* Center align on mobile */
+        margin-bottom: 2rem !important;
+    }
+
+    /* Art Image */
+    .ds-art-frame {
+        order: 3 !important;
+        min-height: auto !important; /* Reset min-height */
+        margin-bottom: 2rem !important;
+    }
+    .ds-art-img {
+        max-height: 50vh !important; /* Reduce height on mobile */
+    }
+
+    /* Skills */
+    .section-skills {
+        order: 4 !important;
+    }
+
+    /* Basic Attributes (Stats) */
+    .section-stats {
+        order: 5 !important;
+    }
+
+    /* Enhancements */
+    .section-enhancements {
+        order: 6 !important;
+    }
+
+    /* Video */
+    .ds-video-container {
+        order: 7 !important;
+        order: 99 !important; /* Let's push Video/Comments to end explicitly if needed */
+        margin: 2rem 0 !important;
+    }
+    
+    /* Comments */
+    .ds-comment-container {
+        order: 8 !important;
+        margin-bottom: 5rem !important;
+    }
+
+    /* Fix: Ensure sections have margin when flattened */
+    .ds-section, 
+    .ds-header-area, 
+    .ds-level-row {
+        width: 100%; /* Ensure full width */
+    }
+    
+    .ds-resizer {
+        display: none !important;
+    }
+}

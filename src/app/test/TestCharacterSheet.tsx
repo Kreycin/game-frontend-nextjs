@@ -392,7 +392,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                     </div>
 
                     {/* Combat Skills */}
-                    <div className="ds-section">
+                    {/* Combat Skills */}
+                    <div className="ds-section section-skills">
                         <div className="ds-section-header">Skills</div>
                         <div className="ds-skill-row">
                             {skills.map((skill, index) => (
@@ -419,7 +420,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                     </div>
 
                     {/* Basic Attributes (Re-aligned to Mockup Grid) */}
-                    <div className="ds-section">
+                    {/* Basic Attributes (Re-aligned to Mockup Grid) */}
+                    <div className="ds-section section-stats">
                         <div className="ds-section-header">Basic Attributes</div>
                         <div className="ds-stats-grid">
                             <div className="ds-stat-item">
@@ -452,7 +454,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                     </div>
 
                     {/* Enhancement Timeline (Real Data) */}
-                    <div className="ds-section">
+                    {/* Enhancement Timeline (Real Data) */}
+                    <div className="ds-section section-enhancements">
                         <div className="ds-section-header">Enhancement Timeline</div>
                         <div className="ds-enhancement-timeline">
                             {enhancements.length > 0 ? enhancements.map((enh: any, i: number) => (
