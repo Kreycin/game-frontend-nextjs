@@ -44,22 +44,18 @@ async function getCharacters(): Promise<Character[]> {
     console.log("Full Fetch URL:", fetchURL);
 
     try {
-        const res = await fetch(fetchURL, { next: { revalidate: 0 } }); // Disable cache for testing
-
-        console.log("Fetch Response Status:", res.status);
+        // Optimization: Cache content for 1 hour (3600s) to prevent timeouts
+        const res = await fetch(fetchURL, { next: { revalidate: 3600 } });
 
         if (!res.ok) {
-            console.warn(`Failed to fetch characters from Strapi. Status: ${res.status} ${res.statusText}`);
+            console.warn(`Failed to fetch characters from Strapi. Status: ${res.status}`);
             return [MOCK_CHARACTER as unknown as Character];
         }
         const rawData = await res.json();
 
         if (!rawData.data || rawData.data.length === 0) {
-            console.warn("Strapi returned no data (empty array). Using Mock Data.");
             return [MOCK_CHARACTER as unknown as Character];
         }
-
-        console.log(`Successfully fetched ${rawData.data.length} characters.`);
 
         const characters = rawData.data.map((char: any) => {
             const transformedStarLevels = char.Star_Levels?.map((level: any) => ({
