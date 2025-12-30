@@ -7,6 +7,11 @@ import { MOCK_CHARACTER } from "@/utils/mockData";
 
 const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
 
+const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
+
+// Force static generation with revalidation (ISR)
+export const revalidate = 3600;
+
 async function getCharacters(): Promise<Character[]> {
     const queryString = qs.stringify({
         fields: ['*'],
@@ -44,8 +49,8 @@ async function getCharacters(): Promise<Character[]> {
     console.log("Full Fetch URL:", fetchURL);
 
     try {
-        // Optimization: Cache content for 1 hour (3600s) to prevent timeouts
-        const res = await fetch(fetchURL, { next: { revalidate: 3600 } });
+        // Use default fetch (cache: 'force-cache' implied by page revalidate)
+        const res = await fetch(fetchURL);
 
         if (!res.ok) {
             console.warn(`Failed to fetch characters from Strapi. Status: ${res.status}`);
