@@ -103,7 +103,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
             type: "Active", // Placeholder
             raw: desc,
             // Use real icon if available (rendered as img), else mock emoji
-            icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '1em', height: '1em', objectFit: 'contain', display: 'inline-block', verticalAlign: 'middle' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
+            icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
             // Map real effects names
             buffs: desc.skill?.effects && desc.skill.effects.length > 0 ? desc.skill.effects.map((e: any) => e.Name) : getMockBuffs(character.Element || "Unknown")
         })) || [];
@@ -399,7 +399,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                 <div className="ds-enh-item" key={i}>
                                     <div className="ds-enh-lvl">
                                         {enh.Enhancement_Icon?.url ?
-                                            <img src={enh.Enhancement_Icon.url} alt="icon" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+                                            <img src={enh.Enhancement_Icon.url} alt="icon" style={{ width: '64px', height: '64px', objectFit: 'contain', marginTop: '0.5rem' }} />
                                             : `Lv.${(i + 1) * 10}`}
                                     </div>
                                     <div>
