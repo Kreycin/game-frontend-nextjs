@@ -852,12 +852,12 @@
     box-shadow: 0 0 20px var(--ds-gold-glow);
 }
 
-/* ================== SKILL MODAL BENTO REDESIGN ================== */
+/* ================== SKILL MODAL REDESIGN (Iteration 2) ================== */
 .ds-skill-modal-layout {
     display: grid;
-    grid-template-columns: 240px 1fr;
-    /* Left: Bento Buffs, Right: Details */
-    gap: 2rem;
+    grid-template-columns: 1fr 340px;
+    /* Left: Content (Flexible), Right: Buffs (Fixed) */
+    gap: 2.5rem;
     min-height: 400px;
 }
 
@@ -869,53 +869,59 @@
 }
 
 .ds-skill-modal-left {
-    border-right: 1px solid var(--ds-glass-border);
-    padding-right: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.ds-skill-modal-right {
-    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-/* Bento Grid for Buffs */
-.ds-buff-bento-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    /* Single column stack for clean look, or 2 cols if space permits */
-    gap: 0.8rem;
-    margin-top: 1rem;
+.ds-skill-modal-right {
+    border-left: 1px solid var(--ds-glass-border);
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.ds-buff-card {
+/* Accordion Buff List */
+.ds-buff-accordion-list {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.ds-buff-accordion {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--ds-glass-border);
-    padding: 0.8rem;
     border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
     overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.ds-buff-card:hover {
+.ds-buff-accordion:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.ds-buff-accordion.expanded {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--ds-gold);
-    transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.ds-buff-accordion-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem;
+    cursor: pointer;
+    user-select: none;
 }
 
 .ds-buff-icon-box {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 8px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -927,16 +933,43 @@
     overflow: hidden;
 }
 
-.ds-buff-card:hover .ds-buff-icon-box {
-    border-color: var(--ds-gold);
-}
-
 .ds-buff-name {
+    flex: 1;
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--ds-text);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.ds-accordion-arrow {
+    color: var(--ds-gold);
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.ds-buff-accordion.expanded .ds-accordion-arrow {
+    transform: rotate(180deg);
+}
+
+.ds-buff-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.ds-buff-accordion.expanded .ds-buff-accordion-content {
+    max-height: 200px;
+    /* Adjust as needed */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ds-buff-desc {
+    padding: 1rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
 }
 
 .ds-section-title {
@@ -945,8 +978,8 @@
     letter-spacing: 1.5px;
     color: var(--ds-label);
     margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--ds-glass-border);
-    padding-bottom: 0.5rem;
+    /* border-bottom removed for accordion section title */
+    padding-bottom: 0.2rem;
 }
 
 

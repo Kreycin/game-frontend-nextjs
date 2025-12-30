@@ -38,7 +38,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
     const isResizing = useRef(false);
     const leftPanelRef = useRef<HTMLDivElement>(null); // For scroll parallax
     const [selectedSkill, setSelectedSkill] = useState<any | null>(null);
-    const [selectedBuff, setSelectedBuff] = useState<any | null>(null); // Updated State type
+
     const [showSpecialStats, setShowSpecialStats] = useState(false);
 
     // --- Special Stats Data (Real) ---
@@ -467,155 +467,178 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
 
                 </div>
 
-                {/* --- MODALS (Kept Functional) --- */}
-                <AnimatePresence>
-                    {selectedSkill && (
-                        <div className="ds-modal-overlay" onClick={() => setSelectedSkill(null)}>
-                            <motion.div
-                                className="ds-scroll-popup"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.9, opacity: 0 }}
-                                onClick={(e) => e.stopPropagation()}
-                                style={{
-                                    maxWidth: '1000px', // Wider modal for 2-column layout
-                                    width: '90%',
-                                }}
-                            >
-                                <div className="ds-modal-inner">
-                                    <h2 style={{
-                                        margin: '0 0 1.5rem 0',
-                                        textTransform: 'uppercase',
-                                        borderBottom: '1px solid var(--ds-glass-border)',
-                                        paddingBottom: '1rem',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        Skill Detail
-                                        <button className="ds-modal-close" style={{ margin: 0, padding: '0.4rem 1.2rem', fontSize: '0.8rem' }} onClick={() => setSelectedSkill(null)}>Close</button>
-                                    </h2>
+                const [expandedBuffs, setExpandedBuffs] = useState<Record<string, boolean>>({ });
 
-                                    <div className="ds-skill-modal-layout">
-                                        {/* LEFT COLUMN: Buff Bento Grid */}
-                                        <div className="ds-skill-modal-left">
-                                            <div className="ds-section-title">Buffs & Effects</div>
-                                            <div className="ds-buff-bento-grid">
-                                                {selectedSkill.buffs && selectedSkill.buffs.length > 0 ? (
-                                                    selectedSkill.buffs.map((buff: any, idx: number) => (
-                                                        <div
-                                                            key={`${buff.name}-${idx}`}
-                                                            className="ds-buff-card"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                setSelectedBuff(buff);
-                                                            }}
-                                                        >
-                                                            <div className="ds-buff-icon-box">
-                                                                {buff.icon ? (
-                                                                    <img src={buff.icon} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                                ) : (
-                                                                    <span>⚡</span>
-                                                                )}
-                                                            </div>
-                                                            <div className="ds-buff-name">{buff.name}</div>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>No specific buffs.</span>
-                                                )}
-                                            </div>
-                                        </div>
+    const toggleBuff = (buffName: string) => {
+                        setExpandedBuffs(prev => ({
+                            ...prev,
+                            [buffName]: !prev[buffName]
+                        }));
+    };
 
-                                        {/* RIGHT COLUMN: Skill Details */}
-                                        <div className="ds-skill-modal-right">
-                                            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                                                <div style={{
-                                                    fontSize: '3rem',
-                                                    width: '80px',
-                                                    height: '80px',
-                                                    borderRadius: '50%',
-                                                    border: '2px solid var(--ds-gold)',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    overflow: 'hidden',
-                                                    background: 'rgba(0,0,0,0.3)'
-                                                }}>
-                                                    {selectedSkill.icon} {/* Assuming this is <img> or emoji */}
+                    // ... (rest of component)
+
+                    {/* --- MODALS (Kept Functional) --- */}
+                    <AnimatePresence>
+                        {selectedSkill && (
+                            <div className="ds-modal-overlay" onClick={() => setSelectedSkill(null)}>
+                                <motion.div
+                                    className="ds-scroll-popup"
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.9, opacity: 0 }}
+                                    onClick={(e) => e.stopPropagation()}
+                                    style={{
+                                        maxWidth: '1000px',
+                                        width: '90%',
+                                    }}
+                                >
+                                    <div className="ds-modal-inner">
+                                        <h2 style={{
+                                            margin: '0 0 1.5rem 0',
+                                            textTransform: 'uppercase',
+                                            borderBottom: '1px solid var(--ds-glass-border)',
+                                            paddingBottom: '1rem',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            Skill Detail
+                                            <button className="ds-modal-close" style={{ margin: 0, padding: '0.4rem 1.2rem', fontSize: '0.8rem' }} onClick={() => setSelectedSkill(null)}>Close</button>
+                                        </h2>
+
+                                        <div className="ds-skill-modal-layout">
+                                            {/* LEFT COLUMN: Skill Details (Preserved & Enhanced) */}
+                                            <div className="ds-skill-modal-left">
+                                                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                                                    <div style={{
+                                                        fontSize: '3rem',
+                                                        width: '80px',
+                                                        height: '80px',
+                                                        borderRadius: '50%',
+                                                        border: '2px solid var(--ds-gold)',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        overflow: 'hidden',
+                                                        background: 'rgba(0,0,0,0.3)'
+                                                    }}>
+                                                        {selectedSkill.icon}
+                                                    </div>
+                                                    <div>
+                                                        <h2 style={{ margin: 0, textTransform: 'uppercase', fontSize: '1.8rem', color: 'var(--ds-text)' }}>{selectedSkill.name}</h2>
+                                                        <div className="ds-modal-subtitle" style={{ color: 'var(--ds-gold)', fontWeight: 'bold' }}>Type: {selectedSkill.type}</div>
+                                                        <div className="ds-modal-subtitle" style={{ color: 'var(--ds-label)', fontSize: '0.9rem' }}>Level: {selectedSkill.level}</div>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h2 style={{ margin: 0, textTransform: 'uppercase', fontSize: '1.8rem', color: 'var(--ds-text)' }}>{selectedSkill.name}</h2>
-                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-gold)', fontWeight: 'bold' }}>Type: {selectedSkill.type}</div>
-                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-label)', fontSize: '0.9rem' }}>Level: {selectedSkill.level}</div>
-                                                </div>
+
+                                                <div className="ds-section-title" style={{ marginTop: '1rem' }}>Description</div>
+                                                <p className="ds-modal-desc" style={{ lineHeight: 1.8, fontSize: '1.05rem', color: 'rgba(255,255,255,0.9)' }}>
+                                                    {selectedSkill.description}
+                                                </p>
                                             </div>
 
-                                            <div className="ds-section-title" style={{ marginTop: '1rem' }}>Description</div>
-                                            <p className="ds-modal-desc" style={{ lineHeight: 1.8, fontSize: '1.05rem', color: 'rgba(255,255,255,0.9)' }}>
-                                                {selectedSkill.description}
-                                            </p>
+                                            {/* RIGHT COLUMN: Buff Accordion List */}
+                                            <div className="ds-skill-modal-right">
+                                                <div className="ds-section-title">Buffs & Effects</div>
+                                                <div className="ds-buff-accordion-list">
+                                                    {selectedSkill.buffs && selectedSkill.buffs.length > 0 ? (
+                                                        selectedSkill.buffs.map((buff: any, idx: number) => {
+                                                            const isExpanded = expandedBuffs[`${buff.name}-${idx}`];
+                                                            return (
+                                                                <div
+                                                                    key={`${buff.name}-${idx}`}
+                                                                    className={`ds-buff-accordion ${isExpanded ? 'expanded' : ''}`}
+                                                                >
+                                                                    <div
+                                                                        className="ds-buff-accordion-header"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            toggleBuff(`${buff.name}-${idx}`);
+                                                                        }}
+                                                                    >
+                                                                        <div className="ds-buff-icon-box">
+                                                                            {buff.icon ? (
+                                                                                <img src={buff.icon} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                                            ) : (
+                                                                                <span>⚡</span>
+                                                                            )}
+                                                                        </div>
+                                                                        <div className="ds-buff-name">{buff.name}</div>
+                                                                        <div className="ds-accordion-arrow">▼</div>
+                                                                    </div>
+                                                                    <div className="ds-buff-accordion-content">
+                                                                        <div className="ds-buff-desc">
+                                                                            {buff.description || "No description available."}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>No specific buffs.</span>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    )}
-                </AnimatePresence>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
 
-                {/* Buff Definition Nested Modal */}
-                <AnimatePresence>
-                    {selectedBuff && (
-                        <div className="ds-modal-overlay" style={{ zIndex: 11000 }} onClick={() => setSelectedBuff(null)}>
-                            <motion.div
-                                className="ds-scroll-popup"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                style={{ maxWidth: '400px', padding: '2rem' }}
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                <div className="ds-modal-inner" style={{ textAlign: 'center' }}>
-                                    {selectedBuff.icon && (
-                                        <div style={{ width: '64px', height: '64px', margin: '0 auto 1rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--ds-gold)' }}>
-                                            <img src={selectedBuff.icon} alt={selectedBuff.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        </div>
-                                    )}
-                                    <h3 style={{ textTransform: 'uppercase', color: 'var(--ds-gold)', marginTop: 0 }}>{selectedBuff.name}</h3>
-                                    <p style={{ lineHeight: 1.6, textAlign: 'left', marginTop: '1rem' }}>
-                                        {selectedBuff.description}
-                                    </p>
-                                    <button className="ds-modal-close" onClick={() => setSelectedBuff(null)}>Close</button>
-                                </div>
-                            </motion.div>
-                        </div>
-                    )}
-                </AnimatePresence>
-
-                {/* SPECIAL STATS MODAL */}
-                <AnimatePresence>
-                    {showSpecialStats && (
-                        <div className="ds-modal-overlay" onClick={() => setShowSpecialStats(false)}>
-                            <div className="ds-scroll-popup" onClick={(e) => e.stopPropagation()}>
-                                <div className="ds-modal-inner">
-                                    <h2 className="ds-modal-header">Advanced Analytics</h2>
-                                    <div className="ds-modal-stats-list">
-                                        {specialStats.map(stat => (
-                                            <div key={stat.label} className="ds-modal-stat-item">
-                                                <span className="label">{stat.label}</span>
-                                                <span className="val">{stat.val}</span>
-                                                <span className="spacer"></span>
+                    {/* Buff Definition Nested Modal */}
+                    <AnimatePresence>
+                        {selectedBuff && (
+                            <div className="ds-modal-overlay" style={{ zIndex: 11000 }} onClick={() => setSelectedBuff(null)}>
+                                <motion.div
+                                    className="ds-scroll-popup"
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    style={{ maxWidth: '400px', padding: '2rem' }}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <div className="ds-modal-inner" style={{ textAlign: 'center' }}>
+                                        {selectedBuff.icon && (
+                                            <div style={{ width: '64px', height: '64px', margin: '0 auto 1rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--ds-gold)' }}>
+                                                <img src={selectedBuff.icon} alt={selectedBuff.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                             </div>
-                                        ))}
+                                        )}
+                                        <h3 style={{ textTransform: 'uppercase', color: 'var(--ds-gold)', marginTop: 0 }}>{selectedBuff.name}</h3>
+                                        <p style={{ lineHeight: 1.6, textAlign: 'left', marginTop: '1rem' }}>
+                                            {selectedBuff.description}
+                                        </p>
+                                        <button className="ds-modal-close" onClick={() => setSelectedBuff(null)}>Close</button>
                                     </div>
-                                    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                                        <button className="ds-special-btn" onClick={() => setShowSpecialStats(false)}>Back to Stats</button>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* SPECIAL STATS MODAL */}
+                    <AnimatePresence>
+                        {showSpecialStats && (
+                            <div className="ds-modal-overlay" onClick={() => setShowSpecialStats(false)}>
+                                <div className="ds-scroll-popup" onClick={(e) => e.stopPropagation()}>
+                                    <div className="ds-modal-inner">
+                                        <h2 className="ds-modal-header">Advanced Analytics</h2>
+                                        <div className="ds-modal-stats-list">
+                                            {specialStats.map(stat => (
+                                                <div key={stat.label} className="ds-modal-stat-item">
+                                                    <span className="label">{stat.label}</span>
+                                                    <span className="val">{stat.val}</span>
+                                                    <span className="spacer"></span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                                            <button className="ds-special-btn" onClick={() => setShowSpecialStats(false)}>Back to Stats</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
-                </AnimatePresence>
+                        )}
+                    </AnimatePresence>
 
             </div>
         </div>
