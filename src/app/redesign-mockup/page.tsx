@@ -377,7 +377,7 @@ export default function MockupPage() {
 
                                 {selectedSkill.buffs && (
                                     <div style={{ marginBottom: '1rem' }}>
-                                        {selectedSkill.buffs.map((buff, i) => (
+                                        {selectedSkill.buffs.map((buff: string, i: number) => (
                                             <span
                                                 key={i}
                                                 className="ds-skill-buff-tag interactive"
