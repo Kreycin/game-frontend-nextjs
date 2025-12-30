@@ -65,8 +65,8 @@ const CHARACTERS = [
 ];
 
 export default function MockupPage() {
-    const [selectedSkill, setSelectedSkill] = useState(null);
-    const [selectedBuff, setSelectedBuff] = useState(null);
+    const [selectedSkill, setSelectedSkill] = useState<any>(null);
+    const [selectedBuff, setSelectedBuff] = useState<any>(null);
     const [showSpecialStats, setShowSpecialStats] = useState(false);
     const [starLevel, setStarLevel] = useState(4);
     const [expandedEnhancements, setExpandedEnhancements] = useState<Record<string | number, boolean>>({});
