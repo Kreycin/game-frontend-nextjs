@@ -114,7 +114,7 @@ export default function MockupPage() {
     }, []);
 
     // Resize handler
-    const startResizing = useCallback((e) => {
+    const startResizing = useCallback((e: any) => {
         isResizing.current = true;
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('mouseup', stopResizing);
@@ -124,7 +124,7 @@ export default function MockupPage() {
         document.body.style.cursor = 'col-resize';
     }, [stopResizing]);
 
-    const handleMove = useCallback((e) => {
+    const handleMove = useCallback((e: any) => {
         if (!isResizing.current) return;
         let clientX;
         if (e.type === 'touchmove') {
