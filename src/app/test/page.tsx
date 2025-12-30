@@ -7,7 +7,7 @@ import { MOCK_CHARACTER } from "@/utils/mockData";
 
 const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
 
-const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
+
 
 // Force static generation with revalidation (ISR)
 export const revalidate = 3600;
