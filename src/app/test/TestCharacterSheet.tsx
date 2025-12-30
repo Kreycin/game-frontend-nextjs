@@ -477,40 +477,87 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.9, opacity: 0 }}
                                 onClick={(e) => e.stopPropagation()}
+                                style={{
+                                    maxWidth: '1000px', // Wider modal for 2-column layout
+                                    width: '90%',
+                                }}
                             >
                                 <div className="ds-modal-inner">
-                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                        <span style={{ fontSize: '3rem' }}>{selectedSkill.icon}</span>
-                                        <div>
-                                            <h2 style={{ margin: 0, textTransform: 'uppercase' }}>{selectedSkill.name}</h2>
-                                            <div className="ds-modal-subtitle">Type: {selectedSkill.type}</div>
+                                    <h2 style={{
+                                        margin: '0 0 1.5rem 0',
+                                        textTransform: 'uppercase',
+                                        borderBottom: '1px solid var(--ds-glass-border)',
+                                        paddingBottom: '1rem',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                        Skill Detail
+                                        <button className="ds-modal-close" style={{ margin: 0, padding: '0.4rem 1.2rem', fontSize: '0.8rem' }} onClick={() => setSelectedSkill(null)}>Close</button>
+                                    </h2>
+
+                                    <div className="ds-skill-modal-layout">
+                                        {/* LEFT COLUMN: Buff Bento Grid */}
+                                        <div className="ds-skill-modal-left">
+                                            <div className="ds-section-title">Buffs & Effects</div>
+                                            <div className="ds-buff-bento-grid">
+                                                {selectedSkill.buffs && selectedSkill.buffs.length > 0 ? (
+                                                    selectedSkill.buffs.map((buff: any, idx: number) => (
+                                                        <div
+                                                            key={`${buff.name}-${idx}`}
+                                                            className="ds-buff-card"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                setSelectedBuff(buff);
+                                                            }}
+                                                        >
+                                                            <div className="ds-buff-icon-box">
+                                                                {buff.icon ? (
+                                                                    <img src={buff.icon} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                                ) : (
+                                                                    <span>⚡</span>
+                                                                )}
+                                                            </div>
+                                                            <div className="ds-buff-name">{buff.name}</div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>No specific buffs.</span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* RIGHT COLUMN: Skill Details */}
+                                        <div className="ds-skill-modal-right">
+                                            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                                                <div style={{
+                                                    fontSize: '3rem',
+                                                    width: '80px',
+                                                    height: '80px',
+                                                    borderRadius: '50%',
+                                                    border: '2px solid var(--ds-gold)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    overflow: 'hidden',
+                                                    background: 'rgba(0,0,0,0.3)'
+                                                }}>
+                                                    {selectedSkill.icon} {/* Assuming this is <img> or emoji */}
+                                                </div>
+                                                <div>
+                                                    <h2 style={{ margin: 0, textTransform: 'uppercase', fontSize: '1.8rem', color: 'var(--ds-text)' }}>{selectedSkill.name}</h2>
+                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-gold)', fontWeight: 'bold' }}>Type: {selectedSkill.type}</div>
+                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-label)', fontSize: '0.9rem' }}>Level: {selectedSkill.level}</div>
+                                                </div>
+                                            </div>
+
+                                            <div className="ds-section-title" style={{ marginTop: '1rem' }}>Description</div>
+                                            <p className="ds-modal-desc" style={{ lineHeight: 1.8, fontSize: '1.05rem', color: 'rgba(255,255,255,0.9)' }}>
+                                                {selectedSkill.description}
+                                            </p>
                                         </div>
                                     </div>
-                                    <p className="ds-modal-desc">{selectedSkill.description}</p>
-
-                                    {/* Buff Tags */}
-                                    <div style={{ marginBottom: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                        {selectedSkill.buffs && selectedSkill.buffs.length > 0 ? (
-                                            selectedSkill.buffs.map((buff: any, idx: number) => (
-                                                <span
-                                                    key={`${buff.name}-${idx}`}
-                                                    className="ds-skill-buff-tag interactive"
-                                                    style={{ cursor: 'pointer', zIndex: 11002, position: 'relative' }}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        setSelectedBuff(buff);
-                                                    }}
-                                                >
-                                                    {buff.name} ⓘ
-                                                </span>
-                                            ))
-                                        ) : (
-                                            <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>No specific buffs.</span>
-                                        )}
-                                    </div>
-
-                                    <button className="ds-modal-close" onClick={() => setSelectedSkill(null)}>Close</button>
                                 </div>
                             </motion.div>
                         </div>
