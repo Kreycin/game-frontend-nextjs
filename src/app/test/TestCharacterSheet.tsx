@@ -583,33 +583,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                     )}
                 </AnimatePresence>
 
-                {/* Buff Definition Nested Modal */}
-                <AnimatePresence>
-                    {selectedBuff && (
-                        <div className="ds-modal-overlay" style={{ zIndex: 11000 }} onClick={() => setSelectedBuff(null)}>
-                            <motion.div
-                                className="ds-scroll-popup"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                style={{ maxWidth: '400px', padding: '2rem' }}
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                <div className="ds-modal-inner" style={{ textAlign: 'center' }}>
-                                    {selectedBuff.icon && (
-                                        <div style={{ width: '64px', height: '64px', margin: '0 auto 1rem', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--ds-gold)' }}>
-                                            <img src={selectedBuff.icon} alt={selectedBuff.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        </div>
-                                    )}
-                                    <h3 style={{ textTransform: 'uppercase', color: 'var(--ds-gold)', marginTop: 0 }}>{selectedBuff.name}</h3>
-                                    <p style={{ lineHeight: 1.6, textAlign: 'left', marginTop: '1rem' }}>
-                                        {selectedBuff.description}
-                                    </p>
-                                    <button className="ds-modal-close" onClick={() => setSelectedBuff(null)}>Close</button>
-                                </div>
-                            </motion.div>
-                        </div>
-                    )}
-                </AnimatePresence>
+
 
                 {/* SPECIAL STATS MODAL */}
                 <AnimatePresence>
