@@ -21,7 +21,7 @@
     --ds-radius-lg: 28px;
     --ds-radius-md: 18px;
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --bento-gap: 1.5rem;
+    --bento-gap: 3rem;
 }
 
 /* ================== LAYOUT ================== */
@@ -181,7 +181,7 @@
     font-size: 1.4rem;
     border-left: 10px solid var(--ds-gold);
     border-radius: var(--ds-radius-lg);
-    margin-bottom: 1.5rem;
+    margin-bottom: 3rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.05);
     font-weight: 900;
     text-transform: uppercase;
@@ -222,7 +222,7 @@
     border-radius: var(--ds-radius-lg);
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 3rem;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(25px);
     margin-top: var(--bento-gap);
@@ -336,9 +336,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 0;
+    padding: 2.5rem 0;
     border-bottom: 1px solid var(--ds-glass-border);
-    margin-bottom: 1.5rem;
+    margin-bottom: 3rem;
 }
 
 .ds-name-stack {
@@ -544,7 +544,7 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
-    gap: 1.5rem;
+    gap: 3rem;
     padding: 1rem 0;
     animation: fadeIn 0.5s 0.5s backwards;
 }
@@ -608,7 +608,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     /* Bento Grid Style: Split stats into 2 cols */
-    gap: 1.5rem;
+    gap: 3rem;
     background: var(--ds-parchment);
     /* background-image removed for clarity */
     padding: 2.5rem;
@@ -656,7 +656,7 @@
     background: var(--ds-parchment);
     /* background-image removed for clarity */
     border-radius: var(--ds-radius-lg);
-    gap: 1.5rem;
+    gap: 3rem;
     animation: fadeIn 0.5s 0.9s backwards;
     border: 1px solid var(--ds-glass-border);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);

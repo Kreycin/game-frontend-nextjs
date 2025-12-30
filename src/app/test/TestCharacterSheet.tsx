@@ -381,7 +381,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
 
                     {/* Combat Skills */}
                     <div className="ds-section">
-                        <div className="ds-section-header">Combat Skills</div>
+                        <div className="ds-section-header">Skills</div>
                         <div className="ds-skill-row">
                             {skills.map((skill, index) => (
                                 <div key={index} className="ds-skill-icon-frame" onClick={() => setSelectedSkill(skill)}>
@@ -484,7 +484,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                             >
                                 <div className="ds-modal-inner">
                                     <h2 style={{
-                                        margin: '0 0 1.5rem 0',
+                                        margin: '0 0 3rem 0',
                                         textTransform: 'uppercase',
                                         borderBottom: '1px solid var(--ds-glass-border)',
                                         paddingBottom: '1rem',
@@ -496,10 +496,10 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         <button className="ds-modal-close" style={{ margin: 0, padding: '0.4rem 1.2rem', fontSize: '0.8rem' }} onClick={() => setSelectedSkill(null)}>Close</button>
                                     </h2>
 
-                                    <div className="ds-skill-modal-layout" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '2rem', maxHeight: '60vh' }}>
+                                    <div className="ds-skill-modal-layout" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '3rem', maxHeight: '60vh' }}>
                                         {/* LEFT COLUMN: Skill Details (Preserved & Enhanced) */}
                                         <div className="ds-skill-modal-left" style={{ overflowY: 'auto', paddingRight: '0.5rem', maxHeight: '60vh' }}>
-                                            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex', gap: '3rem', alignItems: 'center' }}>
                                                 <div style={{
                                                     fontSize: '3rem',
                                                     width: '80px',
