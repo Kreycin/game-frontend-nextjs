@@ -794,17 +794,20 @@
 }
 
 /* ================== MODALS ================== */
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.85);
-backdrop-filter: blur(15px);
-z-index: 10000;
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 2rem;
-animation: fadeIn 0.3s ease-out;
+.ds-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .ds-scroll-popup {
