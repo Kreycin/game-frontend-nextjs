@@ -298,6 +298,13 @@
     /* Balances the label column */
 }
 
+.ds-modal-stats-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
 .ds-modal-stat-item {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -1096,6 +1103,7 @@
     box-shadow: 0 0 20px var(--ds-gold-glow);
     border-color: #fff;
 }
+
 /* ================== MOBILE RESPONSIVENESS ================== */
 @media (max-width: 768px) {
     .mockup-container {
@@ -1103,7 +1111,8 @@
         flex-direction: column !important;
         height: auto !important;
         overflow: visible !important;
-        grid-template-columns: 1fr !important; /* Force override */
+        grid-template-columns: 1fr !important;
+        /* Force override */
     }
 
     .ds-resizer {
@@ -1115,7 +1124,8 @@
         height: auto !important;
         overflow: visible !important;
         padding-bottom: 2rem !important;
-        max-height: none !important; /* Allow full expansion */
+        max-height: none !important;
+        /* Allow full expansion */
     }
 
     /* Adjust Modal for Mobile */
@@ -1156,6 +1166,7 @@
 
 /* ================== MOBILE REORDERING & SCALING ================== */
 @media (max-width: 768px) {
+
     /* 1. Scale Down Everything by 20% (assuming base 16px -> 13px) */
     html {
         font-size: 13px !important;
@@ -1170,7 +1181,8 @@
 
     .left-column-scroll,
     .right-panel {
-        display: contents !important; /* Unwrap contents so they become siblings */
+        display: contents !important;
+        /* Unwrap contents so they become siblings */
     }
 
     /* 3. Define Specific Order */
@@ -1184,18 +1196,22 @@
     /* Role & Element are in .ds-level-row */
     .ds-level-row {
         order: 2 !important;
-        justify-content: center !important; /* Center align on mobile */
+        justify-content: center !important;
+        /* Center align on mobile */
         margin-bottom: 2rem !important;
     }
 
     /* Art Image */
     .ds-art-frame {
         order: 3 !important;
-        min-height: auto !important; /* Reset min-height */
+        min-height: auto !important;
+        /* Reset min-height */
         margin-bottom: 2rem !important;
     }
+
     .ds-art-img {
-        max-height: 50vh !important; /* Reduce height on mobile */
+        max-height: 50vh !important;
+        /* Reduce height on mobile */
     }
 
     /* Skills */
@@ -1216,10 +1232,11 @@
     /* Video */
     .ds-video-container {
         order: 7 !important;
-        order: 99 !important; /* Let's push Video/Comments to end explicitly if needed */
+        order: 99 !important;
+        /* Let's push Video/Comments to end explicitly if needed */
         margin: 2rem 0 !important;
     }
-    
+
     /* Comments */
     .ds-comment-container {
         order: 8 !important;
@@ -1227,12 +1244,13 @@
     }
 
     /* Fix: Ensure sections have margin when flattened */
-    .ds-section, 
-    .ds-header-area, 
+    .ds-section,
+    .ds-header-area,
     .ds-level-row {
-        width: 100%; /* Ensure full width */
+        width: 100%;
+        /* Ensure full width */
     }
-    
+
     .ds-resizer {
         display: none !important;
     }
@@ -1240,45 +1258,55 @@
 
 /* ================== MOBILE MODAL OVERFLOW FIX ================== */
 @media (max-width: 768px) {
+
     /* Reset Overlay to allow full screen child */
     .ds-modal-overlay {
         padding: 0 !important;
         align-items: flex-start !important;
-        overflow: hidden !important; /* Prevent double scroll */
+        overflow: hidden !important;
+        /* Prevent double scroll */
     }
 
     /* Force Full Screen Modal */
     .ds-scroll-popup {
         width: 100vw !important;
-        height: 100dvh !important; /* Dynamic viewport height to avoid bar issues */
+        height: 100dvh !important;
+        /* Dynamic viewport height to avoid bar issues */
         max-width: none !important;
         max-height: none !important;
         border-radius: 0 !important;
         border: none !important;
         margin: 0 !important;
         transform: none !important;
-        padding-bottom: 5rem !important; /* Extra padding for bottom overlap */
+        padding-bottom: 5rem !important;
+        /* Extra padding for bottom overlap */
         overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+        -webkit-overflow-scrolling: touch;
+        /* Smooth scroll on iOS */
     }
 }
 
 /* ================== MOBILE TEXT OVERFLOW FIX ================== */
 @media (max-width: 768px) {
     .ds-modal-stat-item .label {
-        white-space: normal !important; /* Allow wrapping */
-        font-size: 0.75rem !important; /* Slightly smaller text */
-        letter-spacing: 0.05rem !important; /* Tighter spacing */
+        white-space: normal !important;
+        /* Allow wrapping */
+        font-size: 0.75rem !important;
+        /* Slightly smaller text */
+        letter-spacing: 0.05rem !important;
+        /* Tighter spacing */
     }
 
     .ds-modal-stat-item {
         /* Optional: Stack if really needed, but wrapping should suffice */
-        padding: 0.8rem 0.5rem !important; /* Reduce padding */
+        padding: 0.8rem 0.5rem !important;
+        /* Reduce padding */
     }
 }
 
 /* ================== MOBILE STATS MODAL 2-COL ================== */
 @media (max-width: 768px) {
+
     /* 1. Turn List into 2-Column Grid */
     .ds-modal-stats-list {
         display: grid !important;
@@ -1294,26 +1322,31 @@
         justify-content: center !important;
         text-align: center !important;
         padding: 1rem 0.5rem !important;
-        height: 100% !important; /* Uniform height */
+        height: 100% !important;
+        /* Uniform height */
     }
 
     /* 3. Adjust Internal Elements */
     .ds-modal-stat-item .label {
         grid-column: auto !important;
         margin-bottom: 0.5rem !important;
-        font-size: 0.7rem !important; /* Smaller label */
-        white-space: normal !important; /* Wrap allowed */
+        font-size: 0.7rem !important;
+        /* Smaller label */
+        white-space: normal !important;
+        /* Wrap allowed */
         text-align: center !important;
         width: 100%;
     }
 
     .ds-modal-stat-item .val {
         grid-column: auto !important;
-        font-size: 1.1rem !important; /* Prominent value */
+        font-size: 1.1rem !important;
+        /* Prominent value */
         padding: 0 !important;
     }
 
     .ds-modal-stat-item .spacer {
-        display: none !important; /* Remove spacer */
+        display: none !important;
+        /* Remove spacer */
     }
 }
