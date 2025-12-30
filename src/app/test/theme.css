@@ -852,19 +852,23 @@
     box-shadow: 0 0 20px var(--ds-gold-glow);
 }
 
-/* ================== SKILL MODAL REDESIGN (Iteration 2) ================== */
+/* ================== SKILL MODAL REDESIGN (Iteration 2 & 3) ================== */
 .ds-skill-modal-layout {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    /* Left: Content (Flexible), Right: Buffs (Fixed) */
-    gap: 2.5rem;
+    grid-template-columns: 1.2fr 1fr;
+    /* Balanced columns */
+    gap: 2rem;
     min-height: 400px;
+    max-height: 60vh;
+    /* Limit total height for scrolling */
 }
 
 /* Mobile responsive for modal */
 @media (max-width: 768px) {
     .ds-skill-modal-layout {
         grid-template-columns: 1fr;
+        max-height: 80vh;
+        overflow-y: auto;
     }
 }
 
@@ -873,6 +877,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    overflow-y: auto;
+    /* Allow scrolling if description is very long */
 }
 
 .ds-skill-modal-right {
@@ -881,6 +887,33 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow-y: auto;
+    /* Enable Scroll for Buffs */
+    padding-right: 10px;
+    /* Space for scrollbar */
+}
+
+/* Custom Scrollbar for Modal Columns */
+.ds-skill-modal-right::-webkit-scrollbar,
+.ds-skill-modal-left::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ds-skill-modal-right::-webkit-scrollbar-track,
+.ds-skill-modal-left::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.ds-skill-modal-right::-webkit-scrollbar-thumb,
+.ds-skill-modal-left::-webkit-scrollbar-thumb {
+    background: var(--ds-gold);
+    border-radius: 4px;
+}
+
+.ds-skill-modal-right::-webkit-scrollbar-thumb:hover,
+.ds-skill-modal-left::-webkit-scrollbar-thumb:hover {
+    background: #fff;
 }
 
 /* Accordion Buff List */
