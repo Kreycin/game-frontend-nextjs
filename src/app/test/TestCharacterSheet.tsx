@@ -399,8 +399,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                 <div className="ds-enh-item" key={i}>
                                     <div className="ds-enh-lvl">
                                         {enh.Enhancement_Icon?.url ?
-                                            <img src={enh.Enhancement_Icon.url} alt="icon" style={{ width: '64px', height: '64px', objectFit: 'contain', marginTop: '0.5rem' }} />
-                                            : `Lv.${(i + 1) * 10}`}
+                                            <img src={enh.Enhancement_Icon.url} alt="icon" style={{ width: '80px', height: '80px', minWidth: '80px', objectFit: 'contain', marginTop: '0.2rem' }} />
+                                            : <div style={{ width: '80px', textAlign: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--ds-red)' }}>Lv.{((i + 1) * 10)}</div>}
                                     </div>
                                     <div>
                                         <div className="ds-enh-text">
@@ -440,19 +440,26 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                     <p className="ds-modal-desc">{selectedSkill.description}</p>
 
                                     {/* Buff Tags */}
-                                    <div style={{ marginBottom: '1rem' }}>
-                                        {selectedSkill.buffs && selectedSkill.buffs.map((buff: string) => (
-                                            <span
-                                                key={buff}
-                                                className="ds-skill-buff-tag interactive"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedBuff(buff);
-                                                }}
-                                            >
-                                                {buff} ⓘ
-                                            </span>
-                                        ))}
+                                    {/* Buff Tags */}
+                                    <div style={{ marginBottom: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                        {selectedSkill.buffs && selectedSkill.buffs.length > 0 ? (
+                                            selectedSkill.buffs.map((buff: string, idx: number) => (
+                                                <span
+                                                    key={`${buff}-${idx}`}
+                                                    className="ds-skill-buff-tag interactive"
+                                                    style={{ cursor: 'pointer', zIndex: 11002, position: 'relative' }}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        setSelectedBuff(buff || "Unknown Buff");
+                                                    }}
+                                                >
+                                                    {buff || "Unknown Buff"} ⓘ
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>No specific buffs.</span>
+                                        )}
                                     </div>
 
                                     <button className="ds-modal-close" onClick={() => setSelectedSkill(null)}>Close</button>
