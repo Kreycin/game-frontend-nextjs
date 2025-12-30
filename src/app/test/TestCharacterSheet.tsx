@@ -142,7 +142,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                 id: idx,
                 name: skillName,
                 description: description,
-                type: "Active", // Placeholder
+                type: desc.skill?.Type || desc.skill?.Skill_Type || "Active",
                 raw: desc,
                 // Use real icon if available (rendered as img), else mock emoji
                 icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
@@ -503,14 +503,15 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         <button className="ds-modal-close" style={{ margin: 0, padding: '0.4rem 1.2rem', fontSize: '0.8rem' }} onClick={() => setSelectedSkill(null)}>Close</button>
                                     </h2>
 
-                                    <div className="ds-skill-modal-layout">
+                                    <div className="ds-skill-modal-layout" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '2rem', maxHeight: '60vh' }}>
                                         {/* LEFT COLUMN: Skill Details (Preserved & Enhanced) */}
-                                        <div className="ds-skill-modal-left">
+                                        <div className="ds-skill-modal-left" style={{ overflowY: 'auto', paddingRight: '0.5rem', maxHeight: '60vh' }}>
                                             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                                                 <div style={{
                                                     fontSize: '3rem',
                                                     width: '80px',
                                                     height: '80px',
+                                                    flexShrink: 0,
                                                     borderRadius: '50%',
                                                     border: '2px solid var(--ds-gold)',
                                                     display: 'flex',
@@ -522,8 +523,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                                     {selectedSkill.icon}
                                                 </div>
                                                 <div>
-                                                    <h2 style={{ margin: 0, textTransform: 'uppercase', fontSize: '1.8rem', color: 'var(--ds-text)' }}>{selectedSkill.name}</h2>
-                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-gold)', fontWeight: 'bold' }}>Type: {selectedSkill.type}</div>
+                                                    <h2 style={{ margin: 0, textTransform: 'uppercase', fontSize: '1.8rem', color: 'var(--ds-text)', wordBreak: 'break-word', lineHeight: 1.1 }}>{selectedSkill.name}</h2>
+                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-gold)', fontWeight: 'bold', marginTop: '0.3rem' }}>Type: {selectedSkill.type}</div>
                                                     <div className="ds-modal-subtitle" style={{ color: 'var(--ds-label)', fontSize: '0.9rem' }}>Level: {selectedSkill.level}</div>
                                                 </div>
                                             </div>
@@ -535,7 +536,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         </div>
 
                                         {/* RIGHT COLUMN: Buff Accordion List */}
-                                        <div className="ds-skill-modal-right">
+                                        <div className="ds-skill-modal-right" style={{ overflowY: 'auto', paddingRight: '10px', maxHeight: '60vh' }}>
                                             <div className="ds-section-title">Buffs & Effects</div>
                                             <div className="ds-buff-accordion-list">
                                                 {selectedSkill.buffs && selectedSkill.buffs.length > 0 ? (
