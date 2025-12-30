@@ -26,7 +26,7 @@ const COMMENTS = [
     { user: "Nezuko", text: "Mmrph! ✨", time: "1d ago" },
 ];
 
-const BUFF_DEFINITIONS = {
+const BUFF_DEFINITIONS: Record<string, string> = {
     'Electrocute': 'Deals continuous Lightning DMG equal to 40% of ATK each turn. Reduces healing received by 20%.',
     'Stun': 'Target cannot take any action. Cooldowns do not recover while stunned.',
     'SPD Up': 'Increases Speed by 40%.',
