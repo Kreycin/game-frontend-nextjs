@@ -74,6 +74,14 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
     const getElement = () => character.Element || "Unknown";
     const getRole = () => character.Role || "Unknown";
 
+    // Robust YouTube Embed Helper (Parity with Homepage)
+    const getYouTubeEmbedUrl = (url: string | undefined | null): string | null => {
+        if (!url) return null;
+        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const match = url.match(regex);
+        return match?.[1] ? `https://www.youtube.com/embed/${match[1]}` : null;
+    };
+
     // --- Helper: Mock Buffs based on Element ---
     const getMockBuffs = (elementName: string): string[] => {
         const el = elementName.toLowerCase();
@@ -244,12 +252,12 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
 
                     <div className="ds-video-container">
                         <div className="ds-sub-header">Video Showcase</div>
-                        {character.YouTube_URL ? (
+                        {getYouTubeEmbedUrl(character.YouTube_URL) ? (
                             <div className="video-placeholder" style={{ padding: 0, overflow: 'hidden', aspectRatio: '16/9' }}>
                                 <iframe
                                     width="100%"
                                     height="100%"
-                                    src={character.YouTube_URL.replace("watch?v=", "embed/")}
+                                    src={getYouTubeEmbedUrl(character.YouTube_URL)!}
                                     title="Character Showcase"
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
