@@ -107,7 +107,7 @@ export default async function TestPage() {
 
     return (
         <TestCharacterSheet
-            character={allCharacters[0]}
+            allCharacters={allCharacters}
         />
     );
 }

@@ -22,11 +22,18 @@ const BUFF_DEFINITIONS: Record<string, string> = {
 };
 
 interface TestCharacterSheetProps {
-    character: Character;
+    allCharacters: Character[];
 }
 
-export default function TestCharacterSheet({ character }: TestCharacterSheetProps) {
+export default function TestCharacterSheet({ allCharacters }: TestCharacterSheetProps) {
     // --- Enhanced State & Refs ---
+    const [selectedCharIdx, setSelectedCharIdx] = useState(0);
+    const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
+    const switcherRef = useRef<HTMLDivElement>(null);
+
+    // Derived Character
+    const character = allCharacters[selectedCharIdx] || allCharacters[0];
+
     const [rightPanelWidth, setRightPanelWidth] = useState(600); // Default width
     const isResizing = useRef(false);
     const leftPanelRef = useRef<HTMLDivElement>(null); // For scroll parallax
@@ -77,22 +84,31 @@ export default function TestCharacterSheet({ character }: TestCharacterSheetProp
         return ["Stun", "Armor Break"]; // Default
     };
 
-    // Extract skills from the first Star Level for now
+    // Extract skills from the first Star Level
     const getSkills = () => {
         if (!character.Star_Levels || character.Star_Levels.length === 0) return [];
         return character.Star_Levels[0].skill_descriptions?.map((desc, idx) => ({
-            id: idx, // Adding ID for key
+            id: idx,
             name: desc.skill?.name || "Unknown Skill",
-            // Convert RichTextBlock[] to string for simple display
+            // Convert RichTextBlock[] to string
             description: desc.Description?.map((block: RichTextBlock) => block.children.map((c: any) => c.text).join("")).join("\n") || "",
-            type: "Active", // Placeholder, logic needed if type exists
+            type: "Active", // Placeholder
             raw: desc,
-            icon: idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥", // Mock icons
-            buffs: getMockBuffs(character.Element || "Unknown")
+            // Use real icon if available (rendered as img), else mock emoji
+            icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '1em', height: '1em', objectFit: 'contain', display: 'inline-block', verticalAlign: 'middle' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
+            // Map real effects names
+            buffs: desc.skill?.effects && desc.skill.effects.length > 0 ? desc.skill.effects.map((e: any) => e.Name) : getMockBuffs(character.Element || "Unknown")
         })) || [];
     };
 
     const skills = getSkills();
+
+    // Helper to get Enhancements
+    const getEnhancements = () => {
+        if (!character.Star_Levels || character.Star_Levels.length === 0) return [];
+        return character.Star_Levels[0].enhancements || [];
+    };
+    const enhancements = getEnhancements();
 
     // --- Helper: Star Badge Logic ---
     const renderStarBadge = () => (
@@ -141,7 +157,15 @@ export default function TestCharacterSheet({ character }: TestCharacterSheetProp
 
     // Cleanup listeners on unmount
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (switcherRef.current && !switcherRef.current.contains(event.target as Node)) {
+                setIsSwitcherOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+
         return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('mousemove', handleMove);
             document.removeEventListener('mouseup', stopResizing);
             document.removeEventListener('touchmove', handleMove);
@@ -220,10 +244,23 @@ export default function TestCharacterSheet({ character }: TestCharacterSheetProp
 
                     <div className="ds-video-container">
                         <div className="ds-sub-header">Video Showcase</div>
-                        <div className="video-placeholder">
-                            <span>▶ Play Gameplay Video</span>
-                            <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>Demon Slayer: Eternal Destiny</p>
-                        </div>
+                        {character.YouTube_URL ? (
+                            <div className="video-placeholder" style={{ padding: 0, overflow: 'hidden', aspectRatio: '16/9' }}>
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src={character.YouTube_URL.replace("watch?v=", "embed/")}
+                                    title="Character Showcase"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        ) : (
+                            <div className="video-placeholder">
+                                <span>No Video Available</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="ds-comment-container">
@@ -268,8 +305,35 @@ export default function TestCharacterSheet({ character }: TestCharacterSheetProp
                     </div>
 
                     <div className="ds-header-area">
-                        <div className="ds-name-stack">
-                            <h1 className="ds-character-name">{character.Name}</h1>
+                        <div className="ds-name-stack" ref={switcherRef} style={{ position: 'relative' }}>
+                            <div
+                                className="ds-character-title-row"
+                                onClick={() => setIsSwitcherOpen(!isSwitcherOpen)}
+                                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                            >
+                                <h1 className="ds-character-name" style={{ margin: 0 }}>{character.Name}</h1>
+                                <span className="ds-switcher-arrow">{isSwitcherOpen ? '▲' : '▼'}</span>
+                            </div>
+
+                            {isSwitcherOpen && (
+                                <div className="ds-switcher-dropdown">
+                                    {allCharacters.map((char, index) => (
+                                        <div
+                                            key={char.id}
+                                            className={`ds-switcher-item ${index === selectedCharIdx ? 'active' : ''}`}
+                                            onClick={() => {
+                                                setSelectedCharIdx(index);
+                                                setIsSwitcherOpen(false);
+                                            }}
+                                        >
+                                            <span className="ds-switcher-icon">{char.Element || "?"}</span>
+                                            <span className="ds-switcher-name">{char.Name}</span>
+                                            {index === selectedCharIdx && <span className="ds-switcher-check">✓</span>}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
                             {renderStarBadge()}
                         </div>
                     </div>
@@ -319,22 +383,28 @@ export default function TestCharacterSheet({ character }: TestCharacterSheetProp
                         </div>
                     </div>
 
-                    {/* Enhancement Timeline (Mocked for Visual Parity) */}
+                    {/* Enhancement Timeline (Real Data) */}
                     <div className="ds-section">
                         <div className="ds-section-header">Enhancement Timeline</div>
                         <div className="ds-enhancement-timeline">
-                            <div className="ds-enh-item">
-                                <div className="ds-enh-lvl">Lv.10</div>
-                                <div>
-                                    <div className="ds-enh-text">Unlocks [Thunderclap] basic mastery.</div>
+                            {enhancements.length > 0 ? enhancements.map((enh: any, i: number) => (
+                                <div className="ds-enh-item" key={i}>
+                                    <div className="ds-enh-lvl">
+                                        {enh.Enhancement_Icon?.url ?
+                                            <img src={enh.Enhancement_Icon.url} alt="icon" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+                                            : `Lv.${(i + 1) * 10}`}
+                                    </div>
+                                    <div>
+                                        <div className="ds-enh-text">
+                                            {enh.Description?.map((block: any, bi: number) => (
+                                                <span key={bi}>{block.children.map((c: any) => c.text).join("")}</span>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="ds-enh-item">
-                                <div className="ds-enh-lvl">Lv.30</div>
-                                <div>
-                                    <div className="ds-enh-text">Increases CRIT Rate by 15%.</div>
-                                </div>
-                            </div>
+                            )) : (
+                                <div style={{ padding: '1rem', color: 'rgba(255,255,255,0.5)' }}>No enhancements data available.</div>
+                            )}
                         </div>
                     </div>
 
