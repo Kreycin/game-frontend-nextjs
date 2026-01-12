@@ -116,7 +116,6 @@ export default async function HomePage() {
 
   return (
     <main className="relative min-h-screen">
-      <Navbar />
       <TestCharacterSheet allCharacters={allCharacters} />
     </main>
   );

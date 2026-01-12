@@ -198,60 +198,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
             </div>
 
             {/* Main Content */}
-            <div className="relative z-10 pt-8 pb-20">
-                {/* Floating Theme Selector - Dropdown Style */}
-                <div className="fixed top-4 right-4 z-50">
-                    <div className="relative">
-                        {/* Trigger Button */}
-                        <motion.button
-                            onClick={() => setThemeOpen(!themeOpen)}
-                            className="flex items-center gap-2 px-4 py-2 glass backdrop-blur-xl rounded-xl text-white/80 hover:text-white transition-colors"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <Palette className="w-4 h-4" />
-                            <span className="font-medium">{themes.find(t => t.value === theme)?.label || 'Dark'}</span>
-                            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${themeOpen ? 'rotate-180' : ''}`} />
-                        </motion.button>
+            <div className="relative z-10 pt-20 pb-20">
 
-                        {/* Dropdown Menu */}
-                        <AnimatePresence>
-                            {themeOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    transition={{ duration: 0.15 }}
-                                    className="absolute top-full right-0 mt-2 glass rounded-xl shadow-2xl overflow-hidden min-w-[160px]"
-                                >
-                                    {themes.map((t) => (
-                                        <button
-                                            key={t.value}
-                                            onClick={() => {
-                                                setTheme(t.value);
-                                                setThemeOpen(false);
-                                            }}
-                                            className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-white/10 transition-colors ${theme === t.value ? 'bg-white/5' : ''
-                                                }`}
-                                        >
-                                            <div
-                                                className="w-4 h-4 rounded-full border border-white/30 flex-shrink-0"
-                                                style={{ backgroundColor: t.color }}
-                                            />
-                                            <span className="text-xl">{t.icon}</span>
-                                            <span className="flex-1 text-left text-white/90 font-medium">{t.label}</span>
-                                            {theme === t.value && (
-                                                <svg className="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                </svg>
-                                            )}
-                                        </button>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-                </div>
 
                 <motion.div
                     className="container mx-auto px-4 lg:px-8 py-8 max-w-7xl"
@@ -364,7 +312,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                         >
                             {/* Tags */}
                             <div className="flex flex-wrap gap-3">
-                                <span className="px-4 py-2 rounded-full bg-gradient-to-r from-accent to-primary text-white font-bold text-sm border-2 border-gold shadow-lg">
+                                <span className="px-4 py-2 rounded-full bg-gradient-to-r from-accent to-primary text-foreground font-bold text-sm border-2 border-gold shadow-lg">
                                     {getRole()}
                                 </span>
                                 <span className="px-4 py-2 rounded-full bg-white/5 border border-gold/50 text-gold font-semibold text-sm flex items-center gap-2">
@@ -389,8 +337,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
 
                             {/* Skills Section */}
                             <div>
-                                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <Sparkles className="w-5 h-5 text-gold" />
+                                <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
                                     Skills
                                 </h2>
                                 <div className="grid grid-cols-4 gap-4 lg:gap-6">
@@ -419,12 +366,12 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                                         )}
                                                     </motion.div>
                                                     <motion.span
-                                                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-accent to-primary text-white text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full border border-gold shadow-md whitespace-nowrap"
+                                                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-accent to-primary text-foreground text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full border border-gold shadow-md whitespace-nowrap"
                                                     >
                                                         Lv.{skill.level}
                                                     </motion.span>
                                                 </div>
-                                                <span className="text-xs lg:text-sm font-medium text-white/70 text-center max-w-[70px] lg:max-w-[90px] truncate">
+                                                <span className="text-xs lg:text-sm font-medium text-foreground/70 text-center max-w-[70px] lg:max-w-[90px] truncate">
                                                     {skill.name}
                                                 </span>
                                             </div>
@@ -435,16 +382,15 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
 
                             {/* Basic Attributes */}
                             <div>
-                                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <Shield className="w-5 h-5 text-gold" />
+                                <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
                                     Basic Attributes
                                 </h2>
                                 <div className="grid grid-cols-2 gap-3">
                                     {[
-                                        { label: "HP", value: character.HP, icon: Heart, color: "text-red-400" },
-                                        { label: "ATK", value: character.ATK, icon: Sword, color: "text-orange-400" },
-                                        { label: "DEF", value: character.DEF, icon: Shield, color: "text-blue-400" },
-                                        { label: "SPD", value: character.SPD, icon: Zap, color: "text-yellow-400" }
+                                        { label: "HP", value: character.HP, color: "text-red-400" },
+                                        { label: "ATK", value: character.ATK, color: "text-orange-400" },
+                                        { label: "DEF", value: character.DEF, color: "text-blue-400" },
+                                        { label: "SPD", value: character.SPD, color: "text-yellow-400" }
                                     ].map((stat, idx) => (
                                         <motion.div
                                             key={idx}
@@ -455,10 +401,9 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                             whileHover={{ scale: 1.03, y: -3, borderColor: "rgba(255, 215, 0, 0.5)" }}
                                         >
                                             <div className="flex items-center gap-2 mb-1">
-                                                <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                                                <span className="text-xs text-white/60 uppercase tracking-wider">{stat.label}</span>
+                                                <span className="text-xs text-foreground/60 uppercase tracking-wider">{stat.label}</span>
                                             </div>
-                                            <span className="text-xl lg:text-2xl font-bold text-white">
+                                            <span className="text-xl lg:text-2xl font-bold text-foreground">
                                                 {stat.value?.toLocaleString() || "N/A"}
                                             </span>
                                         </motion.div>
@@ -481,9 +426,9 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                         className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
                         variants={itemVariants}
                     >
-                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                             <div className="w-1.5 h-8 bg-gradient-to-b from-accent to-gold rounded-full" />
-                            Enhancement Timeline
+                            Enhancement
                         </h2>
 
                         <div className="grid md:grid-cols-2 gap-4">
@@ -507,7 +452,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         )}
                                     </motion.div>
                                     <div className="flex-1">
-                                        <p className="text-sm lg:text-base text-white/90 leading-relaxed">
+                                        <p className="text-sm lg:text-base text-foreground/90 leading-relaxed">
                                             {enh.Description?.map((block: any, bi: number) =>
                                                 <span key={bi}>{block.children.map((c: any) => c.text).join("")}</span>
                                             )}
@@ -515,35 +460,21 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                     </div>
                                 </motion.div>
                             )) : (
-                                <p className="text-white/50 col-span-2 text-center py-8">
+                                <p className="text-foreground/50 col-span-2 text-center py-8">
                                     No enhancements data available.
                                 </p>
                             )}
                         </div>
                     </motion.div>
 
-                    {/* Character Gallery */}
-                    <motion.div
-                        className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
-                        variants={itemVariants}
-                    >
-                        <CharacterGallery
-                            characters={galleryCharacters}
-                            currentCharacterId={character.id || 0}
-                            onSelectCharacter={(char) => {
-                                const idx = allCharacters.findIndex(c => c.id === char.id);
-                                if (idx !== -1) setSelectedCharIdx(idx);
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                            }}
-                        />
-                    </motion.div>
+
 
                     {/* Video Showcase */}
                     <motion.div
                         className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
                         variants={itemVariants}
                     >
-                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                             <div className="w-1.5 h-8 bg-gradient-to-b from-accent to-gold rounded-full" />
                             Video Showcase
                         </h2>
@@ -562,9 +493,25 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                         ) : (
                             <div className="aspect-video rounded-2xl bg-black/50 border-2 border-gold/30 flex flex-col items-center justify-center gap-4">
                                 <Play className="w-16 h-16 text-gold/50" />
-                                <span className="text-white/50">No Video Available</span>
+                                <span className="text-foreground/50">No Video Available</span>
                             </div>
                         )}
+                    </motion.div>
+
+                    {/* Character Gallery */}
+                    <motion.div
+                        className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
+                        variants={itemVariants}
+                    >
+                        <CharacterGallery
+                            characters={galleryCharacters}
+                            currentCharacterId={character.id || 0}
+                            onSelectCharacter={(char) => {
+                                const idx = allCharacters.findIndex(c => c.id === char.id);
+                                if (idx !== -1) setSelectedCharIdx(idx);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                        />
                     </motion.div>
 
                     {/* Comments Section */}
@@ -597,9 +544,9 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                             onClick={e => e.stopPropagation()}
                         >
                             <div className="flex items-start justify-between mb-6">
-                                <h2 className="text-2xl font-bold text-white">Skill Detail</h2>
+                                <h2 className="text-2xl font-bold text-foreground">Skill Detail</h2>
                                 <button onClick={() => setSelectedSkill(null)} className="p-2 rounded-full hover:bg-white/10 transition-colors">
-                                    <X className="w-5 h-5 text-white/60" />
+                                    <X className="w-5 h-5 text-foreground/60" />
                                 </button>
                             </div>
 
@@ -612,7 +559,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                     )}
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-white">{selectedSkill.name}</h3>
+                                    <h3 className="text-xl font-bold text-foreground">{selectedSkill.name}</h3>
                                     <div className="flex gap-3 mt-1 text-sm text-gold">
                                         <span>Type: {selectedSkill.type}</span>
                                         <span>Level: {selectedSkill.level}</span>
@@ -621,8 +568,8 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                             </div>
 
                             <div className="p-4 rounded-xl bg-white/5 border border-white/10 mb-6">
-                                <h4 className="text-xs uppercase tracking-wider text-white/50 mb-2">Description</h4>
-                                <p className="text-white/90 leading-relaxed whitespace-pre-line">{selectedSkill.description}</p>
+                                <h4 className="text-xs uppercase tracking-wider text-foreground/50 mb-2">Description</h4>
+                                <p className="text-foreground/90 leading-relaxed whitespace-pre-line">{selectedSkill.description}</p>
                             </div>
 
                             {/* Effects Section (Combined Buffs & Debuffs) */}
@@ -657,11 +604,11 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="flex items-center justify-between mb-1">
-                                                        <span className="font-semibold text-white">
+                                                        <span className="font-semibold text-foreground">
                                                             {effect.name}
                                                         </span>
                                                     </div>
-                                                    <p className="text-sm text-white/80">{effect.description || effect.effect}</p>
+                                                    <p className="text-sm text-foreground/80">{effect.description || effect.effect}</p>
                                                 </div>
                                             </motion.div>
                                         ))}
@@ -670,7 +617,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                             )}
 
                             <button
-                                className="w-full py-3 rounded-xl bg-gradient-to-r from-accent to-primary text-white font-bold border border-gold"
+                                className="w-full py-3 rounded-xl bg-gradient-to-r from-accent to-primary text-foreground font-bold border border-gold"
                                 onClick={() => setSelectedSkill(null)}
                             >
                                 Close
@@ -700,9 +647,9 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                             onClick={e => e.stopPropagation()}
                         >
                             <div className="flex items-start justify-between mb-6">
-                                <h2 className="text-2xl font-bold text-white">Special Stats</h2>
+                                <h2 className="text-2xl font-bold text-foreground">Special Stats</h2>
                                 <button onClick={() => setShowSpecialStats(false)} className="p-2 rounded-full hover:bg-white/10 transition-colors">
-                                    <X className="w-5 h-5 text-white/60" />
+                                    <X className="w-5 h-5 text-foreground/60" />
                                 </button>
                             </div>
 
@@ -718,15 +665,15 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                     >
                                         <div className="flex items-center gap-3">
                                             <stat.icon className="w-4 h-4 text-gold" />
-                                            <span className="text-sm text-white/60">{stat.label}</span>
+                                            <span className="text-sm text-foreground/60">{stat.label}</span>
                                         </div>
-                                        <span className="font-bold text-white">{stat.val}</span>
+                                        <span className="font-bold text-foreground">{stat.val}</span>
                                     </motion.div>
                                 ))}
                             </div>
 
                             <button
-                                className="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-accent to-primary text-white font-bold border border-gold"
+                                className="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-accent to-primary text-foreground font-bold border border-gold"
                                 onClick={() => setShowSpecialStats(false)}
                             >
                                 Close

@@ -24,13 +24,21 @@
   --shadow-flame: 0 0 30px hsl(18, 100%, 60%, 0.3);
 
   --background-color: #0a0a0c;
+  --background-color-hsl: 240 10% 4%;
   --surface-color-opaque: rgba(36, 36, 36, 0.85);
+  --surface-color-opaque-hsl: 240 2% 14%;
   --surface-color-light: rgba(45, 45, 45, 0.85);
+  --surface-color-light-hsl: 240 2% 18%;
   --surface-color-dark: rgba(31, 31, 31, 0.9);
+  --surface-color-dark-hsl: 240 2% 12%;
   --border-color: #444;
+  --border-color-hsl: 240 2% 26%;
   --text-color-primary: rgba(255, 255, 255, 0.9);
+  --text-color-primary-hsl: 0 0% 95%;
   --text-color-secondary: #b0b0b0;
+  --text-color-secondary-hsl: 0 0% 69%;
   --accent-color-ur: #ffc107;
+  --accent-color-ur-hsl: 45 100% 51%;
 }
 
 /* Light theme */
@@ -53,13 +61,21 @@
   --shadow-flame: 0 4px 20px hsl(18, 80%, 50%, 0.2);
 
   --background-color: #faf8f5;
+  --background-color-hsl: 30 20% 96%;
   --surface-color-opaque: rgba(255, 255, 255, 0.9);
+  --surface-color-opaque-hsl: 0 0% 100%;
   --surface-color-light: rgba(245, 242, 238, 0.9);
+  --surface-color-light-hsl: 30 20% 95%;
   --surface-color-dark: rgba(240, 235, 230, 0.95);
+  --surface-color-dark-hsl: 30 20% 92%;
   --border-color: #ddd;
+  --border-color-hsl: 0 0% 87%;
   --text-color-primary: rgba(20, 20, 20, 0.9);
+  --text-color-primary-hsl: 0 0% 8%;
   --text-color-secondary: #666;
+  --text-color-secondary-hsl: 0 0% 40%;
   --accent-color-ur: #e67700;
+  --accent-color-ur-hsl: 28 100% 45%;
 }
 
 /* Flame theme */
@@ -82,13 +98,21 @@
   --shadow-flame: 0 0 40px hsl(35, 100%, 50%, 0.35);
 
   --background-color: #1a0f0a;
+  --background-color-hsl: 18 29% 7%;
   --surface-color-opaque: rgba(45, 30, 20, 0.9);
+  --surface-color-opaque-hsl: 20 38% 13%;
   --surface-color-light: rgba(60, 40, 25, 0.85);
+  --surface-color-light-hsl: 20 40% 17%;
   --surface-color-dark: rgba(35, 25, 15, 0.95);
+  --surface-color-dark-hsl: 20 40% 10%;
   --border-color: #664422;
+  --border-color-hsl: 20 50% 26%;
   --text-color-primary: rgba(255, 240, 220, 0.95);
+  --text-color-primary-hsl: 30 100% 93%;
   --text-color-secondary: #cc9966;
+  --text-color-secondary-hsl: 30 50% 60%;
   --accent-color-ur: #ff9500;
+  --accent-color-ur-hsl: 35 100% 50%;
 }
 
 /* Ocean theme */
@@ -111,13 +135,21 @@
   --shadow-flame: 0 0 30px hsl(185, 90%, 50%, 0.25);
 
   --background-color: #0a1520;
+  --background-color-hsl: 210 45% 8%;
   --surface-color-opaque: rgba(20, 40, 60, 0.9);
+  --surface-color-opaque-hsl: 210 50% 16%;
   --surface-color-light: rgba(30, 55, 80, 0.85);
+  --surface-color-light-hsl: 210 45% 22%;
   --surface-color-dark: rgba(15, 30, 50, 0.95);
+  --surface-color-dark-hsl: 210 50% 13%;
   --border-color: #2266aa;
+  --border-color-hsl: 210 64% 40%;
   --text-color-primary: rgba(220, 245, 255, 0.95);
+  --text-color-primary-hsl: 200 100% 93%;
   --text-color-secondary: #66aacc;
+  --text-color-secondary-hsl: 200 38% 60%;
   --accent-color-ur: #00ccff;
+  --accent-color-ur-hsl: 195 100% 50%;
 }
 
 /* ================== THEMED UTILITY CLASSES ================== */
@@ -903,6 +935,13 @@ body {
   border-top-color: var(--accent-color-ur);
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+@layer base {
+  :root {
+    --gradient-flame: linear-gradient(135deg, hsl(18, 100%, 60%) 0%, hsl(0, 84%, 50%) 50%, hsl(35, 100%, 50%) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(240, 10%, 4%) 0%, hsl(260, 30%, 8%) 100%);
+  }
 }
 
 /* --- Keyframe Animations --- */

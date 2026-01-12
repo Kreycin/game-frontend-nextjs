@@ -13,8 +13,8 @@ module.exports = {
         accent: '#ff3e3e',
         primary: '#cc2323',
         background: '#0a0503',
-        foreground: '#ffffff',
-        'muted-foreground': 'rgba(255, 255, 255, 0.7)',
+        foreground: 'hsl(var(--foreground))',
+        'muted-foreground': 'hsl(var(--muted-foreground))',
       },
       borderRadius: {
         '2xl': '1rem',
