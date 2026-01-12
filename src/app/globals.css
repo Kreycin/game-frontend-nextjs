@@ -1,9 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* ================== GLOBAL VARIABLES ================== */
-:root {
-  --background-color: #1a1a1a;
+
+/* ================== THEME VARIABLES ================== */
+:root,
+.dark {
+  /* Dark theme (default) */
+  --background: 240 10% 4%;
+  --foreground: 0 0% 95%;
+  --card: 240 10% 8%;
+  --card-foreground: 0 0% 95%;
+  --primary: 18 100% 60%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 0 84% 50%;
+  --accent-foreground: 0 0% 100%;
+  --gold: 45 100% 50%;
+  --gold-foreground: 0 0% 10%;
+  --muted: 240 10% 15%;
+  --muted-foreground: 240 5% 55%;
+  --border: 240 10% 20%;
+
+  --gradient-flame: linear-gradient(135deg, hsl(18, 100%, 60%) 0%, hsl(0, 84%, 50%) 50%, hsl(35, 100%, 50%) 100%);
+  --shadow-flame: 0 0 30px hsl(18, 100%, 60%, 0.3);
+
+  --background-color: #0a0a0c;
   --surface-color-opaque: rgba(36, 36, 36, 0.85);
   --surface-color-light: rgba(45, 45, 45, 0.85);
   --surface-color-dark: rgba(31, 31, 31, 0.9);
@@ -13,6 +33,203 @@
   --accent-color-ur: #ffc107;
 }
 
+/* Light theme */
+.light {
+  --background: 30 20% 96%;
+  --foreground: 20 15% 15%;
+  --card: 30 30% 99%;
+  --card-foreground: 20 15% 15%;
+  --primary: 18 90% 45%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 0 75% 45%;
+  --accent-foreground: 0 0% 100%;
+  --gold: 40 100% 40%;
+  --gold-foreground: 0 0% 100%;
+  --muted: 30 10% 90%;
+  --muted-foreground: 20 10% 40%;
+  --border: 30 15% 80%;
+
+  --gradient-flame: linear-gradient(135deg, hsl(18, 90%, 50%) 0%, hsl(0, 75%, 45%) 50%, hsl(35, 100%, 45%) 100%);
+  --shadow-flame: 0 4px 20px hsl(18, 80%, 50%, 0.2);
+
+  --background-color: #faf8f5;
+  --surface-color-opaque: rgba(255, 255, 255, 0.9);
+  --surface-color-light: rgba(245, 242, 238, 0.9);
+  --surface-color-dark: rgba(240, 235, 230, 0.95);
+  --border-color: #ddd;
+  --text-color-primary: rgba(20, 20, 20, 0.9);
+  --text-color-secondary: #666;
+  --accent-color-ur: #e67700;
+}
+
+/* Flame theme */
+.flame {
+  --background: 10 25% 4%;
+  --foreground: 45 30% 92%;
+  --card: 10 30% 12%;
+  --card-foreground: 45 25% 90%;
+  --primary: 35 100% 50%;
+  --primary-foreground: 10 30% 8%;
+  --accent: 30 100% 55%;
+  --accent-foreground: 10 30% 8%;
+  --gold: 45 100% 50%;
+  --gold-foreground: 10 30% 8%;
+  --muted: 10 25% 20%;
+  --muted-foreground: 30 20% 60%;
+  --border: 20 40% 25%;
+
+  --gradient-flame: linear-gradient(135deg, hsl(45, 100%, 50%) 0%, hsl(25, 100%, 50%) 50%, hsl(5, 90%, 45%) 100%);
+  --shadow-flame: 0 0 40px hsl(35, 100%, 50%, 0.35);
+
+  --background-color: #1a0f0a;
+  --surface-color-opaque: rgba(45, 30, 20, 0.9);
+  --surface-color-light: rgba(60, 40, 25, 0.85);
+  --surface-color-dark: rgba(35, 25, 15, 0.95);
+  --border-color: #664422;
+  --text-color-primary: rgba(255, 240, 220, 0.95);
+  --text-color-secondary: #cc9966;
+  --accent-color-ur: #ff9500;
+}
+
+/* Ocean theme */
+.ocean {
+  --background: 215 45% 5%;
+  --foreground: 185 30% 92%;
+  --card: 215 40% 12%;
+  --card-foreground: 185 25% 90%;
+  --primary: 185 90% 50%;
+  --primary-foreground: 215 50% 8%;
+  --accent: 170 85% 45%;
+  --accent-foreground: 215 50% 8%;
+  --gold: 25 95% 55%;
+  --gold-foreground: 215 50% 8%;
+  --muted: 215 30% 20%;
+  --muted-foreground: 195 20% 60%;
+  --border: 210 35% 25%;
+
+  --gradient-flame: linear-gradient(135deg, hsl(185, 90%, 55%) 0%, hsl(170, 85%, 45%) 50%, hsl(200, 80%, 50%) 100%);
+  --shadow-flame: 0 0 30px hsl(185, 90%, 50%, 0.25);
+
+  --background-color: #0a1520;
+  --surface-color-opaque: rgba(20, 40, 60, 0.9);
+  --surface-color-light: rgba(30, 55, 80, 0.85);
+  --surface-color-dark: rgba(15, 30, 50, 0.95);
+  --border-color: #2266aa;
+  --text-color-primary: rgba(220, 245, 255, 0.95);
+  --text-color-secondary: #66aacc;
+  --accent-color-ur: #00ccff;
+}
+
+/* ================== THEMED UTILITY CLASSES ================== */
+.themed-bg {
+  background-color: var(--background-color);
+}
+
+.themed-card {
+  background-color: var(--surface-color-opaque);
+  border: 1px solid var(--border-color);
+}
+
+.themed-text {
+  color: var(--text-color-primary);
+}
+
+.themed-text-muted {
+  color: var(--text-color-secondary);
+}
+
+.themed-accent {
+  color: var(--accent-color-ur);
+}
+
+.themed-gradient-overlay {
+  background: linear-gradient(to top,
+      var(--background-color) 0%,
+      color-mix(in srgb, var(--background-color) 90%, transparent) 50%,
+      color-mix(in srgb, var(--background-color) 50%, transparent) 100%);
+}
+
+.themed-surface-overlay {
+  background-color: color-mix(in srgb, var(--background-color) 40%, transparent);
+}
+
+/* Glassmorphism effect - Light mode (default) */
+.glass {
+  background: hsl(30, 30%, 99%, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid hsl(30, 15%, 85%, 0.6);
+  box-shadow: 0 4px 24px hsl(20, 20%, 50%, 0.08);
+}
+
+/* Glassmorphism effect - Dark mode */
+.dark .glass {
+  background: hsl(240, 10%, 10%, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid hsl(240, 10%, 25%, 0.3);
+  box-shadow: none;
+}
+
+/* Glassmorphism effect - Flame mode */
+.flame .glass {
+  background: linear-gradient(135deg,
+      hsl(10, 30%, 12%, 0.75) 0%,
+      hsl(15, 35%, 10%, 0.8) 100%);
+  backdrop-filter: blur(24px);
+  border: 1px solid hsl(35, 70%, 40%, 0.35);
+  box-shadow:
+    0 0 30px hsl(35, 100%, 50%, 0.15),
+    0 0 60px hsl(25, 100%, 45%, 0.08),
+    inset 0 1px 0 hsl(45, 100%, 60%, 0.1),
+    0 8px 32px hsl(0, 0%, 0%, 0.4);
+}
+
+.flame .glass:hover {
+  box-shadow:
+    0 0 40px hsl(35, 100%, 50%, 0.25),
+    0 0 80px hsl(25, 100%, 45%, 0.12),
+    inset 0 1px 0 hsl(45, 100%, 60%, 0.15),
+    0 12px 40px hsl(0, 0%, 0%, 0.5);
+}
+
+/* Glassmorphism effect - Ocean mode */
+.ocean .glass {
+  background: linear-gradient(135deg,
+      hsl(215, 40%, 12%, 0.75) 0%,
+      hsl(210, 45%, 10%, 0.8) 100%);
+  backdrop-filter: blur(24px);
+  border: 1px solid hsl(185, 60%, 40%, 0.3);
+  box-shadow:
+    0 0 30px hsl(185, 90%, 50%, 0.12),
+    0 0 60px hsl(200, 85%, 45%, 0.06),
+    inset 0 1px 0 hsl(180, 90%, 60%, 0.08),
+    0 8px 32px hsl(220, 50%, 5%, 0.5);
+}
+
+.ocean .glass:hover {
+  box-shadow:
+    0 0 40px hsl(185, 90%, 50%, 0.2),
+    0 0 80px hsl(200, 85%, 45%, 0.1),
+    inset 0 1px 0 hsl(180, 90%, 60%, 0.12),
+    0 12px 40px hsl(220, 50%, 5%, 0.6);
+}
+
+/* Flame glow effect */
+.glow-flame {
+  box-shadow: var(--shadow-flame);
+}
+
+.glow-text {
+  text-shadow: 0 0 20px hsl(18, 100%, 60%, 0.5);
+}
+
+/* Gradient text */
+.text-gradient-flame {
+  background: var(--gradient-flame);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* ================== BASE STYLES ================== */
 body {
   margin: 0;
@@ -20,21 +237,26 @@ body {
   color: var(--text-color-primary);
 
   /* --- ส่วนของพื้นหลัง --- */
-  background-color: var(--background-color); /* สีพื้นหลังสำรองเผื่อรูปไม่โหลด */
+  background-color: var(--background-color);
+  /* สีพื้นหลังสำรองเผื่อรูปไม่โหลด */
 
   /* <<< วาง URL ของรูปคุณที่นี่ >>> */
-  background-image: url('https://res.cloudinary.com/di8bf7ufw/image/upload/v1750761818/Gyokko-UR_Workspace_emhp2w.jpg'); 
+  background-image: url('https://res.cloudinary.com/di8bf7ufw/image/upload/v1750761818/Gyokko-UR_Workspace_emhp2w.jpg');
 
-  background-size: cover; /* ทำให้รูปขยายเต็มพื้นที่ */
-  background-position: center center; /* จัดให้รูปอยู่ตรงกลาง */
-  background-attachment: fixed; /* ทำให้พื้นหลังอยู่กับที่ไม่เลื่อนตามตอน scroll */
+  background-size: cover;
+  /* ทำให้รูปขยายเต็มพื้นที่ */
+  background-position: center center;
+  /* จัดให้รูปอยู่ตรงกลาง */
+  background-attachment: fixed;
+  /* ทำให้พื้นหลังอยู่กับที่ไม่เลื่อนตามตอน scroll */
 }
 
 .App {
   padding: 2rem;
 }
 
-.loading-state, .error-state {
+.loading-state,
+.error-state {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,7 +290,8 @@ body {
 @media (min-width: 1025px) {
   .character-sheet-container {
     gap: 2rem;
-    grid-template-columns: 320px 1fr; /* Left sidebar and main content */
+    grid-template-columns: 320px 1fr;
+    /* Left sidebar and main content */
     grid-template-areas:
       "art              header"
       "art              skills"
@@ -79,18 +302,40 @@ body {
   }
 }
 
-.layout-header { grid-area: header; }
-.layout-art { grid-area: art; }
-.layout-main-stats { grid-area: main-stats; }
-.layout-special-stats { grid-area: special-stats; }
-.layout-skills { grid-area: skills; }
-.layout-enhancements { grid-area: enhancements; }
-.layout-showcase { grid-area: showcase; }
+.layout-header {
+  grid-area: header;
+}
+
+.layout-art {
+  grid-area: art;
+}
+
+.layout-main-stats {
+  grid-area: main-stats;
+}
+
+.layout-special-stats {
+  grid-area: special-stats;
+}
+
+.layout-skills {
+  grid-area: skills;
+}
+
+.layout-enhancements {
+  grid-area: enhancements;
+}
+
+.layout-showcase {
+  grid-area: showcase;
+}
 
 /* ================== COMPONENT STYLES ================== */
 
 /* --- Glassmorphism Panel Style --- */
-.collapsible-panel, .character-header, .video-section {
+.collapsible-panel,
+.character-header,
+.video-section {
   background-color: var(--surface-color-opaque);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -110,6 +355,7 @@ body {
   padding: 1.5rem;
   text-align: center;
 }
+
 .name-and-id {
   display: flex;
   align-items: center;
@@ -118,6 +364,7 @@ body {
   gap: 1rem;
   margin-bottom: 0.5rem;
 }
+
 .character-id-tag {
   background-color: #333;
   color: #ccc;
@@ -126,11 +373,37 @@ body {
   border-radius: 4px;
   font-family: 'Courier New', Courier, monospace;
 }
-.character-header h1 { margin: 0; }
-.tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
-.tag-rarity, .tag-role, .tag-element { padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
-.tag-rarity.UR { background-color: var(--accent-color-ur); color: #000; }
-.tag-role, .tag-element { background-color: var(--surface-color-light); }
+
+.character-header h1 {
+  margin: 0;
+}
+
+.tags {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.tag-rarity,
+.tag-role,
+.tag-element {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.tag-rarity.UR {
+  background-color: var(--accent-color-ur);
+  color: #000;
+}
+
+.tag-role,
+.tag-element {
+  background-color: var(--surface-color-light);
+}
 
 /* --- Collapsible Panels --- */
 .panel-header-clickable {
@@ -140,33 +413,48 @@ body {
   cursor: pointer;
   padding: 1rem;
 }
+
 .collapsible-panel h3 {
   margin: 0;
   font-size: 1.1rem;
   color: var(--accent-color-ur);
 }
-.toggle-icon { transition: transform 0.3s ease; }
-.toggle-icon.expanded { transform: rotate(180deg); }
+
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
+}
+
 .panel-content-collapsible {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s ease-out;
 }
+
 .collapsible-panel.expanded .panel-content-collapsible {
-  max-height: 2000px; /* Large value to allow for expansion */
+  max-height: 2000px;
+  /* Large value to allow for expansion */
 }
-.panel-content-inner, .stats-grid, .stats-grid-special {
+
+.panel-content-inner,
+.stats-grid,
+.stats-grid-special {
   padding: 0rem 1rem 1rem 1rem;
   border-top: 1px solid var(--border-color);
   margin: 0 0.5rem;
 }
 
 /* --- Stats Grids --- */
-.stats-grid, .stats-grid-special {
+.stats-grid,
+.stats-grid-special {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem 1rem;
 }
+
 .stat-item {
   display: flex;
   justify-content: space-between;
@@ -174,8 +462,14 @@ body {
   font-size: 0.9rem;
   border-bottom: 1px solid #333;
 }
-.stat-item:last-child { border-bottom: none; }
-.stat-item span { color: var(--text-color-secondary); }
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-item span {
+  color: var(--text-color-secondary);
+}
 
 /* --- Enhancements --- */
 .enhancement-item {
@@ -187,9 +481,22 @@ body {
   padding-bottom: 0.75rem;
   margin-top: 0.75rem;
 }
-.enhancement-item:last-child { padding-bottom: 0; }
-.enhancement-icon { width: 24px; height: 24px; margin-top: 2px; }
-.enhancement-item p { margin: 0; line-height: 1.5; white-space: pre-wrap; }
+
+.enhancement-item:last-child {
+  padding-bottom: 0;
+}
+
+.enhancement-icon {
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+}
+
+.enhancement-item p {
+  margin: 0;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
 
 
 /* --- Skills Section --- */
@@ -198,6 +505,7 @@ body {
   flex-direction: column;
   gap: 1.5rem;
 }
+
 .star-selector {
   display: flex;
   justify-content: center;
@@ -207,6 +515,7 @@ body {
   background-color: var(--surface-color-dark);
   border-radius: 8px;
 }
+
 .star-button {
   background-color: var(--surface-color-light);
   color: var(--text-color-secondary);
@@ -218,10 +527,12 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .star-button:hover {
   background-color: #4f4f4f;
   color: var(--text-color-primary);
 }
+
 .star-button.active {
   background-color: var(--accent-color-ur);
   color: #000;
@@ -229,9 +540,12 @@ body {
   box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
   transform: translateY(-2px);
 }
+
 .skills-grid {
-  display: block; /* ตั้งเป็น block เพื่อให้ column-count ทำงาน */
-  gap: 1.5rem; /* เราจะใช้ column-gap แทน */
+  display: block;
+  /* ตั้งเป็น block เพื่อให้ column-count ทำงาน */
+  gap: 1.5rem;
+  /* เราจะใช้ column-gap แทน */
   align-items: start;
 }
 
@@ -249,52 +563,168 @@ body {
   transition: background-color 0.2s;
   align-self: start;
   break-inside: avoid;
-  margin-bottom: 1.5rem; /* ใช้ margin แทน gap ของ grid */
+  margin-bottom: 1.5rem;
+  /* ใช้ margin แทน gap ของ grid */
 }
-  
 
-.skill-card-small.expanded { background-color: rgba(45, 45, 45, 0.95); }
-.skill-card-header-clickable { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; cursor: pointer; }
-.skill-icon-and-name { display: flex; align-items: center; gap: 0.75rem; }
-.skill-icon-small { width: 48px; height: 48px; border-radius: 4px; flex-shrink: 0; }
-.skill-name-small { margin: 0; font-size: 1rem; }
-.skill-level-tag { position: absolute; top: 0.5rem; right: 0.5rem; background-color: var(--accent-color-ur); color: #000; padding: 0.1rem 0.5rem; font-size: 0.7rem; border-radius: 4px; font-weight: bold; }
-.skill-details-collapsible { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
-.skill-card-small.expanded .skill-details-collapsible { max-height: 3000px; }
-.skill-details-inner { padding-top: 1rem; border-top: 1px solid var(--border-color); }
-.skill-type-small { font-size: 0.8rem; color: var(--text-color-secondary); margin-bottom: 0.75rem; }
-.skill-description-small p { margin: 0; font-size: 0.9rem; color: #ccc; line-height: 1.5; white-space: pre-wrap; }
-.effects-list-in-skill { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.75rem; }
-.effects-list-in-skill h5 { margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--accent-color-ur); }
-.effect-item-in-skill { background-color: var(--surface-color-dark); padding: 0.5rem 0.75rem; border-radius: 6px; }
-.effect-header-in-skill { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
-.effect-icon-in-skill { width: 20px; height: 20px; }
-.effect-name-in-skill { font-weight: 500; }
-.effect-description-in-skill p { margin: 0; line-height: 1.4; white-space: pre-wrap; font-size: 0.85rem; color: var(--text-color-secondary); }
+
+.skill-card-small.expanded {
+  background-color: rgba(45, 45, 45, 0.95);
+}
+
+.skill-card-header-clickable {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.skill-icon-and-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.skill-icon-small {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.skill-name-small {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.skill-level-tag {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: var(--accent-color-ur);
+  color: #000;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.skill-details-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+}
+
+.skill-card-small.expanded .skill-details-collapsible {
+  max-height: 3000px;
+}
+
+.skill-details-inner {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.skill-type-small {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.skill-description-small p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ccc;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.effects-list-in-skill {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.effects-list-in-skill h5 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--accent-color-ur);
+}
+
+.effect-item-in-skill {
+  background-color: var(--surface-color-dark);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.effect-header-in-skill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.effect-icon-in-skill {
+  width: 20px;
+  height: 20px;
+}
+
+.effect-name-in-skill {
+  font-weight: 500;
+}
+
+.effect-description-in-skill p {
+  margin: 0;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
 
 /* --- Video Section --- */
-.video-section { padding: 1.5rem; }
-.video-header-clickable { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-.video-header-clickable h3 { margin: 0; color: var(--text-color-primary); }
+.video-section {
+  padding: 1.5rem;
+}
+
+.video-header-clickable {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.video-header-clickable h3 {
+  margin: 0;
+  color: var(--text-color-primary);
+}
+
 .video-collapsible-area {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-out, margin-top 0.5s ease-out;
   margin-top: 0;
 }
+
 .video-collapsible-area.expanded {
   max-height: 1000px;
   margin-top: 1rem;
   border-top: 1px solid var(--border-color);
   padding-top: 1rem;
 }
+
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%;
+  /* 16:9 Aspect Ratio */
   height: 0;
   overflow: hidden;
   border-radius: 6px;
 }
+
 .video-container iframe {
   position: absolute;
   top: 0;
@@ -303,26 +733,38 @@ body {
   height: 100%;
   border: 0;
 }
+
 @media (min-width: 551px) {
   .skills-grid {
-    column-count: 2; /* สร้าง 2 คอลัมน์ */
-    column-gap: 1.5rem; /* กำหนดช่องว่างระหว่างคอลัมน์ */
+    column-count: 2;
+    /* สร้าง 2 คอลัมน์ */
+    column-gap: 1.5rem;
+    /* กำหนดช่องว่างระหว่างคอลัมน์ */
   }
 }
 
 /* --- Responsive adjustments for smaller screens --- */
 @media (max-width: 550px) {
-  .App { padding: 1rem; }
-  .skills-grid, .stats-grid, .stats-grid-special {
+  .App {
+    padding: 1rem;
+  }
+
+  .skills-grid,
+  .stats-grid,
+  .stats-grid-special {
     grid-template-columns: 1fr;
   }
 }
+
 /* === Export Button Styles === */
 .export-container {
   max-width: 1400px;
-  margin: 2rem auto 0 auto; /* เว้นระยะห่างด้านบน 2rem และจัดให้อยู่กลางจอ */
-  text-align: right;        /* จัดให้ปุ่มอยู่ชิดขวาของกรอบ */
-  padding: 0 2rem;          /* เพิ่ม padding ซ้าย-ขวาเล็กน้อยให้สวยงาม */
+  margin: 2rem auto 0 auto;
+  /* เว้นระยะห่างด้านบน 2rem และจัดให้อยู่กลางจอ */
+  text-align: right;
+  /* จัดให้ปุ่มอยู่ชิดขวาของกรอบ */
+  padding: 0 2rem;
+  /* เพิ่ม padding ซ้าย-ขวาเล็กน้อยให้สวยงาม */
 }
 
 .export-button {
@@ -340,8 +782,9 @@ body {
 .export-button:hover {
   background-color: #ffda6a;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 /* Tell the container to have its own background for exporting */
 #character-sheet-container {
   /* Use the same background image settings as the body */
@@ -351,8 +794,10 @@ body {
 
   /* Add some padding to make it look good */
   padding: 2rem;
-  border-radius: 8px; /* Optional: adds rounded corners to the exported image */
+  border-radius: 8px;
+  /* Optional: adds rounded corners to the exported image */
 }
+
 /* === Collapsible Effect Styles === */
 
 .effect-header-clickable {
@@ -380,13 +825,14 @@ body {
 }
 
 .effect-item-in-skill.expanded .effect-details-collapsible {
-  max-height: 1000px; /* Or a suitable max height */
+  max-height: 1000px;
+  /* Or a suitable max height */
   margin-top: 0.5rem;
   transition: max-height 0.3s ease-in, margin-top 0.3s ease-in;
 }
 
 .effect-description-in-skill p {
-    margin: 0;
+  margin: 0;
 }
 
 .splash-screen {
@@ -396,7 +842,8 @@ body {
   width: 100%;
   height: 100vh;
   z-index: 9999;
-  overflow: hidden; /* ป้องกันไม่ให้มี scrollbar */
+  overflow: hidden;
+  /* ป้องกันไม่ให้มี scrollbar */
 }
 
 .splash-background {
@@ -409,18 +856,21 @@ body {
   background-position: center;
   /* ทำให้พื้นหลังมืดลงเล็กน้อยเพื่อให้เห็นข้อความชัดขึ้น */
   filter: brightness(0.6);
-  transform: scale(1.1); /* ขยายเล็กน้อยเพื่อไม่ให้เห็นขอบ */
+  transform: scale(1.1);
+  /* ขยายเล็กน้อยเพื่อไม่ให้เห็นขอบ */
 }
 
 .splash-content {
-  position: relative; /* ทำให้เนื้อหาลอยอยู่เหนือพื้นหลัง */
+  position: relative;
+  /* ทำให้เนื้อหาลอยอยู่เหนือพื้นหลัง */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
   color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* เพิ่มเงาให้ข้อความ */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  /* เพิ่มเงาให้ข้อความ */
 }
 
 .splash-logo {
@@ -440,7 +890,8 @@ body {
 .splash-countdown {
   font-size: 2.5rem;
   font-weight: bold;
-  color: var(--accent-color-ur); /* ใช้สีเดียวกับเว็บ */
+  color: var(--accent-color-ur);
+  /* ใช้สีเดียวกับเว็บ */
   margin-top: 1rem;
 }
 
@@ -456,13 +907,26 @@ body {
 
 /* --- Keyframe Animations --- */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; transform: scale(0.95); }
-  50% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0.6; transform: scale(0.95); }
+  0% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
 }
 
 /* === Character Navigation (Bottom Bar Version) === */
@@ -475,8 +939,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem; /* ระยะห่างระหว่างปุ่มซ้ายและขวา */
-  margin: 1.5rem 0; /* ระยะห่างจากเนื้อหาด้านบนและปุ่ม Export ด้านล่าง */
+  gap: 2rem;
+  /* ระยะห่างระหว่างปุ่มซ้ายและขวา */
+  margin: 1.5rem 0;
+  /* ระยะห่างจากเนื้อหาด้านบนและปุ่ม Export ด้านล่าง */
 }
 
 /*

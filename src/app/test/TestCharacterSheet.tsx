@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Character, RichTextBlock } from "@/types/character";
-import CommentSection from '@/components/CommentSection';
-import "./theme.css";
+import { CharacterGallery, CharacterPreview } from "@/components/CharacterGallery";
+import CommentSection from "@/components/CommentSection";
+import { useTheme, themes, Theme } from "@/hooks/use-theme";
+import {
+    ChevronDown, Play, X, Heart, Zap, Star, Sparkles,
+    Target, Eye, Shield, Sword, Palette
+} from "lucide-react";
 
-// --- Mock Buff Definitions (Ported from Mockup) ---
+// --- Mock Buff Definitions ---
 const BUFF_DEFINITIONS: Record<string, string> = {
     Electrocute: "Stuns enemies for 1.5s and deals continuous Lightning damage.",
     "Super Conduct": "Reduces enemy Physical Resistance by 40% for 8s.",
@@ -15,7 +20,6 @@ const BUFF_DEFINITIONS: Record<string, string> = {
     Freeze: "Immobilizes enemies. Shatter frozen enemies for extra Physical damage.",
     Melt: "Increases damage of the triggering Pyro or Cryo attack.",
     Swirl: "Spreads the element involved and deals AoE elemental damage.",
-    Crystallize: "Creates an elemental shard that provides a shield.",
     Stun: "Incapacitates the enemy, preventing them from taking action.",
     "Armor Break": "Reduces enemy defense by 20%.",
     Slow: "Reduces movement speed by 30%.",
@@ -27,70 +31,19 @@ interface TestCharacterSheetProps {
 }
 
 export default function TestCharacterSheet({ allCharacters }: TestCharacterSheetProps) {
-    // --- Enhanced State & Refs ---
     const [selectedCharIdx, setSelectedCharIdx] = useState(0);
-    const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
-    const switcherRef = useRef<HTMLDivElement>(null);
-
-    // Derived Character
     const character = allCharacters[selectedCharIdx] || allCharacters[0];
 
-    const [rightPanelWidth, setRightPanelWidth] = useState(600); // Default width
-    const isResizing = useRef(false);
-    const leftPanelRef = useRef<HTMLDivElement>(null); // For scroll parallax
     const [selectedSkill, setSelectedSkill] = useState<any | null>(null);
-
     const [showSpecialStats, setShowSpecialStats] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const { theme, setTheme } = useTheme();
+    const [themeOpen, setThemeOpen] = useState(false);
 
-    // Mobile Detection
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
-    // --- Accordion State ---
-    const [expandedBuffs, setExpandedBuffs] = useState<Record<string, boolean>>({});
-    const toggleBuff = (buffName: string) => {
-        setExpandedBuffs(prev => ({ ...prev, [buffName]: !prev[buffName] }));
-    };
-
-    // --- Special Stats Data (Real) ---
-    const specialStats = [
-        { label: "Lifesteal", val: character.Lifesteal || "0%" },
-        { label: "Penetration", val: character.Penetration || "0%" },
-        { label: "CRIT Rate", val: character.CRIT_rate || "0%" },
-        { label: "CRIT Res", val: character.CRIT_Res || "0%" },
-        { label: "Debuff Acc", val: character.Debuff_Acc || "0%" },
-        { label: "Debuff Res", val: character.Debuff_Res || "0%" },
-        { label: "Accuracy", val: character.Accuracy || "0%" },
-        { label: "Dodge", val: character.Doge || "0%" },
-        { label: "Healing Amt", val: character.Healing_Amt || "0%" },
-        { label: "Healing Amt(P)", val: character.Healing_Amt_P || "0%" },
-        { label: "Extra DMG", val: character.Extra_DMG || "0%" },
-        { label: "DMG Res", val: character.DMG_Res || "0%" },
-        { label: "CRIT DMG Res", val: character.CRIT_DMG_Res || "0%" },
-        { label: "CRIT DMG", val: character.CRIT_DMG || "0%" },
-    ];
-
-    // --- Scroll Parallax Effects ---
-    const { scrollY } = useScroll({
-        target: leftPanelRef,
-        offset: ["start start", "end end"],
-    });
-
-    // Parallax: Background moves SLOWLY as we scroll down.
-    const backgroundY = useTransform(scrollY, [0, 1000], ["0%", "20%"]);
-    const headerOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-
-    // --- Helpers for Data Mapping ---
+    // --- Helper Functions ---
     const getImageUrl = () => character.Main_Art?.url || "https://placehold.co/400x800/1a1a1a/white?text=No+Image";
     const getElement = () => character.Element || "Unknown";
     const getRole = () => character.Role || "Unknown";
 
-    // Robust YouTube Embed Helper (Parity with Homepage)
     const getYouTubeEmbedUrl = (url: string | undefined | null): string | null => {
         if (!url) return null;
         const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -98,37 +51,34 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
         return match?.[1] ? `https://www.youtube.com/embed/${match[1]}` : null;
     };
 
-    // --- Helper: Mock Buffs based on Element ---
     const getMockBuffs = (elementName: string): string[] => {
         const el = elementName.toLowerCase();
         if (el.includes("thunder") || el.includes("electro") || el.includes("legend")) return ["Electrocute", "Super Conduct"];
         if (el.includes("fire") || el.includes("pyro")) return ["Overload", "Burn"];
         if (el.includes("water") || el.includes("hydro")) return ["Vaporize", "Slow"];
-        if (el.includes("ice") || el.includes("cryo")) return ["Freeze", "Shatter"];
-        return ["Stun", "Armor Break"]; // Default
+        if (el.includes("ice") || el.includes("cryo")) return ["Freeze"];
+        return ["Stun", "Armor Break"];
     };
 
-    // Extract skills from the first Star Level
     const getSkills = () => {
         if (!character.Star_Levels || character.Star_Levels.length === 0) return [];
         return character.Star_Levels[0].skill_descriptions?.map((desc, idx) => {
-            // Safe name accessor (handle capitalized or lowercase)
             const skillName = desc.skill?.Skill_Name || desc.skill?.name || "Unknown Skill";
+            const description = desc.Description?.map((block: RichTextBlock) =>
+                block.children.map((c: any) => c.text).join("")
+            ).join("\n") || "";
 
-            // Convert RichTextBlock[] to string
-            const description = desc.Description?.map((block: RichTextBlock) => block.children.map((c: any) => c.text).join("")).join("\n") || "";
-
-            // Try to get buffs from API effects (Rich Object)
             let buffs: any[] = [];
             if (desc.skill?.effects && desc.skill.effects.length > 0) {
                 buffs = desc.skill.effects.map((e: any) => ({
                     name: e.Effect_Name || e.name || "Unknown Buff",
-                    description: e.Description?.map((block: any) => block.children.map((c: any) => c.text).join("")).join("") || "Description unavailable.",
+                    description: e.Description?.map((block: any) =>
+                        block.children.map((c: any) => c.text).join("")
+                    ).join("") || "Description unavailable.",
                     icon: e.Effect_Icon?.url || null
                 }));
             }
 
-            // FALLBACK: If no buffs from API, try to parse from description [Bound Names]
             if (buffs.length === 0) {
                 const bracketMatches = description.match(/\[([a-zA-Z0-9\s]+)\]/g);
                 if (bracketMatches) {
@@ -136,12 +86,11 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                         name: m.slice(1, -1),
                         description: BUFF_DEFINITIONS[m.slice(1, -1)] || "Description unavailable.",
                         icon: null
-                    })); // Mock object from regex
+                    }));
                 } else {
-                    // Legacy Mock fallback
                     const mockNames = getMockBuffs(character.Element || "Unknown");
                     buffs = mockNames.map(name => ({
-                        name: name,
+                        name,
                         description: BUFF_DEFINITIONS[name] || "Description unavailable.",
                         icon: null
                     }));
@@ -151,12 +100,10 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
             return {
                 id: idx,
                 name: skillName,
-                description: description,
+                description,
                 type: desc.skill?.Type || desc.skill?.Skill_Type || "Active",
-                raw: desc,
-                // Use real icon if available (rendered as img), else mock emoji
-                icon: desc.skill?.Skill_Icon?.url ? <img src={desc.skill.Skill_Icon.url} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }} /> : (idx === 0 ? "⚔️" : idx === 1 ? "⚡" : "💥"),
-                buffs: buffs,
+                icon: desc.skill?.Skill_Icon?.url,
+                buffs,
                 level: desc.skill?.Skill_Level || 1
             };
         }) || [];
@@ -164,474 +111,643 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
 
     const skills = getSkills();
 
-    // Helper to get Enhancements
     const getEnhancements = () => {
         if (!character.Star_Levels || character.Star_Levels.length === 0) return [];
         return character.Star_Levels[0].enhancements || [];
     };
     const enhancements = getEnhancements();
 
-    // --- Helper: Star Badge Logic ---
-    const renderStarBadge = () => (
-        <div className="ds-star-badge">
-            19★
-        </div>
-    );
+    const specialStats = [
+        { label: "Lifesteal", val: character.Lifesteal || "0%", icon: Heart },
+        { label: "Penetration", val: character.Penetration || "0%", icon: Target },
+        { label: "CRIT Rate", val: character.CRIT_rate || "0%", icon: Zap },
+        { label: "CRIT Res", val: character.CRIT_Res || "0%", icon: Shield },
+        { label: "Debuff Acc", val: character.Debuff_Acc || "0%", icon: Target },
+        { label: "Debuff Res", val: character.Debuff_Res || "0%", icon: Shield },
+        { label: "Accuracy", val: character.Accuracy || "0%", icon: Eye },
+        { label: "Dodge", val: character.Doge || "0%", icon: Zap },
+        { label: "Healing Amt", val: character.Healing_Amt || "0%", icon: Heart },
+        { label: "Healing Amt(P)", val: character.Healing_Amt_P || "0%", icon: Heart },
+        { label: "Extra DMG", val: character.Extra_DMG || "0%", icon: Sword },
+        { label: "DMG Res", val: character.DMG_Res || "0%", icon: Shield },
+        { label: "CRIT DMG Res", val: character.CRIT_DMG_Res || "0%", icon: Shield },
+        { label: "CRIT DMG", val: character.CRIT_DMG || "0%", icon: Sparkles },
+    ];
 
-    // --- RESIZER LOGIC ---
-    const startResizing = useCallback(() => {
-        isResizing.current = true;
-        document.body.style.userSelect = 'none';
-        document.body.style.cursor = 'col-resize';
-        document.addEventListener('mousemove', handleMove);
-        document.addEventListener('mouseup', stopResizing);
-        document.addEventListener('touchmove', handleMove);
-        document.addEventListener('touchend', stopResizing);
-    }, []);
+    // Convert characters for gallery
+    const galleryCharacters: CharacterPreview[] = allCharacters.map(char => ({
+        id: char.id || 0,
+        name: char.Name || "Unknown",
+        element: char.Element || "Unknown",
+        role: char.Role || "Unknown",
+        rarity: "UR",
+        thumbnail: char.Main_Art?.url || "https://placehold.co/200x300"
+    }));
 
-    const stopResizing = useCallback(() => {
-        isResizing.current = false;
-        document.body.style.userSelect = 'auto';
-        document.body.style.cursor = 'default';
-        document.removeEventListener('mousemove', handleMove);
-        document.removeEventListener('mouseup', stopResizing);
-        document.removeEventListener('touchmove', handleMove);
-        document.removeEventListener('touchend', stopResizing);
-    }, []);
+    // Animation variants
+    const springTransition = {
+        type: "spring" as const,
+        stiffness: 100,
+        damping: 15,
+        mass: 0.8
+    };
 
-    const handleMove = useCallback((e: any) => {
-        if (!isResizing.current) return;
-        let clientX;
-        if (e.type === 'touchmove') {
-            clientX = e.touches[0].clientX;
-        } else {
-            clientX = e.clientX;
-        }
+    const smoothEase = [0.22, 1, 0.36, 1] as const;
 
-        // Calculate new width for the RIGHT panel dependent on window width
-        // Right Panel Width = Window Width - Mouse X - Gap/Resizer width approx
-        const newWidth = window.innerWidth - clientX;
-        if (newWidth > 400 && newWidth < window.innerWidth * 0.7) {
-            setRightPanelWidth(newWidth);
-        }
-    }, []);
-
-    // Cleanup listeners on unmount
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (switcherRef.current && !switcherRef.current.contains(event.target as Node)) {
-                setIsSwitcherOpen(false);
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.08,
+                delayChildren: 0.15,
             }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
+        }
+    };
 
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('mousemove', handleMove);
-            document.removeEventListener('mouseup', stopResizing);
-            document.removeEventListener('touchmove', handleMove);
-            document.removeEventListener('touchend', stopResizing);
-        };
-    }, [handleMove, stopResizing]);
+    const itemVariants = {
+        hidden: { opacity: 0, y: 30, scale: 0.98 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: { duration: 0.6, ease: smoothEase }
+        }
+    };
 
+    const skillHoverVariants = {
+        rest: { scale: 1, y: 0 },
+        hover: {
+            scale: 1.15,
+            y: -8,
+            transition: springTransition
+        },
+        tap: { scale: 0.92, transition: { duration: 0.1 } }
+    };
 
     return (
-        <div className="mockup-body">
-            {/* Background Parallax */}
-            <div className="fixed inset-0 z-0 pointer-events-none">
-                <motion.div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{
-                        backgroundImage: `url(${getImageUrl()})`,
-                        y: backgroundY,
-                        scale: 1.1
-                    }}
+        <div className="min-h-screen themed-bg">
+            {/* Parallax Background */}
+            <div className="fixed inset-0 z-0">
+                <div
+                    className="absolute inset-0 bg-cover bg-center scale-110"
+                    style={{ backgroundImage: `url(${getImageUrl()})` }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-[#0a0a0c]/80 to-transparent" />
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+                <div className="absolute inset-0 themed-gradient-overlay" />
+                <div className="absolute inset-0 themed-surface-overlay backdrop-blur-sm" />
             </div>
 
-            {/* Main Content Grid with Resizer */}
-            <div
-                className="mockup-container"
-                style={{
-                    gridTemplateColumns: isMobile ? '1fr' : `1fr 4px minmax(400px, ${rightPanelWidth}px)` // Dynamic Grid
-                }}
-            >
+            {/* Main Content */}
+            <div className="relative z-10 pt-8 pb-20">
+                {/* Floating Theme Selector - Dropdown Style */}
+                <div className="fixed top-4 right-4 z-50">
+                    <div className="relative">
+                        {/* Trigger Button */}
+                        <motion.button
+                            onClick={() => setThemeOpen(!themeOpen)}
+                            className="flex items-center gap-2 px-4 py-2 glass backdrop-blur-xl rounded-xl text-white/80 hover:text-white transition-colors"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <Palette className="w-4 h-4" />
+                            <span className="font-medium">{themes.find(t => t.value === theme)?.label || 'Dark'}</span>
+                            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${themeOpen ? 'rotate-180' : ''}`} />
+                        </motion.button>
 
-                {/* --- LEFT COLUMN: Character Art & Media --- */}
-                <div className="ds-panel left-column-scroll" ref={leftPanelRef}>
-                    <div className="ds-art-frame">
-                        <motion.img
-                            src={getImageUrl()}
-                            alt={character.Name}
-                            className="ds-art-img"
-                            animate={{
-                                y: [0, -15, 0],
-                            }}
-                            transition={{
-                                repeat: Infinity,
-                                duration: 6,
-                                ease: "easeInOut"
+                        {/* Dropdown Menu */}
+                        <AnimatePresence>
+                            {themeOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                    transition={{ duration: 0.15 }}
+                                    className="absolute top-full right-0 mt-2 glass rounded-xl shadow-2xl overflow-hidden min-w-[160px]"
+                                >
+                                    {themes.map((t) => (
+                                        <button
+                                            key={t.value}
+                                            onClick={() => {
+                                                setTheme(t.value);
+                                                setThemeOpen(false);
+                                            }}
+                                            className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-white/10 transition-colors ${theme === t.value ? 'bg-white/5' : ''
+                                                }`}
+                                        >
+                                            <div
+                                                className="w-4 h-4 rounded-full border border-white/30 flex-shrink-0"
+                                                style={{ backgroundColor: t.color }}
+                                            />
+                                            <span className="text-xl">{t.icon}</span>
+                                            <span className="flex-1 text-left text-white/90 font-medium">{t.label}</span>
+                                            {theme === t.value && (
+                                                <svg className="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                </div>
+
+                <motion.div
+                    className="container mx-auto px-4 lg:px-8 py-8 max-w-7xl"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    {/* Hero Section - Character Art & Info */}
+                    <motion.div
+                        className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-12"
+                        variants={itemVariants}
+                    >
+                        {/* Character Art */}
+                        <div className="relative flex justify-center lg:sticky lg:top-24">
+                            {/* UR Badge */}
+                            <motion.div
+                                className="absolute top-0 left-4 lg:left-0 z-10"
+                                initial={{ opacity: 0, scale: 0.3, rotate: -15 }}
+                                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                                transition={{ delay: 0.4, type: "spring", stiffness: 150, damping: 12 }}
+                            >
+                                <motion.span
+                                    className="text-6xl lg:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-amber-400 via-yellow-300 to-amber-500 drop-shadow-[0_0_30px_rgba(255,215,0,0.5)] inline-block"
+                                    style={{ WebkitTextStroke: '2px rgba(255,255,255,0.3)' }}
+                                    animate={{
+                                        textShadow: [
+                                            "0 0 20px rgba(255,215,0,0.5)",
+                                            "0 0 40px rgba(255,215,0,0.8)",
+                                            "0 0 20px rgba(255,215,0,0.5)"
+                                        ]
+                                    }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                >
+                                    UR
+                                </motion.span>
+                            </motion.div>
+
+                            {/* Character Image with floating animation and particles */}
+                            <motion.div
+                                className="relative"
+                                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                                animate={{ opacity: 1, y: [0, -12, 0], scale: 1 }}
+                                transition={{
+                                    opacity: { duration: 0.8, ease: smoothEase },
+                                    scale: { duration: 0.8, ease: smoothEase },
+                                    y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.8 }
+                                }}
+                            >
+                                {/* Flame Particles */}
+                                {[...Array(12)].map((_, i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="absolute w-2 h-2 rounded-full pointer-events-none"
+                                        style={{
+                                            background: `radial-gradient(circle, ${i % 2 === 0 ? 'rgba(255,200,50,0.9)' : 'rgba(255,100,0,0.9)'} 0%, transparent 70%)`,
+                                            left: `${20 + Math.random() * 60}%`,
+                                            bottom: `${10 + Math.random() * 20}%`,
+                                        }}
+                                        animate={{
+                                            y: [0, -200 - Math.random() * 150],
+                                            x: [0, (Math.random() - 0.5) * 100],
+                                            scale: [0, 1.5, 0],
+                                            opacity: [0, 1, 0],
+                                        }}
+                                        transition={{
+                                            duration: 2 + Math.random() * 2,
+                                            repeat: Infinity,
+                                            delay: i * 0.3,
+                                            ease: "easeOut"
+                                        }}
+                                    />
+                                ))}
+
+                                {/* Spark Particles */}
+                                {[...Array(8)].map((_, i) => (
+                                    <motion.div
+                                        key={`spark-${i}`}
+                                        className="absolute w-1 h-1 bg-yellow-300 rounded-full pointer-events-none"
+                                        style={{
+                                            left: `${30 + Math.random() * 40}%`,
+                                            top: `${20 + Math.random() * 60}%`,
+                                        }}
+                                        animate={{
+                                            scale: [0, 1, 0],
+                                            opacity: [0, 1, 0],
+                                        }}
+                                        transition={{
+                                            duration: 1.5 + Math.random(),
+                                            repeat: Infinity,
+                                            delay: i * 0.4,
+                                            ease: "easeInOut"
+                                        }}
+                                    />
+                                ))}
+
+                                {/* Character Image */}
+                                <motion.img
+                                    src={getImageUrl()}
+                                    alt={character.Name}
+                                    className="relative z-10 max-h-[60vh] lg:max-h-[80vh] w-auto object-contain drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]"
+                                    whileHover={{ scale: 1.02, transition: springTransition }}
+                                />
+                            </motion.div>
+                        </div>
+
+                        {/* Character Info Panel */}
+                        <motion.div
+                            className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 space-y-6"
+                            variants={itemVariants}
+                        >
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-3">
+                                <span className="px-4 py-2 rounded-full bg-gradient-to-r from-accent to-primary text-white font-bold text-sm border-2 border-gold shadow-lg">
+                                    {getRole()}
+                                </span>
+                                <span className="px-4 py-2 rounded-full bg-white/5 border border-gold/50 text-gold font-semibold text-sm flex items-center gap-2">
+                                    <Zap className="w-4 h-4" />
+                                    {getElement()}
+                                </span>
+                            </div>
+
+                            {/* Character Name */}
+                            <div className="text-center lg:text-left">
+                                <h1 className="text-3xl lg:text-4xl xl:text-5xl font-black bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent leading-tight">
+                                    {character.Name}
+                                </h1>
+                                <div className="mt-3 inline-flex items-center gap-2 bg-gold/90 text-black px-4 py-1.5 rounded-full font-bold">
+                                    <Star className="w-4 h-4 fill-current" />
+                                    19★
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+
+                            {/* Skills Section */}
+                            <div>
+                                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-gold" />
+                                    Skills
+                                </h2>
+                                <div className="grid grid-cols-4 gap-4 lg:gap-6">
+                                    {skills.map((skill, index) => (
+                                        <motion.button
+                                            key={index}
+                                            onClick={() => setSelectedSkill(skill)}
+                                            className="relative group flex flex-col items-center"
+                                            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            transition={{ delay: 0.3 + index * 0.1, type: "spring", stiffness: 200, damping: 15 }}
+                                            variants={skillHoverVariants}
+                                            whileHover="hover"
+                                            whileTap="tap"
+                                        >
+                                            <div className="flex flex-col items-center gap-2">
+                                                <div className="relative">
+                                                    <motion.div
+                                                        className="w-16 h-16 lg:w-20 lg:h-20 rounded-full border-3 border-gold bg-gradient-to-br from-white/10 to-black/40 backdrop-blur-md overflow-hidden shadow-lg"
+                                                        whileHover={{ boxShadow: "0 0 25px rgba(255, 215, 0, 0.5)" }}
+                                                    >
+                                                        {skill.icon ? (
+                                                            <img src={skill.icon} alt={skill.name} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center text-2xl">⚔️</div>
+                                                        )}
+                                                    </motion.div>
+                                                    <motion.span
+                                                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-accent to-primary text-white text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full border border-gold shadow-md whitespace-nowrap"
+                                                    >
+                                                        Lv.{skill.level}
+                                                    </motion.span>
+                                                </div>
+                                                <span className="text-xs lg:text-sm font-medium text-white/70 text-center max-w-[70px] lg:max-w-[90px] truncate">
+                                                    {skill.name}
+                                                </span>
+                                            </div>
+                                        </motion.button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Basic Attributes */}
+                            <div>
+                                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <Shield className="w-5 h-5 text-gold" />
+                                    Basic Attributes
+                                </h2>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {[
+                                        { label: "HP", value: character.HP, icon: Heart, color: "text-red-400" },
+                                        { label: "ATK", value: character.ATK, icon: Sword, color: "text-orange-400" },
+                                        { label: "DEF", value: character.DEF, icon: Shield, color: "text-blue-400" },
+                                        { label: "SPD", value: character.SPD, icon: Zap, color: "text-yellow-400" }
+                                    ].map((stat, idx) => (
+                                        <motion.div
+                                            key={idx}
+                                            className="bg-white/5 rounded-xl p-4 border border-white/10 transition-colors duration-300"
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.4 + idx * 0.08, type: "spring", stiffness: 150, damping: 20 }}
+                                            whileHover={{ scale: 1.03, y: -3, borderColor: "rgba(255, 215, 0, 0.5)" }}
+                                        >
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                                                <span className="text-xs text-white/60 uppercase tracking-wider">{stat.label}</span>
+                                            </div>
+                                            <span className="text-xl lg:text-2xl font-bold text-white">
+                                                {stat.value?.toLocaleString() || "N/A"}
+                                            </span>
+                                        </motion.div>
+                                    ))}
+                                </div>
+
+                                <button
+                                    className="w-full mt-4 py-3 rounded-xl bg-white/5 border border-gold/50 text-gold font-bold uppercase tracking-wider hover:bg-gold/10 hover:border-gold transition-all duration-300 flex items-center justify-center gap-2"
+                                    onClick={() => setShowSpecialStats(true)}
+                                >
+                                    <Sparkles className="w-4 h-4" />
+                                    View Special Stats
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Enhancement Timeline */}
+                    <motion.div
+                        className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
+                        variants={itemVariants}
+                    >
+                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="w-1.5 h-8 bg-gradient-to-b from-accent to-gold rounded-full" />
+                            Enhancement Timeline
+                        </h2>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                            {enhancements.length > 0 ? enhancements.map((enh: any, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 transition-all duration-300"
+                                    initial={{ opacity: 0, x: -30, y: 10 }}
+                                    whileInView={{ opacity: 1, x: 0, y: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{ delay: i * 0.12, type: "spring", stiffness: 120, damping: 18 }}
+                                    whileHover={{ x: 10, borderColor: "rgba(255, 215, 0, 0.5)", backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+                                >
+                                    <motion.div className="flex-shrink-0" whileHover={{ scale: 1.1, rotate: 5 }}>
+                                        {enh.Enhancement_Icon?.url ? (
+                                            <img src={enh.Enhancement_Icon.url} alt="Enhancement" className="w-16 h-16 lg:w-20 lg:h-20 object-contain" />
+                                        ) : (
+                                            <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-accent/20 to-gold/20 flex items-center justify-center text-accent font-bold text-lg">
+                                                +{(i + 1) * 10}
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                    <div className="flex-1">
+                                        <p className="text-sm lg:text-base text-white/90 leading-relaxed">
+                                            {enh.Description?.map((block: any, bi: number) =>
+                                                <span key={bi}>{block.children.map((c: any) => c.text).join("")}</span>
+                                            )}
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            )) : (
+                                <p className="text-white/50 col-span-2 text-center py-8">
+                                    No enhancements data available.
+                                </p>
+                            )}
+                        </div>
+                    </motion.div>
+
+                    {/* Character Gallery */}
+                    <motion.div
+                        className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
+                        variants={itemVariants}
+                    >
+                        <CharacterGallery
+                            characters={galleryCharacters}
+                            currentCharacterId={character.id || 0}
+                            onSelectCharacter={(char) => {
+                                const idx = allCharacters.findIndex(c => c.id === char.id);
+                                if (idx !== -1) setSelectedCharIdx(idx);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
                         />
-                        {/* DYNAMIC UR LOGO (Ported from Mockup) */}
-                        <motion.div
-                            style={{
-                                position: 'absolute',
-                                top: '5%',
-                                left: '5%',
-                                fontSize: '8rem',
-                                fontWeight: 900,
-                                color: 'transparent',
-                                WebkitTextStroke: '2px #fff',
-                                opacity: Math.min(1, (1000 - rightPanelWidth) / 400),
-                                scale: Math.max(0.6, 1 + (500 - rightPanelWidth) / 400),
-                                filter: 'drop-shadow(0 0 20px rgba(255,215,0,0.5))',
-                                pointerEvents: 'none',
-                                transformOrigin: 'top left'
-                            }}
-                        >
-                            UR
-                        </motion.div>
+                    </motion.div>
 
-                        <div className="absolute bottom-10 left-0 right-0 flex justify-center gap-4">
-                            {/* Duplicate Element Tag Removed */}
-                        </div>
-                    </div>
+                    {/* Video Showcase */}
+                    <motion.div
+                        className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
+                        variants={itemVariants}
+                    >
+                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <div className="w-1.5 h-8 bg-gradient-to-b from-accent to-gold rounded-full" />
+                            Video Showcase
+                        </h2>
 
-                    <div className="ds-video-container">
-                        <div className="ds-sub-header">Video Showcase</div>
                         {getYouTubeEmbedUrl(character.YouTube_URL) ? (
-                            <div className="video-placeholder" style={{ padding: 0, overflow: 'hidden', aspectRatio: '16/9' }}>
+                            <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-gold/50 shadow-2xl">
                                 <iframe
-                                    width="100%"
-                                    height="100%"
+                                    className="absolute inset-0 w-full h-full"
                                     src={getYouTubeEmbedUrl(character.YouTube_URL)!}
                                     title="Character Showcase"
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
-                                ></iframe>
+                                />
                             </div>
                         ) : (
-                            <div className="video-placeholder">
-                                <span>No Video Available</span>
+                            <div className="aspect-video rounded-2xl bg-black/50 border-2 border-gold/30 flex flex-col items-center justify-center gap-4">
+                                <Play className="w-16 h-16 text-gold/50" />
+                                <span className="text-white/50">No Video Available</span>
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
-                    <div className="ds-comment-container">
-                        {/* Real Comment Section Integration */}
-                        <div style={{ marginTop: '1rem' }}>
-                            <CommentSection pageId={`character-${character.id || 'default'}`} />
-                        </div>
-                    </div>
-                </div>
-
-                {/* --- RESIZER --- */}
-                {/* --- RESIZER (Desktop Only) --- */}
-                {!isMobile && (
-                    <div
-                        className="ds-resizer"
-                        onMouseDown={startResizing}
-                        onTouchStart={startResizing}
+                    {/* Comments Section */}
+                    <motion.div
+                        className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 border border-white/10"
+                        variants={itemVariants}
                     >
-                        <div className="ds-resizer-line"></div>
-                        <div className="ds-resizer-handle">⁝</div>
-                    </div>
-                )}
-
-                {/* --- RIGHT COLUMN: Stats & Skills --- */}
-                <div
-                    className="ds-panel right-panel"
-                    style={{ '--rw': `${rightPanelWidth}px` } as any}
-                >
-                    <div className="ds-level-row">
-                        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-                            <span className="ds-role-tag">{getRole()}</span>
-                            <span className="ds-element-tag">
-                                <span className="icon">⚡</span>
-                                <span className="name">{getElement()}</span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="ds-header-area">
-                        <div className="ds-name-stack" ref={switcherRef} style={{ position: 'relative' }}>
-                            <div
-                                className="ds-character-title-row"
-                                onClick={() => setIsSwitcherOpen(!isSwitcherOpen)}
-                                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                            >
-                                <h1 className="ds-character-name" style={{ margin: 0 }}>{character.Name}</h1>
-                                <span className="ds-switcher-arrow">{isSwitcherOpen ? '▲' : '▼'}</span>
-                            </div>
-
-                            {isSwitcherOpen && (
-                                <div className="ds-switcher-dropdown">
-                                    {allCharacters.map((char, index) => (
-                                        <div
-                                            key={char.id}
-                                            className={`ds-switcher-item ${index === selectedCharIdx ? 'active' : ''}`}
-                                            onClick={() => {
-                                                setSelectedCharIdx(index);
-                                                setIsSwitcherOpen(false);
-                                            }}
-                                        >
-                                            <span className="ds-switcher-icon">{char.Element || "?"}</span>
-                                            <span className="ds-switcher-name">{char.Name}</span>
-                                            {index === selectedCharIdx && <span className="ds-switcher-check">✓</span>}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {renderStarBadge()}
-                        </div>
-                    </div>
-
-                    {/* Combat Skills */}
-                    {/* Combat Skills */}
-                    <div className="ds-section section-skills">
-                        <div className="ds-section-header">Skills</div>
-                        <div className="ds-skill-row">
-                            {skills.map((skill, index) => (
-                                <div key={index} className="ds-skill-icon-frame" onClick={() => setSelectedSkill(skill)}>
-                                    <span style={{ fontSize: '1.5rem' }}>{skill.icon}</span>
-                                    <span style={{
-                                        position: 'absolute',
-                                        top: '-5px',
-                                        right: '-5px',
-                                        background: 'var(--ds-red)',
-                                        color: 'white',
-                                        fontSize: '0.7rem',
-                                        fontWeight: 'bold',
-                                        padding: '2px 6px',
-                                        borderRadius: '10px',
-                                        border: '1px solid var(--ds-gold)',
-                                        zIndex: 10
-                                    }}>
-                                        Lv.{skill.level}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Basic Attributes (Re-aligned to Mockup Grid) */}
-                    {/* Basic Attributes (Re-aligned to Mockup Grid) */}
-                    <div className="ds-section section-stats">
-                        <div className="ds-section-header">Basic Attributes</div>
-                        <div className="ds-stats-grid">
-                            <div className="ds-stat-item">
-                                <span className="label">HP</span>
-                                <span className="val">{character.HP?.toLocaleString() || "N/A"}</span>
-                                <span className="spacer"></span>
-                            </div>
-                            <div className="ds-stat-item">
-                                <span className="label">ATK</span>
-                                <span className="val">{character.ATK?.toLocaleString() || "N/A"}</span>
-                                <span className="spacer"></span>
-                            </div>
-                            <div className="ds-stat-item">
-                                <span className="label">DEF</span>
-                                <span className="val">{character.DEF?.toLocaleString() || "N/A"}</span>
-                                <span className="spacer"></span>
-                            </div>
-                            <div className="ds-stat-item">
-                                <span className="label">SPD</span>
-                                <span className="val">{character.SPD?.toLocaleString() || "N/A"}</span>
-                                <span className="spacer"></span>
-                            </div>
-                            <button
-                                className="ds-special-btn"
-                                onClick={() => setShowSpecialStats(true)}
-                            >
-                                Special Stats Detail
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Enhancement Timeline (Real Data) */}
-                    {/* Enhancement Timeline (Real Data) */}
-                    <div className="ds-section section-enhancements">
-                        <div className="ds-section-header">Enhancement Timeline</div>
-                        <div className="ds-enhancement-timeline">
-                            {enhancements.length > 0 ? enhancements.map((enh: any, i: number) => (
-                                <div className="ds-enh-item" key={i}>
-                                    <div className="ds-enh-lvl">
-                                        {enh.Enhancement_Icon?.url ?
-                                            <img src={enh.Enhancement_Icon.url} alt="icon" style={{ width: '80px', height: '80px', minWidth: '80px', objectFit: 'contain', marginTop: '0.2rem' }} />
-                                            : <div style={{ width: '80px', textAlign: 'center', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--ds-red)' }}>Lv.{((i + 1) * 10)}</div>}
-                                    </div>
-                                    <div>
-                                        <div className="ds-enh-text">
-                                            {enh.Description?.map((block: any, bi: number) => (
-                                                <span key={bi}>{block.children.map((c: any) => c.text).join("")}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )) : (
-                                <div style={{ padding: '1rem', color: 'rgba(255,255,255,0.5)' }}>No enhancements data available.</div>
-                            )}
-                        </div>
-                    </div>
-
-                </div>
-
-
-                {/* --- MODALS (Kept Functional) --- */}
-                <AnimatePresence>
-                    {selectedSkill && (
-                        <div className="ds-modal-overlay" onClick={() => setSelectedSkill(null)}>
-                            <motion.div
-                                className="ds-scroll-popup"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.9, opacity: 0 }}
-                                onClick={(e) => e.stopPropagation()}
-                                style={{
-                                    maxWidth: isMobile ? 'none' : '1000px',
-                                    width: isMobile ? '100vw' : '90%',
-                                    height: isMobile ? '100dvh' : 'auto',
-                                    maxHeight: isMobile ? 'none' : '85vh',
-                                    margin: 0,
-                                    borderRadius: isMobile ? 0 : undefined,
-                                }}
-                            >
-                                <div className="ds-modal-inner" style={{ height: isMobile ? '100%' : 'auto', display: 'flex', flexDirection: 'column' }}>
-                                    <h2 style={{
-                                        margin: '0 0 3rem 0',
-                                        textTransform: 'uppercase',
-                                        borderBottom: '1px solid var(--ds-glass-border)',
-                                        paddingBottom: '1rem',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        Skill Detail
-                                        <button className="ds-modal-close" style={{ margin: 0, padding: '0.4rem 1.2rem', fontSize: '0.8rem' }} onClick={() => setSelectedSkill(null)}>Close</button>
-                                    </h2>
-
-                                    <div className="ds-skill-modal-layout" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '3rem', maxHeight: '60vh' }}>
-                                        {/* LEFT COLUMN: Skill Details (Preserved & Enhanced) */}
-                                        <div className="ds-skill-modal-left" style={{ overflowY: 'auto', paddingRight: '0.5rem', maxHeight: '60vh' }}>
-                                            <div style={{ display: 'flex', gap: '3rem', alignItems: 'center' }}>
-                                                <div style={{
-                                                    fontSize: '3rem',
-                                                    width: '80px',
-                                                    height: '80px',
-                                                    flexShrink: 0,
-                                                    borderRadius: '50%',
-                                                    border: '2px solid var(--ds-gold)',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    overflow: 'hidden',
-                                                    background: 'rgba(0,0,0,0.3)'
-                                                }}>
-                                                    {selectedSkill.icon}
-                                                </div>
-                                                <div>
-                                                    <h2 style={{ margin: 0, textTransform: 'uppercase', fontSize: '1.8rem', color: 'var(--ds-text)', wordBreak: 'break-word', lineHeight: 1.1 }}>{selectedSkill.name}</h2>
-                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-gold)', fontWeight: 'bold', marginTop: '0.3rem' }}>Type: {selectedSkill.type}</div>
-                                                    <div className="ds-modal-subtitle" style={{ color: 'var(--ds-label)', fontSize: '0.9rem' }}>Level: {selectedSkill.level}</div>
-                                                </div>
-                                            </div>
-
-                                            <div className="ds-section-title" style={{ marginTop: '1rem' }}>Description</div>
-                                            <p className="ds-modal-desc" style={{ lineHeight: 1.8, fontSize: '1.05rem', color: 'rgba(255,255,255,0.9)', whiteSpace: 'pre-line' }}>
-                                                {selectedSkill.description}
-                                            </p>
-                                        </div>
-
-                                        {/* RIGHT COLUMN: Buff Accordion List */}
-                                        <div className="ds-skill-modal-right" style={{ overflowY: 'auto', paddingRight: '10px', maxHeight: '60vh' }}>
-                                            <div className="ds-section-title">Buffs & Effects</div>
-                                            <div className="ds-buff-accordion-list">
-                                                {selectedSkill.buffs && selectedSkill.buffs.length > 0 ? (
-                                                    selectedSkill.buffs.map((buff: any, idx: number) => {
-                                                        const isExpanded = expandedBuffs[`${buff.name}-${idx}`];
-                                                        return (
-                                                            <div
-                                                                key={`${buff.name}-${idx}`}
-                                                                className={`ds-buff-accordion ${isExpanded ? 'expanded' : ''}`}
-                                                            >
-                                                                <div
-                                                                    className="ds-buff-accordion-header"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        toggleBuff(`${buff.name}-${idx}`);
-                                                                    }}
-                                                                >
-                                                                    <div className="ds-buff-icon-box">
-                                                                        {buff.icon ? (
-                                                                            <img src={buff.icon} alt="icon" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                                        ) : (
-                                                                            <span>⚡</span>
-                                                                        )}
-                                                                    </div>
-                                                                    <div className="ds-buff-name">{buff.name}</div>
-                                                                    <div className="ds-accordion-arrow">▼</div>
-                                                                </div>
-                                                                <div className="ds-buff-accordion-content">
-                                                                    <div className="ds-buff-desc">
-                                                                        {buff.description || "No description available."}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        );
-                                                    })
-                                                ) : (
-                                                    <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>No specific buffs.</span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    )}
-                </AnimatePresence>
-
-
-
-                {/* SPECIAL STATS MODAL */}
-                <AnimatePresence>
-                    {showSpecialStats && (
-                        <div className="ds-modal-overlay" onClick={() => setShowSpecialStats(false)} style={{ padding: isMobile ? 0 : '2rem', alignItems: isMobile ? 'flex-start' : 'center' }}>
-                            <div className="ds-scroll-popup" onClick={(e) => e.stopPropagation()} style={{
-                                width: isMobile ? '100vw' : '90%',
-                                height: isMobile ? '100dvh' : 'auto',
-                                maxHeight: isMobile ? 'none' : '85vh',
-                                maxWidth: isMobile ? 'none' : '600px',
-                                margin: 0,
-                                borderRadius: isMobile ? 0 : undefined,
-                                paddingBottom: isMobile ? '5rem' : '2.5rem'
-                            }}>
-                                <div className="ds-modal-inner">
-                                    <h2 className="ds-modal-header">Special Stats</h2>
-                                    <div className="ds-modal-stats-list">
-                                        {specialStats.map(stat => (
-                                            <div key={stat.label} className="ds-modal-stat-item">
-                                                <span className="label">{stat.label}</span>
-                                                <span className="val">{stat.val}</span>
-                                                <span className="spacer"></span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                                        <button className="ds-special-btn" onClick={() => setShowSpecialStats(false)}>Back to Stats</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </AnimatePresence>
-
+                        <CommentSection pageId={`character-${character.id || 'default'}`} />
+                    </motion.div>
+                </motion.div>
             </div>
+
+            {/* Skill Modal */}
+            <AnimatePresence mode="wait">
+                {selectedSkill && (
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 themed-surface-overlay backdrop-blur-md"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2, ease: smoothEase }}
+                        onClick={() => setSelectedSkill(null)}
+                    >
+                        <motion.div
+                            className="glass rounded-3xl p-6 lg:p-8 max-w-lg w-full border border-gold/50 shadow-2xl max-h-[85vh] overflow-y-auto"
+                            initial={{ scale: 0.85, opacity: 0, y: 30 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.85, opacity: 0, y: 30 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.8 }}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="flex items-start justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-white">Skill Detail</h2>
+                                <button onClick={() => setSelectedSkill(null)} className="p-2 rounded-full hover:bg-white/10 transition-colors">
+                                    <X className="w-5 h-5 text-white/60" />
+                                </button>
+                            </div>
+
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-20 h-20 rounded-full border-2 border-gold bg-black/30 overflow-hidden flex-shrink-0">
+                                    {selectedSkill.icon ? (
+                                        <img src={selectedSkill.icon} alt={selectedSkill.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-3xl">⚔️</div>
+                                    )}
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">{selectedSkill.name}</h3>
+                                    <div className="flex gap-3 mt-1 text-sm text-gold">
+                                        <span>Type: {selectedSkill.type}</span>
+                                        <span>Level: {selectedSkill.level}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-4 rounded-xl bg-white/5 border border-white/10 mb-6">
+                                <h4 className="text-xs uppercase tracking-wider text-white/50 mb-2">Description</h4>
+                                <p className="text-white/90 leading-relaxed whitespace-pre-line">{selectedSkill.description}</p>
+                            </div>
+
+                            {/* Effects Section (Buffs & Debuffs) */}
+                            {selectedSkill.buffs && selectedSkill.buffs.length > 0 && (
+                                <div className="mb-6">
+                                    <h4 className="text-xs uppercase tracking-wider text-gold mb-3 flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-gold"></span>
+                                        Effects
+                                    </h4>
+                                    <div className="space-y-2">
+                                        {selectedSkill.buffs.map((effect: any, idx: number) => {
+                                            // Determine if it's a buff or debuff based on name keywords
+                                            const isDebuff = effect.name.toLowerCase().includes('break') ||
+                                                effect.name.toLowerCase().includes('stun') ||
+                                                effect.name.toLowerCase().includes('burn') ||
+                                                effect.name.toLowerCase().includes('bleed') ||
+                                                effect.name.toLowerCase().includes('blind') ||
+                                                effect.name.toLowerCase().includes('reduce') ||
+                                                effect.name.toLowerCase().includes('down') ||
+                                                effect.type === 'debuff';
+
+                                            return (
+                                                <motion.div
+                                                    key={idx}
+                                                    className={`p-3 rounded-xl flex items-start gap-3 ${isDebuff
+                                                        ? "bg-red-500/10 border border-red-500/30"
+                                                        : "bg-green-500/10 border border-green-500/30"
+                                                        }`}
+                                                    initial={{ opacity: 0, x: -10 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: idx * 0.1 }}
+                                                >
+                                                    <div className={`w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border flex items-center justify-center ${isDebuff ? "border-red-500/50 bg-red-500/20" : "border-green-500/50 bg-green-500/20"
+                                                        }`}>
+                                                        {effect.icon ? (
+                                                            <img
+                                                                src={effect.icon}
+                                                                alt={effect.name}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <span className="text-lg">{isDebuff ? '💥' : '✨'}</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center justify-between mb-1">
+                                                            <span className={`font-semibold ${isDebuff ? "text-red-300" : "text-green-300"}`}>
+                                                                {effect.name}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-sm text-white/80">{effect.description || effect.effect}</p>
+                                                    </div>
+                                                </motion.div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            <button
+                                className="w-full py-3 rounded-xl bg-gradient-to-r from-accent to-primary text-white font-bold border border-gold"
+                                onClick={() => setSelectedSkill(null)}
+                            >
+                                Close
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Special Stats Modal */}
+            <AnimatePresence mode="wait">
+                {showSpecialStats && (
+                    <motion.div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 themed-surface-overlay backdrop-blur-md"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2, ease: smoothEase }}
+                        onClick={() => setShowSpecialStats(false)}
+                    >
+                        <motion.div
+                            className="glass rounded-3xl p-6 lg:p-8 max-w-2xl w-full border border-gold/50 shadow-2xl max-h-[85vh] overflow-y-auto"
+                            initial={{ scale: 0.85, opacity: 0, y: 30 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.85, opacity: 0, y: 30 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.8 }}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="flex items-start justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-white">Special Stats</h2>
+                                <button onClick={() => setShowSpecialStats(false)} className="p-2 rounded-full hover:bg-white/10 transition-colors">
+                                    <X className="w-5 h-5 text-white/60" />
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {specialStats.map((stat, index) => (
+                                    <motion.div
+                                        key={index}
+                                        className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10"
+                                        initial={{ opacity: 0, x: -20, scale: 0.95 }}
+                                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                                        transition={{ delay: index * 0.04, type: "spring", stiffness: 200, damping: 20 }}
+                                        whileHover={{ borderColor: "rgba(255, 215, 0, 0.4)", x: 5 }}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <stat.icon className="w-4 h-4 text-gold" />
+                                            <span className="text-sm text-white/60">{stat.label}</span>
+                                        </div>
+                                        <span className="font-bold text-white">{stat.val}</span>
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            <button
+                                className="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-accent to-primary text-white font-bold border border-gold"
+                                onClick={() => setShowSpecialStats(false)}
+                            >
+                                Close
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
