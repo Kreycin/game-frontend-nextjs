@@ -691,6 +691,29 @@ body {
   background-color: var(--surface-color-dark);
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
+  border: 1px solid transparent; /* Prepare for border color change */
+  transition: all 0.3s ease;
+}
+
+.effect-item-in-skill.effect-buff {
+  background-color: rgba(46, 125, 50, 0.15);
+  border-color: rgba(46, 125, 50, 0.5);
+}
+
+.effect-item-in-skill.effect-debuff {
+  background-color: rgba(198, 40, 40, 0.15);
+  border-color: rgba(198, 40, 40, 0.5);
+}
+
+.effect-duration-tag {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color-secondary);
+  margin-left: auto; /* Push to right */
+  margin-right: 0.5rem;
+  white-space: nowrap;
 }
 
 .effect-header-in-skill {

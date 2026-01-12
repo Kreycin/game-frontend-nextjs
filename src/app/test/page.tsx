@@ -9,8 +9,8 @@ const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0
 
 
 
-// Force static generation with revalidation (ISR)
-export const revalidate = 3600;
+// Force dynamic rendering (no cache) for testing
+export const revalidate = 0;
 
 async function getCharacters(): Promise<Character[]> {
     const queryString = qs.stringify({

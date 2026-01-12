@@ -75,7 +75,10 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                     description: e.Description?.map((block: any) =>
                         block.children.map((c: any) => c.text).join("")
                     ).join("") || "Description unavailable.",
-                    icon: e.Effect_Icon?.url || null
+                    icon: e.Effect_Icon?.url || null,
+                    type: e.Effect_Type || 'Buff',
+                    duration: e.Turn_Duration || null,
+                    undispellable: e.Is_Undispellable || false
                 }));
             }
 
@@ -582,7 +585,10 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         {selectedSkill.buffs.map((effect: any, idx: number) => (
                                             <motion.div
                                                 key={idx}
-                                                className="p-3 rounded-xl flex items-start gap-3 bg-white/5 border border-white/10"
+                                                className={`p-3 rounded-xl flex items-start gap-3 border transition-colors ${effect.type === 'Buff' ? 'bg-green-500/10 border-green-500/30' :
+                                                    effect.type === 'Debuff' ? 'bg-red-500/10 border-red-500/30' :
+                                                        'bg-white/5 border-white/10'
+                                                    }`}
                                                 initial={{ opacity: 0, x: -10 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: idx * 0.1 }}
@@ -603,8 +609,18 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="flex items-center justify-between mb-1">
-                                                        <span className="font-semibold text-foreground">
+                                                        <span className="font-semibold text-foreground flex items-center gap-2">
                                                             {effect.name}
+                                                            {effect.undispellable && (
+                                                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/30 tracking-wide">
+                                                                    Undispellable
+                                                                </span>
+                                                            )}
+                                                            {effect.duration && (
+                                                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-foreground/70 border border-white/10">
+                                                                    {effect.duration}
+                                                                </span>
+                                                            )}
                                                         </span>
                                                     </div>
                                                     <p className="text-sm text-foreground/80">{effect.description || effect.effect}</p>

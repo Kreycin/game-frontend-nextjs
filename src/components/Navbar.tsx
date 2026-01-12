@@ -56,7 +56,7 @@ export default function Navbar() {
                             >
                                 {themes.map((t) => (
                                     <option key={t.value} value={t.value} className="bg-black text-white">
-                                        {t.icon} {t.label}
+                                        {t.label}
                                     </option>
                                 ))}
                             </select>
@@ -84,7 +84,7 @@ export default function Navbar() {
                         >
                             {themes.map((t) => (
                                 <option key={t.value} value={t.value} className="bg-black text-white">
-                                    {t.icon}
+                                    {t.label}
                                 </option>
                             ))}
                         </select>
