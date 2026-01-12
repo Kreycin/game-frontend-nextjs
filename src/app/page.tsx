@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
-import CharacterSheet from "@/components/CharacterSheet";
+import TestCharacterSheet from "@/app/test/TestCharacterSheet";
 import CharacterSheetSkeleton from "@/components/CharacterSheetSkeleton";
+import Navbar from "@/components/Navbar";
 import type { Character } from '@/types/character';
 import qs from 'qs';
 
 const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
 
-// --- Page Component สำหรับหน้าแรก ---
 import { MOCK_CHARACTER } from "@/utils/mockData";
 
 async function getCharacters(): Promise<Character[]> {
@@ -26,11 +26,9 @@ async function getCharacters(): Promise<Character[]> {
                   Skill_Icon: {
                     fields: ['url']
                   },
-                  // ----- นี่คือส่วนที่เพิ่มเข้ามา -----
-                  effects: { // 1. เจาะเข้าไปใน relation "effects"
-                    populate: '*' // 2. สั่งให้ดึงข้อมูลทั้งหมดของ effect ออกมาด้วย
+                  effects: {
+                    populate: '*'
                   }
-                  // ---------------------------------
                 }
               }
             }
@@ -55,7 +53,6 @@ async function getCharacters(): Promise<Character[]> {
       return [MOCK_CHARACTER];
     }
 
-    // โค้ดส่วนแปลงข้อมูลนี้ถูกต้องแล้ว และจะจัดการกับ effects ที่ได้มาใหม่โดยอัตโนมัติ
     const characters = rawData.data.map((char: any) => {
       const transformedStarLevels = char.Star_Levels?.map((level: any) => ({
         ...level,
@@ -64,7 +61,7 @@ async function getCharacters(): Promise<Character[]> {
           skill: desc.skill ? {
             ...desc.skill,
             Skill_Icon: desc.skill.Skill_Icon || null,
-            effects: desc.skill.effects || [] // ตรวจสอบให้แน่ใจว่า effects ถูกส่งต่อไป
+            effects: desc.skill.effects || []
           } : null,
         })) || [],
       })) || [];
@@ -105,38 +102,22 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // --- Page Component สำหรับหน้าแรก ---
-import AnimatedBackground from "@/components/AnimatedBackground";
-import { MotionDiv } from "@/components/MotionWrapper"; // We need a client wrapper for motion since page is server component
-
 export default async function HomePage() {
   const allCharacters = await getCharacters();
-  // if (!allCharacters || allCharacters.length === 0) {
-  //   return <CharacterSheetSkeleton />;
-  // }
-  // Commenting out explicit loading state return to allow background to show even if empty, 
-  // but logically if empty we might still want skeleton. 
-  // Let's keep existing logic but wrapped.
 
-  const content = (allCharacters && allCharacters.length > 0) ? (
-    <CharacterSheet
-      allCharacters={allCharacters}
-      characterId={allCharacters[0].id.toString()}
-    />
-  ) : (
-    <CharacterSheetSkeleton />
-  );
+  if (!allCharacters || allCharacters.length === 0) {
+    return (
+      <main className="relative min-h-screen">
+        <Navbar />
+        <CharacterSheetSkeleton />
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen">
-      <AnimatedBackground />
-      <MotionDiv
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10"
-      >
-        {content}
-      </MotionDiv>
+      <Navbar />
+      <TestCharacterSheet allCharacters={allCharacters} />
     </main>
   );
 }
