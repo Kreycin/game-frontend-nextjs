@@ -316,7 +316,6 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                     {getRole()}
                                 </span>
                                 <span className="px-4 py-2 rounded-full bg-white/5 border border-gold/50 text-gold font-semibold text-sm flex items-center gap-2">
-                                    <Zap className="w-4 h-4" />
                                     {getElement()}
                                 </span>
                             </div>
