@@ -90,13 +90,6 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                         description: BUFF_DEFINITIONS[m.slice(1, -1)] || "Description unavailable.",
                         icon: null
                     }));
-                } else {
-                    const mockNames = getMockBuffs(character.Element || "Unknown");
-                    buffs = mockNames.map(name => ({
-                        name,
-                        description: BUFF_DEFINITIONS[name] || "Description unavailable.",
-                        icon: null
-                    }));
                 }
             }
 
@@ -454,7 +447,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         )}
                                     </motion.div>
                                     <div className="flex-1">
-                                        <p className="text-sm lg:text-base text-foreground/90 leading-relaxed">
+                                        <p className="text-sm lg:text-base text-foreground/90 leading-relaxed whitespace-pre-wrap">
                                             {enh.Description?.map((block: any, bi: number) =>
                                                 <span key={bi}>{block.children.map((c: any) => c.text).join("")}</span>
                                             )}
@@ -623,7 +616,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                                             )}
                                                         </span>
                                                     </div>
-                                                    <p className="text-sm text-foreground/80">{effect.description || effect.effect}</p>
+                                                    <p className="text-sm text-foreground/80 whitespace-pre-wrap">{effect.description || effect.effect}</p>
                                                 </div>
                                             </motion.div>
                                         ))}
