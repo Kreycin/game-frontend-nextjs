@@ -625,7 +625,7 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                 <p className="text-white/90 leading-relaxed whitespace-pre-line">{selectedSkill.description}</p>
                             </div>
 
-                            {/* Effects Section (Buffs & Debuffs) */}
+                            {/* Effects Section (Combined Buffs & Debuffs) */}
                             {selectedSkill.buffs && selectedSkill.buffs.length > 0 && (
                                 <div className="mb-6">
                                     <h4 className="text-xs uppercase tracking-wider text-gold mb-3 flex items-center gap-2">
@@ -633,51 +633,38 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         Effects
                                     </h4>
                                     <div className="space-y-2">
-                                        {selectedSkill.buffs.map((effect: any, idx: number) => {
-                                            // Determine if it's a buff or debuff based on name keywords
-                                            const isDebuff = effect.name.toLowerCase().includes('break') ||
-                                                effect.name.toLowerCase().includes('stun') ||
-                                                effect.name.toLowerCase().includes('burn') ||
-                                                effect.name.toLowerCase().includes('bleed') ||
-                                                effect.name.toLowerCase().includes('blind') ||
-                                                effect.name.toLowerCase().includes('reduce') ||
-                                                effect.name.toLowerCase().includes('down') ||
-                                                effect.type === 'debuff';
-
-                                            return (
-                                                <motion.div
-                                                    key={idx}
-                                                    className={`p-3 rounded-xl flex items-start gap-3 ${isDebuff
-                                                        ? "bg-red-500/10 border border-red-500/30"
-                                                        : "bg-green-500/10 border border-green-500/30"
-                                                        }`}
-                                                    initial={{ opacity: 0, x: -10 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ delay: idx * 0.1 }}
-                                                >
-                                                    <div className={`w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border flex items-center justify-center ${isDebuff ? "border-red-500/50 bg-red-500/20" : "border-green-500/50 bg-green-500/20"
-                                                        }`}>
-                                                        {effect.icon ? (
-                                                            <img
-                                                                src={effect.icon}
-                                                                alt={effect.name}
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <span className="text-lg">{isDebuff ? '💥' : '✨'}</span>
-                                                        )}
+                                        {selectedSkill.buffs.map((effect: any, idx: number) => (
+                                            <motion.div
+                                                key={idx}
+                                                className="p-3 rounded-xl flex items-start gap-3 bg-white/5 border border-white/10"
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: idx * 0.1 }}
+                                            >
+                                                <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border border-gold/50 flex items-center justify-center bg-black/30">
+                                                    {effect.icon ? (
+                                                        <img
+                                                            src={effect.icon}
+                                                            alt={effect.name}
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).src = "https://res.cloudinary.com/di8bf7ufw/image/upload/v1736416010/ui_icon_default_buff.png";
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <span className="text-lg">✨</span>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="flex items-center justify-between mb-1">
+                                                        <span className="font-semibold text-white">
+                                                            {effect.name}
+                                                        </span>
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <div className="flex items-center justify-between mb-1">
-                                                            <span className={`font-semibold ${isDebuff ? "text-red-300" : "text-green-300"}`}>
-                                                                {effect.name}
-                                                            </span>
-                                                        </div>
-                                                        <p className="text-sm text-white/80">{effect.description || effect.effect}</p>
-                                                    </div>
-                                                </motion.div>
-                                            );
-                                        })}
+                                                    <p className="text-sm text-white/80">{effect.description || effect.effect}</p>
+                                                </div>
+                                            </motion.div>
+                                        ))}
                                     </div>
                                 </div>
                             )}
