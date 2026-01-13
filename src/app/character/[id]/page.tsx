@@ -21,7 +21,7 @@ async function getCharacters(): Promise<Character[]> {
   const fetchURL = `${STRAPI_API_URL}/api/characters?${queryString}`;
 
   try {
-    const res = await fetch(fetchURL, { next: { revalidate: 3600 } }); // เปลี่ยนกลับมาใช้ cache revalidate
+    const res = await fetch(fetchURL, { next: { tags: ['characters'] } }); // ใช้ tags เพื่อรองรับ on-demand revalidation
 
     if (!res.ok) {
       console.error("Failed to fetch characters from Strapi:", await res.text());
@@ -43,7 +43,7 @@ async function getCharacters(): Promise<Character[]> {
             id: enh.id, ...enh.attributes, Enhancement_Icon: enh.attributes.Enhancement_Icon?.data?.attributes || null
           })) || [],
           skill_descriptions: level.skill_descriptions?.data?.map((skill: any) => ({
-              id: skill.id, ...skill.attributes, Skill_Icon: skill.attributes.skill_icon?.data?.attributes || null
+            id: skill.id, ...skill.attributes, Skill_Icon: skill.attributes.skill_icon?.data?.attributes || null
           })) || []
         })) || [],
         Name: attributes.Name || `Character #${char.id}`,
@@ -56,7 +56,7 @@ async function getCharacters(): Promise<Character[]> {
         SPD: attributes.SPD || 0,
       };
     });
-    
+
     console.log(`Successfully fetched and transformed ${characters.length} characters.`);
     return characters;
 
@@ -70,7 +70,7 @@ async function getCharacters(): Promise<Character[]> {
 // ----- Page Component (Final Version) -----
 export default async function CharacterPage({ params }: { params: { id: string } }) {
   // ไม่ต้อง await params ตรงนี้
-  const { id: characterId } = params; 
+  const { id: characterId } = params;
   const allCharacters = await getCharacters();
 
   if (!allCharacters || allCharacters.length === 0) {
@@ -89,8 +89,8 @@ export default async function CharacterPage({ params }: { params: { id: string }
 
 // Optional: For build-time optimization
 export async function generateStaticParams() {
-    const characters = await getCharacters();
-    return characters.map((character) => ({
-        id: character.id.toString(),
-    }));
+  const characters = await getCharacters();
+  return characters.map((character) => ({
+    id: character.id.toString(),
+  }));
 }

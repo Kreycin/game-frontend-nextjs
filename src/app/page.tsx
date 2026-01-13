@@ -42,7 +42,7 @@ async function getCharacters(): Promise<Character[]> {
   const fetchURL = `${STRAPI_API_URL}/api/characters?${queryString}`;
 
   try {
-    const res = await fetch(fetchURL, { cache: 'no-store' });
+    const res = await fetch(fetchURL, { next: { tags: ['characters'] } });
     if (!res.ok) {
       console.warn(`Failed to fetch characters from Strapi found at ${STRAPI_API_URL}. Using Mock Data.`);
       return [MOCK_CHARACTER];
