@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useTheme, themes, Theme } from "@/hooks/use-theme";
+import PushNotificationToggle from "@/components/PushNotificationToggle";
 
 const navLinks = [
     { name: "Characters", href: "/" },
@@ -61,6 +62,8 @@ export default function Navbar() {
                                 ))}
                             </select>
                         </div>
+                        {/* Push Notification Toggle */}
+                        <PushNotificationToggle />
                         <Link
                             href="/login"
                             className="px-4 py-2 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"

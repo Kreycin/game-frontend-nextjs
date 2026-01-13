@@ -8,10 +8,9 @@ const withPWA = withPWAInit({
   aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true,
   disable: process.env.NODE_ENV === 'development',
-  // --- การแก้ไข ---
-  // ย้าย importScripts เข้ามาไว้ใน workboxOptions
+  // Import custom push notification handler
   workboxOptions: {
-    importScripts: ['/firebase-messaging-sw.js'],
+    importScripts: ['/push-sw.js'],
   },
 });
 
@@ -19,4 +18,4 @@ const nextConfig: NextConfig = {
   /* config options here */
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

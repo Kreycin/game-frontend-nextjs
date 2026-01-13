@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 import ClientAuthProvider from "@/context/ClientAuthProvider";
 import Navbar from "@/components/Navbar"; // เราจะสร้าง Navbar ทีหลัง
 import LayoutWrapper from "@/components/LayoutWrapper";
-import NotificationButtonWrapper from "@/components/NotificationButtonWrapper";
+
 import { ThemeProvider } from "@/hooks/use-theme";
 import "./globals.css"; // นี่คือไฟล์ App.css เดิมของเรา
 import "./styles/TierListPage.css";
 import "./styles/CharacterTooltip.css";
-import "./styles/NotificationSettings.css";
+
 
 export const metadata: Metadata = {
   title: "DS Game Hub",
@@ -29,12 +29,10 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <ClientAuthProvider>
-            <NotificationButtonWrapper> {/* <-- 2. นำมาหุ้มตรงนี้ */}
-              <LayoutWrapper>
-                <Navbar />
-                <main>{children}</main>
-              </LayoutWrapper>
-            </NotificationButtonWrapper> {/* <-- 3. ปิด Tag */}
+            <LayoutWrapper>
+              <Navbar />
+              <main>{children}</main>
+            </LayoutWrapper>
           </ClientAuthProvider>
         </ThemeProvider>
       </body>
