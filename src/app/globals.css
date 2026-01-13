@@ -6,9 +6,9 @@
 :root,
 .dark {
   /* Dark theme (default) */
-  --background: 240 10% 4%;
-  --foreground: 0 0% 95%;
-  --card: 240 10% 8%;
+  --background: 240 10% 2%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 4%;
   --card-foreground: 0 0% 95%;
   --primary: 18 100% 60%;
   --primary-foreground: 0 0% 100%;
@@ -23,14 +23,14 @@
   --gradient-flame: linear-gradient(135deg, hsl(18, 100%, 60%) 0%, hsl(0, 84%, 50%) 50%, hsl(35, 100%, 50%) 100%);
   --shadow-flame: 0 0 30px hsl(18, 100%, 60%, 0.3);
 
-  --background-color: #0a0a0c;
-  --background-color-hsl: 240 10% 4%;
-  --surface-color-opaque: rgba(36, 36, 36, 0.85);
-  --surface-color-opaque-hsl: 240 2% 14%;
-  --surface-color-light: rgba(45, 45, 45, 0.85);
-  --surface-color-light-hsl: 240 2% 18%;
-  --surface-color-dark: rgba(31, 31, 31, 0.9);
-  --surface-color-dark-hsl: 240 2% 12%;
+  --background-color: #030303;
+  --background-color-hsl: 240 10% 2%;
+  --surface-color-opaque: rgba(18, 18, 18, 0.95);
+  --surface-color-opaque-hsl: 240 2% 7%;
+  --surface-color-light: rgba(30, 30, 30, 0.9);
+  --surface-color-light-hsl: 240 2% 12%;
+  --surface-color-dark: rgba(10, 10, 10, 0.95);
+  --surface-color-dark-hsl: 240 2% 4%;
   --border-color: #444;
   --border-color-hsl: 240 2% 26%;
   --text-color-primary: rgba(255, 255, 255, 0.9);
