@@ -66,10 +66,10 @@ const BlocksRenderer = ({ blocks }: { blocks: any[] | null }) => {
 };
 
 const getYouTubeEmbedUrl = (url: string | undefined | null): string | null => {
-  if (!url) return null;
-  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-  const match = url.match(regex);
-  return match?.[1] ? `https://www.youtube.com/embed/${match[1]}` : null;
+    if (!url) return null;
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match?.[1] ? `https://www.youtube.com/embed/${match[1]}` : null;
 };
 
 type TabName = 'profile' | 'review' | 'build_and_teams';
@@ -85,7 +85,7 @@ const TierListTabs = ({ guideData }: { guideData: GuideData | null }) => {
     const handleTabClick = (tabName: TabName) => {
         setActiveTab(activeTab === tabName ? null : tabName);
     };
-    
+
     const embedUrl = getYouTubeEmbedUrl(guideData.youtube_url);
 
     const tabs: { id: TabName; label: string }[] = [
@@ -117,7 +117,7 @@ const TierListTabs = ({ guideData }: { guideData: GuideData | null }) => {
                     {activeTab === 'build_and_teams' && (
                         <>
                             <BlocksRenderer blocks={guideData.build_and_teams} />
-                            {embedUrl && <VideoSection embedUrl={embedUrl} />}
+                            {embedUrl && <VideoSection skillAnimationUrl={embedUrl} showcaseUrl={null} />}
                         </>
                     )}
                 </div>
