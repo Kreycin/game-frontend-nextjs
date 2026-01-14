@@ -21,21 +21,36 @@ export default function PushNotificationToggle() {
     }, []);
 
     const initPush = async () => {
-        // Wait for PWA service worker to be ready (it already imports push-sw.js)
+        console.log('initPush starting...');
+
+        // Wait for PWA service worker with timeout
         if ('serviceWorker' in navigator) {
             try {
-                await navigator.serviceWorker.ready;
+                // Add timeout to prevent hanging forever
+                const swReady = navigator.serviceWorker.ready;
+                const timeout = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('SW timeout')), 3000)
+                );
+
+                await Promise.race([swReady, timeout]);
                 console.log('PWA Service Worker ready for push');
             } catch (e) {
-                console.warn('Service worker not ready', e);
+                console.warn('Service worker not ready or timeout:', e);
+                // Continue anyway - might still work
             }
         } else {
             console.log('No service worker support');
         }
-        // Then check subscription status
-        const currentStatus = await getSubscriptionStatus();
-        console.log('Push subscription status:', currentStatus);
-        setStatus(currentStatus);
+
+        // Check subscription status regardless of SW state
+        try {
+            const currentStatus = await getSubscriptionStatus();
+            console.log('Push subscription status:', currentStatus);
+            setStatus(currentStatus);
+        } catch (e) {
+            console.error('Failed to get subscription status:', e);
+            setStatus('unsupported');
+        }
     };
 
     const handleToggle = async () => {
