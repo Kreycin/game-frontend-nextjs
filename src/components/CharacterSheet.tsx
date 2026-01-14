@@ -28,7 +28,11 @@ const getStarLevelNumber = (starString: string | null): number => {
 const renderRichText = (richTextArray: RichTextBlock[] | undefined) => {
   if (!richTextArray) return null;
   return richTextArray.map((block, index) => (
-    <p key={index}>{block.children.map((child: { text: string }) => child.text).join('')}</p>
+    <p key={index} style={{ whiteSpace: 'pre-wrap' }}>
+      {block.children.map((child: { text: string }, childIndex: number) => (
+        <span key={childIndex}>{child.text}</span>
+      ))}
+    </p>
   ));
 };
 
