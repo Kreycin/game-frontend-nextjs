@@ -6,10 +6,10 @@ import VideoSection from './VideoSection';
 import type { GuideData } from '@/types/tierlist';
 
 const getYouTubeEmbedUrl = (url: string | undefined | null): string | null => {
-  if (!url) return null;
-  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-  const match = url.match(regex);
-  return match?.[1] ? `https://www.youtube.com/embed/${match[1]}` : null;
+    if (!url) return null;
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match?.[1] ? `https://www.youtube.com/embed/${match[1]}` : null;
 };
 
 // Helper Component สำหรับแสดงผล HTML
@@ -40,18 +40,18 @@ const TierListExtraInfo = ({ guideData }: { guideData: GuideData | null }) => {
             </CollapsiblePanel>
 
             <CollapsiblePanel title="Review" defaultExpanded={false}>
-                 <div className="panel-content-inner">
+                <div className="panel-content-inner">
                     <RawHtmlRenderer htmlContent={review as unknown as string} />
                 </div>
             </CollapsiblePanel>
 
             <CollapsiblePanel title="Build & Teams" defaultExpanded={false}>
-                 <div className="panel-content-inner">
+                <div className="panel-content-inner">
                     <RawHtmlRenderer htmlContent={build_and_teams as unknown as string} />
                 </div>
             </CollapsiblePanel>
-            
-            {embedUrl && <VideoSection embedUrl={embedUrl} />}
+
+            {embedUrl && <VideoSection skillAnimationUrl={embedUrl} showcaseUrl={null} />}
 
         </div>
     );
