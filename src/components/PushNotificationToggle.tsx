@@ -29,24 +29,39 @@ export default function PushNotificationToggle() {
             } catch (e) {
                 console.warn('Service worker not ready', e);
             }
+        } else {
+            console.log('No service worker support');
         }
         // Then check subscription status
         const currentStatus = await getSubscriptionStatus();
+        console.log('Push subscription status:', currentStatus);
         setStatus(currentStatus);
     };
 
     const handleToggle = async () => {
-        if (isProcessing) return;
+        console.log('Push toggle clicked, current status:', status);
+        if (isProcessing) {
+            console.log('Already processing, ignoring click');
+            return;
+        }
         setIsProcessing(true);
 
         try {
             if (status === 'subscribed') {
+                console.log('Attempting to unsubscribe...');
                 const success = await unsubscribeFromPush();
+                console.log('Unsubscribe result:', success);
                 if (success) setStatus('unsubscribed');
             } else if (status === 'unsubscribed') {
+                console.log('Attempting to subscribe...');
                 const success = await subscribeToPush();
+                console.log('Subscribe result:', success);
                 if (success) setStatus('subscribed');
+            } else {
+                console.log('Status is not subscribed/unsubscribed, cannot toggle:', status);
             }
+        } catch (error) {
+            console.error('Toggle error:', error);
         } finally {
             setIsProcessing(false);
         }
