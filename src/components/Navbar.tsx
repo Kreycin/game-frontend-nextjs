@@ -63,8 +63,7 @@ export default function Navbar() {
                                 ))}
                             </select>
                         </div>
-                        {/* Push Notification Toggle */}
-                        {/* TODO: Re-enable when push notifications work */}
+                        {/* Push Notification Toggle - temporarily disabled */}
                         {/* <PushNotificationToggle /> */}
                         {isLoggedIn ? (
                             <>
