@@ -84,19 +84,29 @@ async function getCharacters(): Promise<Character[]> {
     console.warn("Could not fetch from API, using static data only", error);
   }
 
-  // 🔀 MERGE: Static + API with deduplication by Name
-  // Static characters take priority (they have the recovered data)
-  const staticNames = new Set(staticChars.map(c => c.Name?.toLowerCase()));
-  const uniqueApiChars = apiCharacters.filter(c => !staticNames.has(c.Name?.toLowerCase()));
+  // 🔀 MERGE: API + Static with deduplication by Name
+  // API characters come first (newest additions), then static fallback data
+  const apiNames = new Set(apiCharacters.map(c => c.Name?.toLowerCase()));
+  const uniqueStaticChars = staticChars.filter(c => !apiNames.has(c.Name?.toLowerCase()));
 
-  const allCharacters = [...staticChars, ...uniqueApiChars];
-  console.log(`Total characters: ${allCharacters.length} (${staticChars.length} static + ${uniqueApiChars.length} from API)`);
+  // Combine: API first (already sorted by publishedAt:desc from query), then static
+  const allCharacters = [...apiCharacters, ...uniqueStaticChars];
+
+  // Sort all by publishedAt (newest first)
+  allCharacters.sort((a, b) => {
+    const dateA = new Date((a as any).publishedAt || (a as any).createdAt || 0).getTime();
+    const dateB = new Date((b as any).publishedAt || (b as any).createdAt || 0).getTime();
+    return dateB - dateA; // Newest first
+  });
+
+  console.log(`Total characters: ${allCharacters.length} (${apiCharacters.length} from API + ${uniqueStaticChars.length} static)`);
 
   // Fallback to mock if nothing available
   if (allCharacters.length === 0) {
     console.warn("No characters available. Using Mock Data.");
     return [MOCK_CHARACTER];
   }
+
 
   return allCharacters;
 }
