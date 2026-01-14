@@ -19,6 +19,27 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
 }
 
 /**
+ * Register the push notification service worker
+ */
+export async function registerPushServiceWorker(): Promise<ServiceWorkerRegistration | null> {
+    if (!('serviceWorker' in navigator)) {
+        console.log('Service workers not supported');
+        return null;
+    }
+
+    try {
+        const registration = await navigator.serviceWorker.register('/push-sw.js', {
+            scope: '/'
+        });
+        console.log('Push SW registered:', registration.scope);
+        return registration;
+    } catch (error) {
+        console.error('Push SW registration failed:', error);
+        return null;
+    }
+}
+
+/**
  * Check if push notifications are supported
  */
 export function isPushSupported(): boolean {

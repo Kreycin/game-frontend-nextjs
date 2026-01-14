@@ -7,6 +7,7 @@ import {
     getSubscriptionStatus,
     subscribeToPush,
     unsubscribeFromPush,
+    registerPushServiceWorker,
 } from '@/utils/pushNotifications';
 
 type SubscriptionStatus = 'subscribed' | 'unsubscribed' | 'denied' | 'unsupported' | 'loading';
@@ -16,10 +17,13 @@ export default function PushNotificationToggle() {
     const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
-        checkStatus();
+        initPush();
     }, []);
 
-    const checkStatus = async () => {
+    const initPush = async () => {
+        // Register service worker first
+        await registerPushServiceWorker();
+        // Then check subscription status
         const currentStatus = await getSubscriptionStatus();
         setStatus(currentStatus);
     };
