@@ -64,7 +64,8 @@ export default function Navbar() {
                             </select>
                         </div>
                         {/* Push Notification Toggle */}
-                        <PushNotificationToggle />
+                        {/* TODO: Re-enable when push notifications work */}
+                        {/* <PushNotificationToggle /> */}
                         {isLoggedIn ? (
                             <>
                                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5">
