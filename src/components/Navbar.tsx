@@ -9,7 +9,6 @@ import PushNotificationToggle from "@/components/PushNotificationToggle";
 
 const navLinks = [
     { name: "Characters", href: "/" },
-    { name: "Tier List", href: "/tier-list" },
 ];
 
 export default function Navbar() {
