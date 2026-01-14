@@ -21,8 +21,15 @@ export default function PushNotificationToggle() {
     }, []);
 
     const initPush = async () => {
-        // Register service worker first
-        await registerPushServiceWorker();
+        // Wait for PWA service worker to be ready (it already imports push-sw.js)
+        if ('serviceWorker' in navigator) {
+            try {
+                await navigator.serviceWorker.ready;
+                console.log('PWA Service Worker ready for push');
+            } catch (e) {
+                console.warn('Service worker not ready', e);
+            }
+        }
         // Then check subscription status
         const currentStatus = await getSubscriptionStatus();
         setStatus(currentStatus);
