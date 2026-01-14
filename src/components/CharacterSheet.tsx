@@ -150,7 +150,8 @@ export default function CharacterSheet({ allCharacters, characterId }: { allChar
   const currentSkillDescriptions = selectedStarLevelData?.skill_descriptions || [];
 
   const mainArtUrl = character.Main_Art?.url;
-  const embedUrl = getYouTubeEmbedUrl(character.YouTube_URL);
+  const skillAnimationEmbedUrl = getYouTubeEmbedUrl(character.YouTube_URL);
+  const showcaseEmbedUrl = getYouTubeEmbedUrl((character as any).Showcase_URL);
 
   return (
     <div className="App">
@@ -277,7 +278,7 @@ export default function CharacterSheet({ allCharacters, characterId }: { allChar
           </CollapsiblePanel>
         </motion.div>
 
-        <VideoSection embedUrl={embedUrl} className="layout-showcase" />
+        <VideoSection skillAnimationUrl={skillAnimationEmbedUrl} showcaseUrl={showcaseEmbedUrl} className="layout-showcase" />
         {/*<CharacterViewer />*/}
 
       </div> {/* --- จบส่วนของ Container หลัก --- */}
