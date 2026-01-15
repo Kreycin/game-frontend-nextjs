@@ -81,12 +81,12 @@ export async function unsubscribeFromPush(): Promise<boolean> {
     }
 }
 
-export const onForegroundMessage = () => {
+export const onMessageListener = (callback: (payload: any) => void) => {
     if (messaging) {
-        return new Promise((resolve) => {
-            onMessage(messaging!, (payload) => {
-                resolve(payload);
-            });
+        return onMessage(messaging, (payload) => {
+            console.log("Foreground message received:", payload);
+            callback(payload);
         });
     }
+    return null; // Return null if messaging not supported
 };
