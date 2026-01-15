@@ -48,12 +48,21 @@ async function getCharacters(): Promise<Character[]> {
     sort: ['publishedAt:desc'],
   }, { encodeValuesOnly: true });
 
+
   const fetchURL = `${STRAPI_API_URL}/api/characters?${queryString}`;
 
   let apiCharacters: Character[] = [];
 
   try {
-    const res = await fetch(fetchURL, { next: { tags: ['characters'] } });
+    // Add timeout to prevent build hanging when Render backend is sleeping
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
+    const res = await fetch(fetchURL, {
+      next: { tags: ['characters'] },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
     if (res.ok) {
       const rawData = await res.json();
       if (rawData.data && rawData.data.length > 0) {
