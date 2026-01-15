@@ -1,6 +1,7 @@
-// src/firebase.ts
 import { initializeApp, getApp, getApps, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getMessaging, Messaging, isSupported } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_NOTI_FIREBASE_API_KEY,
@@ -11,8 +12,20 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_NOTI_FIREBASE_APP_ID,
 };
 
-// Initialize App and Firestore (Safe for Server & Client)
+// Initialize App
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db: Firestore = getFirestore(app);
 
-export { db };
+// Initialize Services
+const db: Firestore = getFirestore(app);
+const auth = getAuth(app);
+
+let messaging: Messaging | null = null;
+if (typeof window !== 'undefined') {
+  isSupported().then(supported => {
+    if (supported) {
+      messaging = getMessaging(app);
+    }
+  });
+}
+
+export { app, db, auth, messaging };

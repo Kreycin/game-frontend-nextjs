@@ -1,36 +1,15 @@
 // src/utils/pushNotifications.ts
-// Utility functions for push notification subscription
+import { messaging } from '@/firebase';
+import { getToken, onMessage } from 'firebase/messaging';
 
-const API_ENDPOINT = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+const TOPIC_NAME = 'news';
 
-/**
- * Convert URL-safe base64 to Uint8Array for applicationServerKey
- */
-function urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
-/**
- * Register the push notification service worker
- */
 export async function registerPushServiceWorker(): Promise<ServiceWorkerRegistration | null> {
-    if (!('serviceWorker' in navigator)) {
-        console.log('Service workers not supported');
-        return null;
-    }
-
+    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return null;
     try {
-        // next-pwa handles registration, we just need to get it
+        // next-pwa handles registration, just return it
         const registration = await navigator.serviceWorker.ready;
-        console.log('Push SW ready:', registration.scope);
         return registration;
     } catch (error) {
         console.error('Failed to get SW registration:', error);
@@ -38,121 +17,76 @@ export async function registerPushServiceWorker(): Promise<ServiceWorkerRegistra
     }
 }
 
-/**
- * Check if push notifications are supported
- */
 export function isPushSupported(): boolean {
-    return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    return typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window;
 }
 
-/**
- * Get current subscription status
- */
 export async function getSubscriptionStatus(): Promise<'subscribed' | 'unsubscribed' | 'denied' | 'unsupported'> {
-    if (!isPushSupported()) {
-        return 'unsupported';
-    }
+    if (!isPushSupported()) return 'unsupported';
+    if (Notification.permission === 'denied') return 'denied';
 
-    if (Notification.permission === 'denied') {
-        return 'denied';
-    }
-
-    try {
-        const registration = await navigator.serviceWorker.ready;
-        const subscription = await registration.pushManager.getSubscription();
-        return subscription ? 'subscribed' : 'unsubscribed';
-    } catch {
-        return 'unsubscribed';
-    }
+    // Check if we have a token saved in localStorage (simple check for topic sub)
+    const savedToken = localStorage.getItem('fcm_token');
+    return savedToken ? 'subscribed' : 'unsubscribed';
 }
 
-/**
- * Subscribe to push notifications
- */
 export async function subscribeToPush(): Promise<boolean> {
-    if (!isPushSupported() || !VAPID_PUBLIC_KEY) {
-        console.error('Push not supported or VAPID key missing');
+    if (!messaging || !VAPID_PUBLIC_KEY) {
+        console.error('Messaging not initialized or VAPID key missing');
         return false;
     }
 
     try {
-        // Request permission
         const permission = await Notification.requestPermission();
-        if (permission !== 'granted') {
-            console.log('Notification permission denied');
-            return false;
-        }
+        if (permission !== 'granted') return false;
 
-        // Get service worker registration
-        const registration = await navigator.serviceWorker.ready;
-
-        // Subscribe to push
-        const subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY).buffer as ArrayBuffer,
+        const token = await getToken(messaging, {
+            vapidKey: VAPID_PUBLIC_KEY
         });
 
-        // Send subscription to backend
-        const response = await fetch(`${API_ENDPOINT}/api/push-subscriptions/subscribe`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                endpoint: subscription.endpoint,
-                keys: {
-                    p256dh: btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))),
-                    auth: btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth')!))),
-                },
-            }),
-        });
+        if (token) {
+            console.log('FCM Token:', token);
+            // In a real app, you send this token to your server to subscribe to a topic
+            // For now, we simulate success and save to local storage
+            // TODO: Call API to subscribe token to 'news' topic
+            // await subscribeTokenToTopic(token, TOPIC_NAME);
 
-        if (!response.ok) {
-            throw new Error('Failed to save subscription');
+            localStorage.setItem('fcm_token', token);
+            return true;
         }
-
-        console.log('Successfully subscribed to push notifications');
-        return true;
+        return false;
     } catch (error) {
         console.error('Failed to subscribe:', error);
         return false;
     }
 }
 
-/**
- * Unsubscribe from push notifications
- */
 export async function unsubscribeFromPush(): Promise<boolean> {
-    if (!isPushSupported()) {
-        return false;
-    }
-
     try {
-        const registration = await navigator.serviceWorker.ready;
-        const subscription = await registration.pushManager.getSubscription();
+        // For FCM, we typically just delete the token locally
+        // or call API to unsubscribe from topic
+        const token = localStorage.getItem('fcm_token');
+        if (token) {
+            // TODO: Call API to unsubscribe token from 'news' topic
+            // await unsubscribeTokenFromTopic(token, TOPIC_NAME);
 
-        if (!subscription) {
-            return true; // Already unsubscribed
+            // Note: deleteToken(messaging) invalidates it, but we might just want to 
+            // remove from topic. For now, simple local clear.
+            localStorage.removeItem('fcm_token');
         }
-
-        // Unsubscribe locally
-        await subscription.unsubscribe();
-
-        // Remove from backend
-        await fetch(`${API_ENDPOINT}/api/push-subscriptions/unsubscribe`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                endpoint: subscription.endpoint,
-            }),
-        });
-
-        console.log('Successfully unsubscribed from push notifications');
         return true;
     } catch (error) {
         console.error('Failed to unsubscribe:', error);
         return false;
     }
 }
+
+export const onForegroundMessage = () => {
+    if (messaging) {
+        return new Promise((resolve) => {
+            onMessage(messaging!, (payload) => {
+                resolve(payload);
+            });
+        });
+    }
+};

@@ -8,9 +8,9 @@ const withPWA = withPWAInit({
   aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true,
   disable: process.env.NODE_ENV === 'development',
-  // Import custom push notification handler
+  // Import Firebase Messaging SW
   workboxOptions: {
-    importScripts: ['/push-sw.js'],
+    importScripts: ['/firebase-messaging-sw.js'],
   },
 });
 
