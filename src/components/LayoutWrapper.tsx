@@ -4,6 +4,7 @@ import SplashScreen from './SplashScreen';
 
 import { onMessageListener } from '@/utils/pushNotifications';
 import NotificationToast, { NotificationPayload } from './NotificationToast';
+import InstallPrompt from './InstallPrompt';
 
 export default function LayoutWrapper({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +39,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
         notification={notification}
         onClose={() => setNotification(null)}
       />
+      <InstallPrompt />
       {children}
     </>
   );
