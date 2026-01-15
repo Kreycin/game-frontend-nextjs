@@ -447,10 +447,10 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
                                         )}
                                     </motion.div>
                                     <div className="flex-1">
-                                        <p className="text-sm lg:text-base text-foreground/90 leading-relaxed whitespace-pre-wrap">
-                                            {enh.Description?.map((block: any, bi: number) =>
-                                                <span key={bi}>{block.children.map((c: any) => c.text).join("")}</span>
-                                            )}
+                                        <p className="text-sm lg:text-base text-foreground/90 leading-relaxed">
+                                            {enh.Description?.map((block: any, bi: number) => (
+                                                <span key={bi} className="block">{block.children.map((c: any) => c.text).join("")}</span>
+                                            ))}
                                         </p>
                                     </div>
                                 </motion.div>
