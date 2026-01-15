@@ -66,10 +66,13 @@ export default function Navbar() {
                         <PushNotificationToggle />
                         {isLoggedIn ? (
                             <>
-                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5">
+                                <Link
+                                    href="/profile"
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                                >
                                     <User className="w-4 h-4 text-green-400" />
                                     <span className="text-sm text-foreground">{profile?.displayName || user?.displayName || user?.email?.split('@')[0]}</span>
-                                </div>
+                                </Link>
                                 <button
                                     onClick={logout}
                                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 transition-colors"
@@ -138,9 +141,13 @@ export default function Navbar() {
                             <div className="flex gap-2 mt-4 px-4">
                                 {isLoggedIn ? (
                                     <>
-                                        <div className="flex-1 py-2 text-center rounded-lg bg-white/5 text-green-400">
+                                        <Link
+                                            href="/profile"
+                                            onClick={() => setIsOpen(false)}
+                                            className="flex-1 py-2 text-center rounded-lg bg-white/5 text-green-400 hover:bg-white/10 transition-colors cursor-pointer"
+                                        >
                                             {profile?.displayName || user?.displayName || user?.email?.split('@')[0]}
-                                        </div>
+                                        </Link>
                                         <button
                                             onClick={() => { logout(); setIsOpen(false); }}
                                             className="flex-1 py-2 text-center rounded-lg bg-red-500/20 text-red-400 font-medium"
