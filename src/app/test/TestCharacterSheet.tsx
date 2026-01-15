@@ -464,33 +464,61 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
 
 
 
-                    {/* Video Showcase */}
+                    {/* Videos Section - Skill Animation & Showcase */}
                     <motion.div
                         className="glass backdrop-blur-xl rounded-3xl p-6 lg:p-8 mb-12"
                         variants={itemVariants}
                     >
                         <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                             <div className="w-1.5 h-8 bg-gradient-to-b from-accent to-gold rounded-full" />
-                            Video Showcase
+                            Videos
                         </h2>
 
-                        {getYouTubeEmbedUrl(character.YouTube_URL) ? (
-                            <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-gold/50 shadow-2xl">
-                                <iframe
-                                    className="absolute inset-0 w-full h-full"
-                                    src={getYouTubeEmbedUrl(character.YouTube_URL)!}
-                                    title="Character Showcase"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                />
+                        <div className="grid md:grid-cols-2 gap-6">
+                            {/* Skill Animation Video */}
+                            <div>
+                                <h3 className="text-lg font-semibold text-gold mb-3">Skill Animation</h3>
+                                {getYouTubeEmbedUrl(character.YouTube_URL) ? (
+                                    <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-gold/50 shadow-2xl">
+                                        <iframe
+                                            className="absolute inset-0 w-full h-full"
+                                            src={getYouTubeEmbedUrl(character.YouTube_URL)!}
+                                            title="Skill Animation"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="aspect-video rounded-2xl bg-black/50 border-2 border-gold/30 flex flex-col items-center justify-center gap-4">
+                                        <Play className="w-12 h-12 text-gold/50" />
+                                        <span className="text-foreground/50">No Video Available</span>
+                                    </div>
+                                )}
                             </div>
-                        ) : (
-                            <div className="aspect-video rounded-2xl bg-black/50 border-2 border-gold/30 flex flex-col items-center justify-center gap-4">
-                                <Play className="w-16 h-16 text-gold/50" />
-                                <span className="text-foreground/50">No Video Available</span>
+
+                            {/* Showcase Video */}
+                            <div>
+                                <h3 className="text-lg font-semibold text-gold mb-3">Showcase</h3>
+                                {getYouTubeEmbedUrl((character as any).Showcase_URL) ? (
+                                    <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-gold/50 shadow-2xl">
+                                        <iframe
+                                            className="absolute inset-0 w-full h-full"
+                                            src={getYouTubeEmbedUrl((character as any).Showcase_URL)!}
+                                            title="Showcase"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="aspect-video rounded-2xl bg-black/50 border-2 border-gold/30 flex flex-col items-center justify-center gap-4">
+                                        <Play className="w-12 h-12 text-gold/50" />
+                                        <span className="text-foreground/50">No Video Available</span>
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
                     </motion.div>
 
                     {/* Character Gallery */}
