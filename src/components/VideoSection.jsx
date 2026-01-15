@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 // Component แสดงวิดีโอ 2 ตัวในแถวเดียวกัน: Skill Animation และ Showcase
+// Last updated: 2026-01-15 to fix Video Showcase text issue
 const VideoSection = ({ skillAnimationUrl, showcaseUrl, className = '' }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
