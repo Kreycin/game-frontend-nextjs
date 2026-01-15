@@ -28,13 +28,12 @@ export async function registerPushServiceWorker(): Promise<ServiceWorkerRegistra
     }
 
     try {
-        const registration = await navigator.serviceWorker.register('/push-sw.js', {
-            scope: '/'
-        });
-        console.log('Push SW registered:', registration.scope);
+        // next-pwa handles registration, we just need to get it
+        const registration = await navigator.serviceWorker.ready;
+        console.log('Push SW ready:', registration.scope);
         return registration;
     } catch (error) {
-        console.error('Push SW registration failed:', error);
+        console.error('Failed to get SW registration:', error);
         return null;
     }
 }

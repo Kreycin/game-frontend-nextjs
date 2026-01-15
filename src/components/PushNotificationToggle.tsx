@@ -23,33 +23,37 @@ export default function PushNotificationToggle() {
     const initPush = async () => {
         console.log('initPush starting...');
 
-        // Wait for PWA service worker with timeout
-        if ('serviceWorker' in navigator) {
-            try {
-                // Add timeout to prevent hanging forever
-                const swReady = navigator.serviceWorker.ready;
-                const timeout = new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('SW timeout')), 3000)
-                );
-
-                await Promise.race([swReady, timeout]);
-                console.log('PWA Service Worker ready for push');
-            } catch (e) {
-                console.warn('Service worker not ready or timeout:', e);
-                // Continue anyway - might still work
-            }
-        } else {
-            console.log('No service worker support');
+        // Check if push is supported
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+            console.log('Push notification not supported');
+            setStatus('unsupported');
+            return;
         }
 
-        // Check subscription status regardless of SW state
+        // Wait for service worker but don't block everything
+        // next-pwa should register it automatically
+        if ('serviceWorker' in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.getRegistration();
+                if (!registration) {
+                    console.warn('No active Service Worker found yet. waiting...');
+                } else {
+                    console.log('Service Worker found with scope:', registration.scope);
+                }
+            } catch (e) {
+                console.warn('Error checking SW registration:', e);
+            }
+        }
+
+        // Check subscription status
         try {
             const currentStatus = await getSubscriptionStatus();
             console.log('Push subscription status:', currentStatus);
             setStatus(currentStatus);
         } catch (e) {
             console.error('Failed to get subscription status:', e);
-            setStatus('unsupported');
+            // Default to unsubscribed if error, so user can try again
+            setStatus('unsubscribed');
         }
     };
 
