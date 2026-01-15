@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/firebase'; // Use the updated firebase config
 import { collection, query, where, onSnapshot, orderBy, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
-import type { User, UserProfile } from '@/context/AuthContext'; // Import types
+import type { UserProfile } from '@/context/AuthContext'; // Import types
+import type { User as FirebaseUser } from 'firebase/auth'; // Import Firebase User type directly
 
 // --- Cloudinary Image URLs ---
 const DEFAULT_ICON_URL = "https://res.cloudinary.com/di8bf7ufw/image/upload/v1757845754/default-icon.png_wqrpnw.png";
@@ -35,10 +36,10 @@ const CommentCard: React.FC<{ comment: Comment }> = ({ comment }) => {
         {isGuest ? (
           <div className="w-full h-full rounded-full bg-gray-600" />
         ) : (
-          <img 
-            src={DEFAULT_ICON_URL} 
-            alt="User Icon" 
-            className="w-full h-full object-cover rounded-full" 
+          <img
+            src={DEFAULT_ICON_URL}
+            alt="User Icon"
+            className="w-full h-full object-cover rounded-full"
           />
         )}
       </div>
@@ -58,20 +59,20 @@ const CommentSection: React.FC<CommentSectionProps> = ({ pageId }) => {
   const { user, profile, isLoggedIn } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
-  
+
   // --- NEW: Add loading and error states ---
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     if (!pageId) {
-        setLoading(false);
-        return;
+      setLoading(false);
+      return;
     };
     const commentsRef = collection(db, 'comments');
     const q = query(commentsRef, where('pageId', '==', pageId), orderBy('createdAt', 'desc'));
-    
-    const unsubscribe = onSnapshot(q, 
+
+    const unsubscribe = onSnapshot(q,
       (querySnapshot) => {
         const commentsData = querySnapshot.docs.map(doc => ({
           id: doc.id,
@@ -80,7 +81,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ pageId }) => {
         setComments(commentsData);
         setLoading(false); // <--- Set loading to false on success
         setError(null); // <--- Clear any previous errors
-      }, 
+      },
       (err) => {
         console.error("Error fetching comments:", err);
         // --- NEW: Handle fetch errors ---
@@ -98,7 +99,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ pageId }) => {
 
     let authorInfo: AuthorInfo;
     if (isLoggedIn && user && profile) {
-      authorInfo = { isGuest: false, name: profile.displayName || user.username, userId: user.id.toString() };
+      // Use profile display name, or user display name, or fallback to email prefix
+      const displayName = profile.displayName || user.displayName || user.email?.split('@')[0] || 'User';
+      // Use user.uid for Firebase
+      authorInfo = { isGuest: false, name: displayName, userId: user.uid };
     } else {
       let guestName = localStorage.getItem('guestName');
       if (!guestName) {
@@ -109,16 +113,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({ pageId }) => {
     }
 
     try {
-        await addDoc(collection(db, 'comments'), {
-          pageId: pageId,
-          text: newComment,
-          createdAt: serverTimestamp(),
-          authorInfo: authorInfo,
-        });
-        setNewComment('');
+      await addDoc(collection(db, 'comments'), {
+        pageId: pageId,
+        text: newComment,
+        createdAt: serverTimestamp(),
+        authorInfo: authorInfo,
+      });
+      setNewComment('');
     } catch (err) {
-        console.error("Error posting comment:", err);
-        setError("Failed to post comment. Please try again.");
+      console.error("Error posting comment:", err);
+      setError("Failed to post comment. Please try again.");
     }
   };
 
@@ -144,7 +148,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ pageId }) => {
         <textarea
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder={isLoggedIn ? `Commenting as ${profile?.displayName || user?.username}...` : 'Write a comment...'}
+          placeholder={isLoggedIn ? `Commenting as ${profile?.displayName || user?.displayName || user?.email?.split('@')[0] || 'User'}...` : 'Write a comment...'}
           className="w-full p-3 bg-gray-700 text-gray-100 rounded-md border border-gray-600"
           rows={3}
         ></textarea>

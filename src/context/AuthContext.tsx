@@ -1,103 +1,89 @@
 // src/context/AuthContext.tsx
-
-import React, { createContext, useState, useEffect, useContext, useCallback, ReactNode } from 'react';
-import axios from 'axios';
-import { db } from '../firebase'; // Make sure this firebase instance is for Firestore
-import { doc, getDoc } from 'firebase/firestore';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
-
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-}
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import { auth, db } from '../firebase';
+import {
+  onAuthStateChanged,
+  signOut as firebaseSignOut,
+  User as FirebaseUser
+} from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export interface UserProfile {
   displayName: string;
+  photoURL?: string;
+  bio?: string;
 }
 
-// 1. Add jwt to the context type
 interface AuthContextType {
-  user: User | null;
-  jwt: string | null; // Added for notification system
+  user: FirebaseUser | null;
   profile: UserProfile | null;
   isLoggedIn: boolean;
   loading: boolean;
-  login: (token: string, userData: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   refetchProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [jwt, setJwt] = useState<string | null>(null); // 2. Add state for JWT
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = useCallback(async (userId: number, username: string) => {
+  const fetchProfile = async (uid: string) => {
     try {
-      const profileDocRef = doc(db, 'userProfiles', userId.toString());
-      const profileSnap = await getDoc(profileDocRef);
-      if (profileSnap.exists()) {
-        setProfile(profileSnap.data() as UserProfile);
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setProfile(docSnap.data() as UserProfile);
       } else {
-        setProfile({ displayName: username });
+        // Create default profile if not exists
+        const defaultProfile = {
+          displayName: user?.displayName || user?.email?.split('@')[0] || 'User',
+          photoURL: user?.photoURL || ''
+        };
+        // We don't await this to keep UI fast, fire and forget (or await if critical)
+        await setDoc(docRef, defaultProfile, { merge: true });
+        setProfile(defaultProfile);
       }
     } catch (error) {
-      console.error("Failed to fetch Firebase profile", error);
-      setProfile({ displayName: username }); // Fallback profile
+      console.error("Error fetching user profile:", error);
+      setProfile(null);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    const checkUser = async () => {
-      const token = localStorage.getItem('jwt');
-      if (token) {
-        setJwt(token); // 3. Set JWT from localStorage on initial load
-        try {
-          const { data: userData } = await axios.get(`${API_ENDPOINT}/api/users/me`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          setUser(userData);
-          await fetchProfile(userData.id, userData.username);
-        } catch (error) {
-          console.error("Failed to verify token", error);
-          localStorage.removeItem('jwt');
-          setJwt(null); // Clear JWT if invalid
-        }
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        await fetchProfile(currentUser.uid);
+      } else {
+        setProfile(null);
       }
       setLoading(false);
-    };
-    checkUser();
-  }, [fetchProfile]);
+    });
 
-  const login = (token: string, userData: User) => {
-    localStorage.setItem('jwt', token);
-    setJwt(token); // 4. Set JWT on login
-    setUser(userData);
-    fetchProfile(userData.id, userData.username);
-  };
+    return () => unsubscribe();
+  }, []);
 
-  const logout = () => {
-    localStorage.removeItem('jwt');
-    setJwt(null); // 5. Clear JWT on logout
-    setUser(null);
-    setProfile(null);
-    window.location.href = '/'; // Reload to clear all states
-  };
-
-  const refetchProfile = useCallback(async () => {
-    if (user) {
-      await fetchProfile(user.id, user.username);
+  const logout = async () => {
+    try {
+      await firebaseSignOut(auth);
+      // State updates handled by onAuthStateChanged
+    } catch (error) {
+      console.error("Error signing out:", error);
     }
-  }, [user, fetchProfile]);
+  };
+
+  const refetchProfile = async () => {
+    if (user) {
+      await fetchProfile(user.uid);
+    }
+  };
 
   return (
-    // 6. Provide jwt through the context
-    <AuthContext.Provider value={{ user, jwt, profile, isLoggedIn: !!user, loading, login, logout, refetchProfile }}>
+    <AuthContext.Provider value={{ user, profile, isLoggedIn: !!user, loading, logout, refetchProfile }}>
       {!loading && children}
     </AuthContext.Provider>
   );

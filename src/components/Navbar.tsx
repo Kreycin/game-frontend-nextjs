@@ -68,7 +68,7 @@ export default function Navbar() {
                             <>
                                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5">
                                     <User className="w-4 h-4 text-green-400" />
-                                    <span className="text-sm text-foreground">{profile?.displayName || user?.username}</span>
+                                    <span className="text-sm text-foreground">{profile?.displayName || user?.displayName || user?.email?.split('@')[0]}</span>
                                 </div>
                                 <button
                                     onClick={logout}
@@ -139,7 +139,7 @@ export default function Navbar() {
                                 {isLoggedIn ? (
                                     <>
                                         <div className="flex-1 py-2 text-center rounded-lg bg-white/5 text-green-400">
-                                            {profile?.displayName || user?.username}
+                                            {profile?.displayName || user?.displayName || user?.email?.split('@')[0]}
                                         </div>
                                         <button
                                             onClick={() => { logout(); setIsOpen(false); }}

@@ -1,19 +1,17 @@
-'use client'; // บอกว่าเป็น Client Component
+'use client';
 
 import { useState } from 'react';
-import Link from 'next/link'; // ใช้ Link จาก Next.js
-import { useRouter } from 'next/navigation'; // ใช้ Router จาก Next.js
-import axios from 'axios';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { signInWithEmailAndPassword } from 'firebase/auth'; // Import from Firebase
+import { auth } from '@/firebase'; // Import auth instance
 import { useAuth } from '@/context/AuthContext';
 
-const API_ENDPOINT = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
-
 export default function LoginPage() {
-  const { login } = useAuth();
   const [formData, setFormData] = useState({ identifier: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Hook สำหรับการ redirect
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,18 +23,28 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_ENDPOINT}/api/auth/local`, {
-        identifier: formData.identifier,
-        password: formData.password,
-      });
+      // Direct Firebase Login
+      await signInWithEmailAndPassword(auth, formData.identifier, formData.password);
 
-      login(response.data.jwt, response.data.user);
-
+      // AuthContext listener will handle the state update automatically
       setLoading(false);
-      router.push('/'); // Redirect ไปหน้าแรก
-    } catch (err) {
+      router.push('/');
+    } catch (err: any) {
+      console.error("Login error:", err);
       setLoading(false);
-      setError('Invalid email or password.');
+      // Map Firebase error codes to user-friendly messages
+      switch (err.code) {
+        case 'auth/invalid-credential':
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          setError('Invalid email or password.');
+          break;
+        case 'auth/too-many-requests':
+          setError('Too many failed attempts. Please try again later.');
+          break;
+        default:
+          setError('Failed to login. Please try again.');
+      }
     }
   };
 
@@ -47,20 +55,20 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <div className="space-y-6">
             <div>
-              <label htmlFor="identifier" className="block text-sm font-medium text-gray-400 mb-2">Email or Username</label>
-              <input 
-                id="identifier" type="text" name="identifier" 
-                placeholder="Enter your email or username" 
-                onChange={handleChange} required 
+              <label htmlFor="identifier" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
+              <input
+                id="identifier" type="email" name="identifier"
+                placeholder="Enter your email"
+                onChange={handleChange} required
                 className="w-full p-3 bg-gray-700 text-gray-100 rounded-md border border-gray-600"
               />
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-400 mb-2">Password</label>
-              <input 
-                id="password" type="password" name="password" 
-                placeholder="Enter your password" 
-                onChange={handleChange} required 
+              <input
+                id="password" type="password" name="password"
+                placeholder="Enter your password"
+                onChange={handleChange} required
                 className="w-full p-3 bg-gray-700 text-gray-100 rounded-md border border-gray-600"
               />
             </div>

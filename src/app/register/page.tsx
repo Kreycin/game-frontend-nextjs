@@ -1,11 +1,10 @@
-'use client'; // บอกว่าเป็น Client Component
+'use client';
 
 import { useState } from 'react';
-import Link from 'next/link'; // ใช้ Link จาก Next.js
-import { useRouter } from 'next/navigation'; // ใช้ Router จาก Next.js
-import axios from 'axios';
-
-const API_ENDPOINT = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; // Firebase methods
+import { auth } from '@/firebase';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -27,30 +26,37 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      // Step 1: Register the new user
-      await axios.post(`${API_ENDPOINT}/api/auth/local/register`, {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
+      // Step 1: Create User in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+
+      // Step 2: Update Display Name (Username)
+      await updateProfile(userCredential.user, {
+        displayName: formData.username
       });
 
-      // Step 2: Log the new user in to get a JWT
-      const loginResponse = await axios.post(`${API_ENDPOINT}/api/auth/local`, {
-        identifier: formData.email,
-        password: formData.password,
-      });
-
-      const jwt = loginResponse.data.jwt;
-      localStorage.setItem('jwt', jwt);
-
-      // Note: Migration logic for guest data can be added here if needed
+      // Step 3: AuthContext will pick this up automatically via onAuthStateChanged
+      // No need to manually set JWT or localStorage
 
       setLoading(false);
-      // Reload the page to update auth state globally and redirect
-      window.location.href = '/'; 
+      router.push('/');
     } catch (err: any) {
+      console.error("Registration error:", err);
       setLoading(false);
-      setError(err.response?.data?.error?.message || 'An unexpected error occurred.');
+
+      // Map Firebase error codes
+      switch (err.code) {
+        case 'auth/email-already-in-use':
+          setError('This email is already registered.');
+          break;
+        case 'auth/weak-password':
+          setError('Password should be at least 6 characters.');
+          break;
+        case 'auth/invalid-email':
+          setError('Invalid email address.');
+          break;
+        default:
+          setError(err.message || 'Failed to create account.');
+      }
     }
   };
 
@@ -62,43 +68,43 @@ export default function RegisterPage() {
           <div className="space-y-6">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-400 mb-2">Username</label>
-              <input 
+              <input
                 id="username"
-                type="text" 
-                name="username" 
-                placeholder="Enter your username" 
-                onChange={handleChange} 
-                required 
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                onChange={handleChange}
+                required
                 className="w-full p-3 bg-gray-700 text-gray-100 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               />
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
-              <input 
+              <input
                 id="email"
-                type="email" 
-                name="email" 
-                placeholder="Enter your email" 
-                onChange={handleChange} 
-                required 
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                onChange={handleChange}
+                required
                 className="w-full p-3 bg-gray-700 text-gray-100 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               />
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-400 mb-2">Password</label>
-              <input 
+              <input
                 id="password"
-                type="password" 
-                name="password" 
-                placeholder="Enter your password" 
-                onChange={handleChange} 
-                required 
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                onChange={handleChange}
+                required
                 className="w-full p-3 bg-gray-700 text-gray-100 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               />
             </div>
           </div>
 
-          <button 
+          <button
             type="submit"
             disabled={loading}
             className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 disabled:bg-gray-500"
