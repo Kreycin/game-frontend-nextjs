@@ -65,7 +65,7 @@ async function getCharacters(): Promise<Character[]> {
     const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
     const res = await fetch(fetchURL, {
-      next: { tags: ['characters'] },
+      cache: 'no-store', // Disable caching completely
       signal: controller.signal
     });
     clearTimeout(timeoutId);
@@ -160,7 +160,7 @@ export default async function HomePage() {
 
   return (
     <main className="relative min-h-screen">
-      <TestCharacterSheet allCharacters={allCharacters} />
+      <TestCharacterSheet allCharacters={allCharacters} debugApiUrl={STRAPI_API_URL} />
     </main>
   );
 }
