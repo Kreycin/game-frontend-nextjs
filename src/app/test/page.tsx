@@ -30,7 +30,9 @@ async function getCharacters(): Promise<Character[]> {
                                         fields: ['url']
                                     },
                                     effects: {
-                                        populate: '*'
+                                        populate: {
+                                            Effect_Icon: { fields: ['url'] }
+                                        }
                                     }
                                 }
                             }
