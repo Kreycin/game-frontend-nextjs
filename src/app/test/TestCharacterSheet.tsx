@@ -28,10 +28,9 @@ const BUFF_DEFINITIONS: Record<string, string> = {
 
 interface TestCharacterSheetProps {
     allCharacters: Character[];
-    debugApiUrl?: string; // --- DEBUG ---
 }
 
-export default function TestCharacterSheet({ allCharacters, debugApiUrl }: TestCharacterSheetProps) {
+export default function TestCharacterSheet({ allCharacters }: TestCharacterSheetProps) {
     const [selectedCharIdx, setSelectedCharIdx] = useState(0);
     const character = allCharacters[selectedCharIdx] || allCharacters[0];
 
@@ -42,11 +41,6 @@ export default function TestCharacterSheet({ allCharacters, debugApiUrl }: TestC
 
     // --- Debug Logging ---
     useEffect(() => {
-        if (debugApiUrl) {
-            console.log("%c--- DEBUG: API Connection ---", "background: #ff0000; color: #fff; font-size: 20px; font-weight: bold;");
-            console.log(`CONNECTED TO: %c${debugApiUrl}`, "font-weight: bold; color: yellow; font-size: 16px;");
-        }
-
         if (allCharacters && allCharacters.length > 0) {
             console.log("%c--- DEBUG: Frontend Received Characters ---", "background: #222; color: #bada55; padding: 4px; font-weight: bold;");
             const char = allCharacters[0];
