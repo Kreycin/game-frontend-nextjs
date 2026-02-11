@@ -10,6 +10,10 @@ const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0
 
 import { MOCK_CHARACTER } from "@/utils/mockData";
 
+// Force dynamic rendering to ensure fresh data and avoid caching issues
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getCharacters(): Promise<Character[]> {
   // 🚀 HYBRID APPROACH: Static + API data combined
   // Static data = recovered characters that were lost

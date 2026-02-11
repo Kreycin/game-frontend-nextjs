@@ -39,6 +39,27 @@ export default function TestCharacterSheet({ allCharacters }: TestCharacterSheet
     const { theme, setTheme } = useTheme();
     const [themeOpen, setThemeOpen] = useState(false);
 
+    // --- Debug Logging ---
+    useEffect(() => {
+        if (allCharacters && allCharacters.length > 0) {
+            console.log("%c--- DEBUG: Frontend Received Characters ---", "background: #222; color: #bada55; padding: 4px; font-weight: bold;");
+            const char = allCharacters[0];
+            console.log(`Character: ${char.Name} (ID: ${char.id})`);
+
+            // Log effects from first skill as sample
+            const firstSkill = char.Star_Levels?.[0]?.skill_descriptions?.[0]?.skill;
+            if (firstSkill?.effects) {
+                console.log("Effects Sample (First Skill):", firstSkill.effects.map((e: any) => ({
+                    name: e.Effect_Name,
+                    icon_url: e.Effect_Icon?.url,
+                    full_obj: e
+                })));
+            } else {
+                console.log("No effects found in first skill");
+            }
+        }
+    }, [allCharacters]);
+
     // --- Helper Functions ---
     const getImageUrl = () => character.Main_Art?.url || "https://placehold.co/400x800/1a1a1a/white?text=No+Image";
     const getElement = () => character.Element || "Unknown";
