@@ -1,6 +1,6 @@
 [
   {
-    "id": 13,
+    "id": 14,
     "documentId": "r3a3loz0wwj30cscfn8u6xov",
     "Name": "Genya - Demon Eater",
     "Character_ID": "Genya",
@@ -25,11 +25,11 @@
     "Extra_DMG": "20%",
     "DMG_Res": "25%",
     "CRIT_DMG_Res": "0%",
-    "YouTube_URL": null,
+    "YouTube_URL": "https://youtu.be/44t0AQXQjLk",
     "Showcase_URL": null,
     "createdAt": "2026-03-25T10:58:42.975Z",
-    "updatedAt": "2026-03-25T13:55:02.573Z",
-    "publishedAt": "2026-03-25T13:55:02.584Z",
+    "updatedAt": "2026-03-25T18:41:43.002Z",
+    "publishedAt": "2026-03-25T18:41:43.019Z",
     "Main_Art": {
       "id": 10,
       "documentId": "f6ih6q9nlv66gxzdg86pjumr",
@@ -39,7 +39,7 @@
     },
     "Star_Levels": [
       {
-        "id": 12,
+        "id": 13,
         "Star_Level": "star19",
         "enhancements": [
           {
@@ -155,7 +155,7 @@
         ],
         "skill_descriptions": [
           {
-            "id": 38,
+            "id": 42,
             "Description": [
               {
                 "type": "paragraph",
@@ -294,7 +294,7 @@
             }
           },
           {
-            "id": 39,
+            "id": 43,
             "Description": [
               {
                 "type": "paragraph",
@@ -496,7 +496,7 @@
             }
           },
           {
-            "id": 40,
+            "id": 44,
             "Description": [
               {
                 "type": "paragraph",
@@ -626,7 +626,7 @@
             }
           },
           {
-            "id": 41,
+            "id": 45,
             "Description": [
               {
                 "type": "paragraph",
