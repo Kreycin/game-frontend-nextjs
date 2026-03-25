@@ -1,5 +1,723 @@
 [
   {
+    "id": 11,
+    "documentId": "r3a3loz0wwj30cscfn8u6xov",
+    "Name": "Genya - Demon Eater",
+    "Character_ID": "Genya",
+    "Rarity": "UR",
+    "Role": "DPS",
+    "Element": "Demon",
+    "HP": 742464,
+    "ATK": 70005,
+    "DEF": 2275,
+    "SPD": 1965,
+    "CRIT_DMG": "150%",
+    "Lifesteal": "0%",
+    "Penetration": "0%",
+    "CRIT_rate": "20%",
+    "CRIT_Res": "20%",
+    "Debuff_Acc": "0%",
+    "Debuff_Res": "0%",
+    "Accuracy": "100%",
+    "Doge": "0%",
+    "Healing_Amt": "0%",
+    "Healing_Amt_P": "0%",
+    "Extra_DMG": "20%",
+    "DMG_Res": "25%",
+    "CRIT_DMG_Res": "0%",
+    "YouTube_URL": null,
+    "Showcase_URL": null,
+    "createdAt": "2026-03-25T10:58:42.975Z",
+    "updatedAt": "2026-03-25T13:36:54.854Z",
+    "publishedAt": "2026-03-25T13:36:54.876Z",
+    "Main_Art": null,
+    "Star_Levels": [
+      {
+        "id": 10,
+        "Star_Level": "star19",
+        "enhancements": [
+          {
+            "id": 2,
+            "documentId": "i5ev8vv48cw32oa6x1xrspa1",
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "After being attacked, gain 1 additional stack of [Blood Demon Cells] and reduce the attacker's [Limit Value] by 20%."
+                  }
+                ]
+              }
+            ],
+            "createdAt": "2026-03-25T12:35:34.642Z",
+            "updatedAt": "2026-03-25T12:35:34.642Z",
+            "publishedAt": "2026-03-25T12:35:34.650Z",
+            "Enhancement_Icon": {
+              "id": 2,
+              "documentId": "dec8raho6sc1vr1zvb6e2ckh",
+              "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774442042/Ex1_c684af1963.png"
+            }
+          },
+          {
+            "id": 4,
+            "documentId": "xum26gkg7m6g5rppjho4h726",
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "At the start of each turn and when obtaining [Demon Eater Barrier], gain 1 stack of [Immunity Shield]. After obtaining [Demon Eater Barrier], become immune to debuffs for the next 2 turns."
+                  }
+                ]
+              }
+            ],
+            "createdAt": "2026-03-25T12:36:16.696Z",
+            "updatedAt": "2026-03-25T12:36:16.696Z",
+            "publishedAt": "2026-03-25T12:36:16.704Z",
+            "Enhancement_Icon": {
+              "id": 3,
+              "documentId": "mfh5nrf1tguyrqf2wlbn4t6k",
+              "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774442153/Ex2_ea0ce538f6.png"
+            }
+          },
+          {
+            "id": 6,
+            "documentId": "oh9q27079nr35xlqinrhr5zt",
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "SPD +30; Before each attack, ATK, Crit Rate, and Crit DMG are temporarily increased by 40%."
+                  }
+                ]
+              }
+            ],
+            "createdAt": "2026-03-25T12:37:35.334Z",
+            "updatedAt": "2026-03-25T12:37:35.334Z",
+            "publishedAt": "2026-03-25T12:37:35.340Z",
+            "Enhancement_Icon": {
+              "id": 4,
+              "documentId": "yb90qxfb35b2bsf6vbtonuzo",
+              "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774442207/Ex3_762406131f.png"
+            }
+          },
+          {
+            "id": 8,
+            "documentId": "zbackoltatqfinsd4edc10hf",
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Genya is immune to True DMG. Upon entering the field, gain [Transparent World], and damage taken from a single hit will not exceed 20% Max HP. "
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "After each attack, ATK and SPD increase by 3% (Max 10 stacks); at max stacks, Crit DMG is additionally increased by 20%. "
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "These effects cannot be purged and last until the end of battle."
+                  }
+                ]
+              }
+            ],
+            "createdAt": "2026-03-25T12:39:12.020Z",
+            "updatedAt": "2026-03-25T12:39:12.020Z",
+            "publishedAt": "2026-03-25T12:39:12.029Z",
+            "Enhancement_Icon": {
+              "id": 5,
+              "documentId": "h3u48pc9ipan4hakzrxdojwf",
+              "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774442276/Ex4_b7d212f8af.png"
+            }
+          }
+        ],
+        "skill_descriptions": [
+          {
+            "id": 30,
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Deals 400% DMG 3 times to random enemy units, with 60% base chance to apply [Silence] to the targets."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Subsequently deals 120% DMG fixed damage to all enemy units, with 75% base chance to reduce all enemies Limit Value by 20%. "
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "After attacking, applies [Demon Eater Mark] to enemy units carrying shields and dispels all enemy shields, then deals 90% DMG fixed damage to all enemy units. "
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "While in [Demon Eater Berserk], deals additional True DMG equal to 50% of lost HP to [Silenced] enemies (Max = 500% ATK)."
+                  }
+                ]
+              }
+            ],
+            "skill": {
+              "id": 18,
+              "documentId": "vtfwn0wnawzcbozf6ltdenzs",
+              "Skill_Name": "Demon-Eating Throat Seal",
+              "Skill_Type": "Release at Turn 1, CD: 2 turn(s)",
+              "Skill_Level": 3,
+              "createdAt": "2026-03-25T11:21:55.776Z",
+              "updatedAt": "2026-03-25T13:10:06.812Z",
+              "publishedAt": "2026-03-25T13:10:06.818Z",
+              "Skill_Icon": {
+                "id": 6,
+                "documentId": "tw3i5k4vkg0lkycgenjerora",
+                "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774444203/ui_icon_skill_178_1_4053536104.png"
+              },
+              "effects": [
+                {
+                  "id": 16,
+                  "documentId": "pgrvhe8yamj6dexjpzvu553w",
+                  "Effect_Name": "Silence",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Unable to use active skills"
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Debuff",
+                  "Turn_Duration": "1 turn",
+                  "Is_Undispellable": false,
+                  "createdAt": "2026-03-25T11:22:40.039Z",
+                  "updatedAt": "2026-03-25T13:37:46.442Z",
+                  "publishedAt": "2026-03-25T13:37:46.455Z",
+                  "Effect_Icon": {
+                    "id": 11,
+                    "documentId": "ycixtonr9c92bldkwzgayocm",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774445830/icon_buff_chenmo_22014eb67d.png"
+                  }
+                },
+                {
+                  "id": 22,
+                  "documentId": "q5frjww01lammpdycx4g8ph6",
+                  "Effect_Name": "Demon Eater Mark",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Mark. SPD reduced by 50%"
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Debuff",
+                  "Turn_Duration": "2 turns",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:23:34.847Z",
+                  "updatedAt": "2026-03-25T13:41:03.012Z",
+                  "publishedAt": "2026-03-25T13:41:03.019Z",
+                  "Effect_Icon": {
+                    "id": 13,
+                    "documentId": "g4k5kaq46bqy8e10e62k6ihn",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774445927/icon_buff_sudujiangdi_525068bfd7.png"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": 31,
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "ATK +40%, HP +30%, SPD +40"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Each time attacking an enemy carrying [Demon Eater Mark], gain 1 stack of [Blood Demon Cells]."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "When [Blood Demon Cells] reach 10 stacks, cleanse all debuffs and enters the [Demon Eater Berserk] state."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Additionally, when Genya is controlled, immediately gains a shield [Demon Eater Barrier] equal to (30% ATK * number of [Blood Demon Cells] stacks)."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "While in the [Demon Eater Berserk] state, applie 1 stack of [Madness] to all allies at the start of each turn."
+                  }
+                ]
+              }
+            ],
+            "skill": {
+              "id": 19,
+              "documentId": "calcxhxkqwtocec7s6pnxgve",
+              "Skill_Name": "Gluttonous Feast",
+              "Skill_Type": "Passive Skill",
+              "Skill_Level": 3,
+              "createdAt": "2026-03-25T11:50:05.063Z",
+              "updatedAt": "2026-03-25T13:10:28.674Z",
+              "publishedAt": "2026-03-25T13:10:28.679Z",
+              "Skill_Icon": {
+                "id": 7,
+                "documentId": "mxuhjexu5d2juxtdyjip42d4",
+                "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774444225/ui_icon_skill_178_2_aeea183986.png"
+              },
+              "effects": [
+                {
+                  "id": 19,
+                  "documentId": "j3x9oov5iekwsnhvjqxfgdmu",
+                  "Effect_Name": "Blood Demon Cells",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Increases ATK by 5%, and both DMG Bonus and DMG Reduction by 10%. Stacks up to 10 layers."
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Buff",
+                  "Turn_Duration": "Permanent",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:51:02.040Z",
+                  "updatedAt": "2026-03-25T13:39:22.153Z",
+                  "publishedAt": "2026-03-25T13:39:22.165Z",
+                  "Effect_Icon": {
+                    "id": 14,
+                    "documentId": "y1o6zk5kgvol2mhwdoom9pvt",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774445959/ui_buff_guihai_8cca9e9813.png"
+                  }
+                },
+                {
+                  "id": 20,
+                  "documentId": "j3uy05fymcph64jrh386up14",
+                  "Effect_Name": "Demon Eater Berserk",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Gains Final DMG Bonus equal to 40% of own DMG Bonus ratio, and Final DMG Reduction equal to 40% of own DMG Reduction ratio."
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Buff",
+                  "Turn_Duration": "Permanent",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:51:56.293Z",
+                  "updatedAt": "2026-03-25T13:40:05.336Z",
+                  "publishedAt": "2026-03-25T13:40:05.347Z",
+                  "Effect_Icon": {
+                    "id": 15,
+                    "documentId": "tjuke9893lc30l09qd6vxzwb",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774446002/ui_buff_kbzt_b7806aa097.png"
+                  }
+                },
+                {
+                  "id": 24,
+                  "documentId": "ktqgaaj88yi6yoqaf25duy5v",
+                  "Effect_Name": "Demon Eater Barrier",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "A shield that can block a certain amount of damage."
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Buff",
+                  "Turn_Duration": "1 turn",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:52:57.087Z",
+                  "updatedAt": "2026-03-25T13:41:55.557Z",
+                  "publishedAt": "2026-03-25T13:41:55.567Z",
+                  "Effect_Icon": {
+                    "id": 17,
+                    "documentId": "t42hzpkwip6kqxqcrh2ibt75",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774446113/ui_buff_wqzt_31d379a059.png"
+                  }
+                },
+                {
+                  "id": 23,
+                  "documentId": "i1rohlr5bf22889mos0qhfw7",
+                  "Effect_Name": "Madness",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "SPD+50, stacks up to 10 layers."
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Buff",
+                  "Turn_Duration": "Permanent",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:54:32.442Z",
+                  "updatedAt": "2026-03-25T13:41:42.772Z",
+                  "publishedAt": "2026-03-25T13:41:42.779Z",
+                  "Effect_Icon": {
+                    "id": 16,
+                    "documentId": "auxtx9frfpuso1cvo9zzjh5i",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774446099/ui_buff_douqi_c0ae529c98.png"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": 32,
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Deals 500% DMG to all enemy units, with 60% base chance to cause [Knockdown]. "
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Deals an additional 140% ATK fixed DMG to units carrying [Demon Eater Mark], with  70% base chance to apply [Silence]. "
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Subsequently, deals 160% ATK fixed DMG to the enemy unit with the highest ATK."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": ""
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "If in the [Demon Eater Berserk] state, consumes 20% of current HP to cast this skill again (Bonus DMG increases by 1% for every 1% of Max HP lost). This secondary cast ignores all shields and DMG Res stats on the target."
+                  }
+                ]
+              }
+            ],
+            "skill": {
+              "id": 20,
+              "documentId": "vsef8suo20gkfv1y3qrcp2kb",
+              "Skill_Name": "Gluttonous Devour",
+              "Skill_Type": "Release at Turn 2, CD: 4 turn(s)",
+              "Skill_Level": 3,
+              "createdAt": "2026-03-25T11:59:16.110Z",
+              "updatedAt": "2026-03-25T13:18:28.268Z",
+              "publishedAt": "2026-03-25T13:18:28.273Z",
+              "Skill_Icon": {
+                "id": 8,
+                "documentId": "fj2x4knuix4gxl8rq3fh25u6",
+                "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774444704/ui_icon_skill_178_3_a107c4b2b2.png"
+              },
+              "effects": [
+                {
+                  "id": 17,
+                  "documentId": "a8zwrrrv9eg0ixyfpfx0h2zo",
+                  "Effect_Name": "Knockdown",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Unable to act"
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Debuff",
+                  "Turn_Duration": "1 turn",
+                  "Is_Undispellable": false,
+                  "createdAt": "2026-03-25T12:01:34.043Z",
+                  "updatedAt": "2026-03-25T13:38:04.295Z",
+                  "publishedAt": "2026-03-25T13:38:04.308Z",
+                  "Effect_Icon": {
+                    "id": 12,
+                    "documentId": "ilsn6wsmxm5fq5apccwsjgd8",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774445880/ui_buff_jidao_7efe7aaf10.png"
+                  }
+                },
+                {
+                  "id": 16,
+                  "documentId": "pgrvhe8yamj6dexjpzvu553w",
+                  "Effect_Name": "Silence",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Unable to use active skills"
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Debuff",
+                  "Turn_Duration": "1 turn",
+                  "Is_Undispellable": false,
+                  "createdAt": "2026-03-25T11:22:40.039Z",
+                  "updatedAt": "2026-03-25T13:37:46.442Z",
+                  "publishedAt": "2026-03-25T13:37:46.455Z",
+                  "Effect_Icon": {
+                    "id": 11,
+                    "documentId": "ycixtonr9c92bldkwzgayocm",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774445830/icon_buff_chenmo_22014eb67d.png"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": 33,
+            "Description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Every time Genya attacks, he will not trigger enemy counterattacks and causes units carrying [Demon Eater Mark] to lose 10% of their current HP \n(HP loss ignores the target's DEF and shields, and cannot result in death)."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "After attacking, guaranteed to trigger an additional basic attack."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "When any unit from either side dies, Genya immediately restores 50% Max HP and gains 1 stack of [Blood Demon Cells]."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "If Genya is in the [Demon Eater Berserk] , he additionally reduces the [Limit Value] of all enemies by 50%."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Every time Genya is hit, 50% fixed chance to apply [Demon Eater Mark] to the attacker."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Upon receiving fatal damage, avoids death, restores HP to full and triggers the [Demon Eater Berserk] - This effect can trigger once per battle."
+                  }
+                ]
+              }
+            ],
+            "skill": {
+              "id": 21,
+              "documentId": "zmrjc99342020w2sf6nyxhvm",
+              "Skill_Name": "Blood-Feast Reincarnation",
+              "Skill_Type": "Passive Skill",
+              "Skill_Level": 3,
+              "createdAt": "2026-03-25T12:14:14.962Z",
+              "updatedAt": "2026-03-25T13:18:47.980Z",
+              "publishedAt": "2026-03-25T13:18:47.986Z",
+              "Skill_Icon": {
+                "id": 9,
+                "documentId": "hx6stg4a71avshrj9wbdanfr",
+                "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774444724/ui_icon_skill_178_4_dcc2d9736d.png"
+              },
+              "effects": [
+                {
+                  "id": 19,
+                  "documentId": "j3x9oov5iekwsnhvjqxfgdmu",
+                  "Effect_Name": "Blood Demon Cells",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Increases ATK by 5%, and both DMG Bonus and DMG Reduction by 10%. Stacks up to 10 layers."
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Buff",
+                  "Turn_Duration": "Permanent",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:51:02.040Z",
+                  "updatedAt": "2026-03-25T13:39:22.153Z",
+                  "publishedAt": "2026-03-25T13:39:22.165Z",
+                  "Effect_Icon": {
+                    "id": 14,
+                    "documentId": "y1o6zk5kgvol2mhwdoom9pvt",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774445959/ui_buff_guihai_8cca9e9813.png"
+                  }
+                },
+                {
+                  "id": 22,
+                  "documentId": "q5frjww01lammpdycx4g8ph6",
+                  "Effect_Name": "Demon Eater Mark",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Mark. SPD reduced by 50%"
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Debuff",
+                  "Turn_Duration": "2 turns",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:23:34.847Z",
+                  "updatedAt": "2026-03-25T13:41:03.012Z",
+                  "publishedAt": "2026-03-25T13:41:03.019Z",
+                  "Effect_Icon": {
+                    "id": 13,
+                    "documentId": "g4k5kaq46bqy8e10e62k6ihn",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774445927/icon_buff_sudujiangdi_525068bfd7.png"
+                  }
+                },
+                {
+                  "id": 20,
+                  "documentId": "j3uy05fymcph64jrh386up14",
+                  "Effect_Name": "Demon Eater Berserk",
+                  "Description": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "text": "Gains Final DMG Bonus equal to 40% of own DMG Bonus ratio, and Final DMG Reduction equal to 40% of own DMG Reduction ratio."
+                        }
+                      ]
+                    }
+                  ],
+                  "Effect_Type": "Buff",
+                  "Turn_Duration": "Permanent",
+                  "Is_Undispellable": true,
+                  "createdAt": "2026-03-25T11:51:56.293Z",
+                  "updatedAt": "2026-03-25T13:40:05.336Z",
+                  "publishedAt": "2026-03-25T13:40:05.347Z",
+                  "Effect_Icon": {
+                    "id": 15,
+                    "documentId": "tjuke9893lc30l09qd6vxzwb",
+                    "url": "https://res.cloudinary.com/di8bf7ufw/image/upload/v1774446002/ui_buff_kbzt_b7806aa097.png"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": 170,
     "documentId": "wmhbk2qucsrq8v7zsuavx3hl",
     "Name": "Yoriichi -  Sun Halo Crimson Blade ",
