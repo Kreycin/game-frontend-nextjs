@@ -12,12 +12,15 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_NOTI_FIREBASE_APP_ID,
 };
 
-// Initialize App
-const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// Initialize App safely (prevents crashes during Next.js build if env vars are missing)
+const canInitFirebase = typeof window !== 'undefined' && firebaseConfig.apiKey;
+const app: FirebaseApp = !getApps().length && canInitFirebase 
+  ? initializeApp(firebaseConfig) 
+  : (getApps().length ? getApp() : {} as FirebaseApp);
 
-// Initialize Services
-const db: Firestore = getFirestore(app);
-const auth = getAuth(app);
+// Initialize Services safely
+const db: Firestore = canInitFirebase ? getFirestore(app) : {} as Firestore;
+const auth = canInitFirebase ? getAuth(app) : {} as ReturnType<typeof getAuth>;
 
 let messaging: Messaging | null = null;
 if (typeof window !== 'undefined') {

@@ -2,98 +2,23 @@ import { Metadata } from 'next';
 import TestCharacterSheet from "./TestCharacterSheet";
 import CharacterSheetSkeleton from "@/components/CharacterSheetSkeleton";
 import type { Character } from '@/types/character';
-import qs from 'qs';
-import { MOCK_CHARACTER } from "@/utils/mockData";
+import { getStaticCharacters } from '@/data/staticCharacters';
 
-const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://127.0.0.1:1337';
+function getCharacters(): Character[] {
+    const characters = getStaticCharacters();
 
+    // Sort by publishedAt (newest first)
+    characters.sort((a, b) => {
+        const dateA = new Date((a as any).publishedAt || (a as any).createdAt || 0).getTime();
+        const dateB = new Date((b as any).publishedAt || (b as any).createdAt || 0).getTime();
+        return dateB - dateA;
+    });
 
-
-// Force dynamic rendering (no cache) for testing
-export const revalidate = 0;
-
-async function getCharacters(): Promise<Character[]> {
-    const queryString = qs.stringify({
-        fields: ['*'],
-        populate: {
-            Main_Art: { fields: ['url', 'width', 'height'] },
-            Star_Levels: {
-                populate: {
-                    enhancements: {
-                        populate: { Enhancement_Icon: { fields: ['url'] } }
-                    },
-                    skill_descriptions: {
-                        populate: {
-                            skill: {
-                                populate: {
-                                    Skill_Icon: {
-                                        fields: ['url']
-                                    },
-                                    effects: {
-                                        populate: {
-                                            Effect_Icon: { fields: ['url'] }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                },
-            },
-        },
-        sort: ['publishedAt:desc'],
-    }, { encodeValuesOnly: true });
-
-    const fetchURL = `${STRAPI_API_URL}/api/characters?${queryString}`;
-
-    console.log("--- DEBUG: /test Route Fetching ---");
-    console.log("API URL:", STRAPI_API_URL);
-    console.log("Full Fetch URL:", fetchURL);
-
-    try {
-        // Use default fetch (cache: 'force-cache' implied by page revalidate)
-        const res = await fetch(fetchURL);
-
-        if (!res.ok) {
-            console.warn(`Failed to fetch characters from Strapi. Status: ${res.status}`);
-            return [MOCK_CHARACTER as unknown as Character];
-        }
-        const rawData = await res.json();
-
-        if (!rawData.data || rawData.data.length === 0) {
-            return [MOCK_CHARACTER as unknown as Character];
-        }
-
-        const characters = rawData.data.map((char: any) => {
-            const transformedStarLevels = char.Star_Levels?.map((level: any) => ({
-                ...level,
-                skill_descriptions: level.skill_descriptions?.map((desc: any) => ({
-                    ...desc,
-                    skill: desc.skill ? {
-                        ...desc.skill,
-                        Skill_Icon: desc.skill.Skill_Icon || null,
-                        effects: desc.skill.effects || []
-                    } : null,
-                })) || [],
-            })) || [];
-
-            return {
-                ...char,
-                id: char.id,
-                Main_Art: char.Main_Art || null,
-                Star_Levels: transformedStarLevels,
-            };
-        });
-
-        return characters;
-    } catch (error) {
-        console.error("Error fetching characters:", error);
-        return [MOCK_CHARACTER as unknown as Character];
-    }
+    return characters;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-    const characters = await getCharacters();
+    const characters = getCharacters();
     const character = characters[0];
     return {
         title: `${character.Name} - Premium Test`,
@@ -102,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TestPage() {
-    const allCharacters = await getCharacters();
+    const allCharacters = getCharacters();
 
     if (!allCharacters || allCharacters.length === 0) {
         return <CharacterSheetSkeleton />;
