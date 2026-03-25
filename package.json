@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "firebase": "firebase"
+    "firebase": "firebase",
+    "sync-data": "node scripts/fetch-characters.mjs"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
