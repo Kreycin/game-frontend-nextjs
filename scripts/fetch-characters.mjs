@@ -63,12 +63,40 @@ async function fetchCharacters() {
       };
     });
 
-    console.log(`✅ พบตัวละครทั้งหมด ${characters.length} ตัว กำลังเขียนไฟล์...`);
+    // โหลดข้อมูลเก่าจาก characters.json
+    let existingCharacters = [];
+    if (fs.existsSync(OUTPUT_FILE)) {
+      try {
+        const oldData = fs.readFileSync(OUTPUT_FILE, 'utf-8');
+        existingCharacters = JSON.parse(oldData);
+        console.log(`\n📦 โหลดข้อมูลเก่าสำเร็จ: มีตัวละครเดิม ${existingCharacters.length} ตัว`);
+      } catch (e) {
+        console.log(`⚠️ ไม่สามารถอ่านไฟล์ข้อมูลเก่าได้ เริ่มต้นใหม่`);
+      }
+    }
 
-    // บันทึกทับไฟล์ JSON เดิม
-    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(characters, null, 2), 'utf-8');
+    // รวมข้อมูล (Merge) 
+    // ยึดข้อมูลใหม่จาก Strapi เป็นหลัก ข้อมูลเก่าที่ไม่ซ้ำก็เก็บไว้
+    const apiNames = new Set(characters.map(c => c.Name?.toLowerCase()));
+    const uniqueOldCharacters = existingCharacters.filter(c => !apiNames.has(c.Name?.toLowerCase()));
+    
+    const mergedCharacters = [...characters, ...uniqueOldCharacters];
 
-    console.log(`🎉 ดึงข้อมูลเสร็จสิ้น! บันทึกลงใน: src/data/characters.json`);
+    // เรียงลำดับตัวละครใหม่ล่าสุดขึ้นก่อน
+    mergedCharacters.sort((a, b) => {
+      const dateA = new Date(a.publishedAt || a.createdAt || 0).getTime();
+      const dateB = new Date(b.publishedAt || b.createdAt || 0).getTime();
+      return dateB - dateA; // Newest first
+    });
+
+    console.log(`\n✅ พบตัวละครใหม่ใน Strapi: ${characters.length} ตัว`);
+    console.log(`✅ ตัวละครเดิมที่เก็บรักษาไว้: ${uniqueOldCharacters.length} ตัว`);
+    console.log(`✅ ยอดรวมหลังจากการรวมข้อมูล: ${mergedCharacters.length} ตัว`);
+
+    // บันทึกทับไฟล์ JSON เดิม (แบ็คอัพข้อมูลเก่าบวกข้อมูลใหม่)
+    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(mergedCharacters, null, 2), 'utf-8');
+
+    console.log(`\n🎉 บันทึกข้อมูลเสร็จสิ้น! ลงใน: src/data/characters.json`);
     console.log(`   ขนาดไฟล์: ${(fs.statSync(OUTPUT_FILE).size / 1024).toFixed(2)} KB`);
     console.log('\n👉 คุณสามารถปิด Backend Strapi และ `git commit` โค้ด Frontend ขึ้นเว็บได้เลยครับ');
 
